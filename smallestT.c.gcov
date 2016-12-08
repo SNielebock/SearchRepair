@@ -1,0 +1,36 @@
+        -:    0:Source:smallestT.c
+        -:    0:Graph:./smallestT.gcno
+        -:    0:Data:./smallestT.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <math.h>
+        -:    3:
+        1:    4:int main(void) 
+        -:    5:{ 
+        -:    6:  int num1 ;
+        -:    7:  int num2 ;
+        -:    8:  int num3 ;
+        -:    9:  int num4 ;
+        -:   10:  int small ;
+        -:   11:  int printf_tmp0 ;
+        -:   12:
+        -:   13:  {
+        1:   14:  printf("Please enter 4 numbers separated by spaces > ");
+        1:   15:  scanf("%d%d%d%d", & num1, & num2, & num3, & num4);
+        1:   16:  if ((num1 < num2 && num1 < num3) && num1 < num4) {
+    #####:   17:    small = num1;
+        -:   18:  } else
+        1:   19:  if ((num2 < num1 && num2 < num3) && num2 < num4) {
+    #####:   20:    small = num2;
+        -:   21:  } else
+        1:   22:  if ((num3 < num1 && num3 < num2) && num3 < num4) {
+    #####:   23:    small = num3;
+        -:   24:  } else {
+        1:   25:    small = num4;
+        -:   26:  }
+        1:   27:  printf("%d is the smallest\n", small);
+        1:   28:  return (0);
+        -:   29:}
+        -:   30:}
+        -:   31:

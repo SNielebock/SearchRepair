@@ -97,9 +97,9 @@ public class SearchCase {
 		boolean pass = fillSearchCase();
 		if(!pass) return;
 		searchOverRepository();
-		//printResult();
+		printResult();
 		ruleOutFalsePositive();
-		//printSearchingResult();
+		printSearchingResult();
 		
 		if(isEmpty(info.getResult())) {
 			this.info.getResult().setState(ResultState.FAILED);
@@ -145,6 +145,8 @@ public class SearchCase {
 		for(String source : info.getResult().getSearchMapping().keySet()){
 			for(Map<String, String> map : info.getResult().getSearchMapping().get(source)){
 				try{
+					//TODO: Commented out
+//					System.out.println("IN HERE! (RULEOUTFALSEPOSITIVE): " + map.toString());
 					String input = Restore.getMappingString(source, map);
 					String outputFile = generateOutputFile(input);
 					if(testAllResults(source, outputFile)){
@@ -169,19 +171,27 @@ public class SearchCase {
 
 
 	private boolean testAllResults(String source, String outputFile) {
+		//TODO: Commented out
+//		System.out.println("IN HERE! (TESTALLRESULTS)");
 		boolean pass = passAllPositive(source, outputFile);
-		if(!pass) return false;
+		if(!pass){
+//			System.out.println("NOT PASS -> RETURNED FALSE");
+			return false;
+		}
 		int count = passNegatives(source, outputFile);
 		if(count == this.getNegatives().size()) {
 			info.getResult().getPositive().add(source);
+//			System.out.println("COUNT = PASSNEGATIVES -> RETURNED TRUE");
 			return true;
 		}
 		else if(count == 0){
 			info.getResult().getFalsePositve().add(source);
+//			System.out.println("COUNT = 0 -> RETURNED FALSE");
 			return false;
 		}
 		else {
 			info.getResult().getPartial().put(source, count * 1.0 / this.getNegatives().size());
+//			System.out.println("ELSE -> RETURNED TRUE");
 			return true;
 		}
 	}
@@ -245,6 +255,8 @@ public class SearchCase {
 			String command2 = "./" + this.casePrefix;
 			
 			String s2 = Utility.runCProgramWithInput(command2, input);
+			//TODO: Commented out
+//			System.out.println("S2 OUTPUT: " + s2);
 			
 			if(s2.isEmpty() ){
 				return false;
@@ -345,7 +357,8 @@ public class SearchCase {
 			String s1 = Utility.runCProgram(command1);
 			if(s1.equals("failed")) continue;
 			String s2 = Utility.runCProgramWithInput(command2, input);
-			//System.out.println(s2);
+			//TODO: Commented out
+//			System.out.println("S2!: " + s2);
 			if(s2.trim().isEmpty()) return;
 			String[] entries = s2.split("_nextloop_");
 			for(String entry : entries){
@@ -369,7 +382,12 @@ public class SearchCase {
 					if(o.equals("")) continue;
 					outputList.add(o);
 				}
+				//TODO: Commented out
+//				System.out.println("info.getpositives: " + info.getPositives().toString());
 				info.getPositives().put(inputList, outputList);
+//				System.out.println("inputList: " + inputList.toString());
+//				System.out.println("outputList: " + outputList.toString());
+//				System.out.println("info.getpositives: " + info.getPositives().toString());
 			}
 		}
 

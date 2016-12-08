@@ -161,7 +161,8 @@ public  class ESearchCase {
 		}
 		Transform trans = new Transform(this.getFolder(), this.getFileName(), typeParameter);
 		String pass = trans.tranform();
-		
+		//TODO: Commented out
+//		System.out.println("PASS: " + pass);
 		//transform here, if there is a true transform, no need to copy
 		if(pass != null) {
 			Utility.copy(pass, runDir + "/" + this.getFileName());
@@ -420,10 +421,11 @@ public  class ESearchCase {
 			if(s2.isEmpty() ){
 				continue;
 			}
-			System.out.println(input);
-			System.out.println(s2);
-			System.out.println(output);
-			System.out.println(output.equals(s2));
+			//TODO: Commented out
+//			System.out.println(input);
+//			System.out.println(s2);
+//			System.out.println(output);
+//			System.out.println(output.equals(s2));
 			if(s2.equals(output)) count++;
 		}
 		return count;
@@ -449,9 +451,10 @@ public  class ESearchCase {
 			if(s2.isEmpty() ){
 				return false;
 			}
-			System.out.println(input);
-			System.out.println(output);
-			System.out.println(s2);
+			//TODO: Commented out
+//			System.out.println(input);
+//			System.out.println(output);
+//			System.out.println(s2);
 			if(!s2.equals(output)) return false;
 		}
 		return true;
@@ -512,7 +515,6 @@ public  class ESearchCase {
 			
 			e.printStackTrace();
 		}
-		
 	}
 
 	protected void initPositiveStates() {

@@ -6,14 +6,26 @@ import Experiment.GroupTest;
 import ProcessIntroClass.GenerateStandardTestCases;
 import Repository.EntryAddition;
 
+/**
+ * SearchRepair is an automatic repair program, which uses semantic search to find
+ * patches for faulty C-code. This version is the attempt to convert it, so that it
+ * can repair Java-code.
+ * 
+ * @author Matthias (Java version)
+ * @author originally created by Yuriy Brun, Claire Le Goues and Kathryn T. Stolee
+ */
 public class Main {
-
+	
+	/**
+	 * Standard main method; generates the test cases and runs the repair progress.
+	 * @param args - unused
+	 */
 	public static void main(String[] args) {
-		//repository type: 0 linux, 1 introclass, 2 future
-		int repositoryType = 2;
+		//repository type: 0 linux, 1 introclass, 2 future, 5 myTest
+		int repositoryType = 5;
 		
 		//introclass path
-		String introclassPath = "/users/keyalin/documents/test/latest/IntroClass";
+		String introclassPath = "/home/matthias/git/IntroClass-master";
 		
 		
 		//get data directly 0 or re run to get data:1
@@ -28,7 +40,8 @@ public class Main {
 		else{
 			//rerun
 			GenerateStandardTestCases test = new GenerateStandardTestCases(introclassPath, "./bughunt");
-			test.generate();
+			//TODO: Commenting in!
+//			test.generate();
 			rerun(wb, repositoryType);
 			Analyzer.getCSVData();
 		}
@@ -49,10 +62,11 @@ public class Main {
 	}
 
 	private static void initRepository() {
-		EntryAddition.addOneFolder("./repository/future", DataBaseManager.TABLEFUTURE1);
-		EntryAddition.addOneFolder("./repository/future2", DataBaseManager.TABLEFUTURE2);
-		EntryAddition.addOneFolder("./repository/introclass", DataBaseManager.TABLEALL);
-		EntryAddition.addOneFolder("./repository/linux", DataBaseManager.TABLELINUX);
+//		EntryAddition.addOneFolder("./repository/future", DataBaseManager.TABLEFUTURE1);
+//		EntryAddition.addOneFolder("./repository/future2", DataBaseManager.TABLEFUTURE2);
+//		EntryAddition.addOneFolder("./repository/introclass", DataBaseManager.TABLEALL);
+//		EntryAddition.addOneFolder("./repository/linux", DataBaseManager.TABLELINUX);
+		EntryAddition.addOneFolder("./repository/myTest", DataBaseManager.TABLEMYTEST);
 	}
 
 }

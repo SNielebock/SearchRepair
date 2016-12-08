@@ -6,8 +6,24 @@ import java.util.List;
 
 import search.ResultObject.ResultState;
 
+/**
+ * This class calls the different searchCases for the specific tests.
+ * 
+ * @see MedianSearchCase
+ * @see GradeSearchCase
+ * @see SyllableSearchCase
+ * @see CheckSumSearchCase
+ * @see DigitSearchCase
+ * 
+ *
+ */
 public class GroupTest {
 
+	/**
+	 * for testing purpose only
+	 * 
+	 * @param args unused
+	 */
 	public static void main(String[] args) {
 		//medianTest(false, 2);
 		//smallestTest(false, 2);
@@ -16,14 +32,36 @@ public class GroupTest {
 		syllablesTest(false, 2);
 	}
 
+	/**
+	 * <p>calls the different function tests:</p>
+	 * <p>{@link GroupTest#medianTest(boolean, int)}</p>
+	 * <p>{@link GroupTest#smallestTest(boolean, int)}</p>
+	 * <p>{@link GroupTest#gradeTest(boolean, int)}</p>
+	 * <p>{@link GroupTest#checkSumTest(boolean, int)}</p>
+	 * <p>{@link GroupTest#syllablesTest(boolean, int)}</p>
+	 * <p> tip: running all of those tests at the same time will take very long; comment unnecessary ones out.</p>
+	 * 
+	 * @param wb 				wb = whitebox and determines whether the program will run a whitebox test(true) or a blackbox one(false).
+	 * @param repositoryType	which repository the program should use to repair the faulty functions.
+	 * 							repository type: 0 linux, 1 introclass, 2 future
+	 */
 	public static void rerun(boolean wb, int repositoryType) {
 		medianTest(wb, repositoryType);
-		// smallestTest(wb, repositoryType);
+		//smallestTest(wb, repositoryType);
 		// gradeTest(wb, repositoryType);
 		// checkSumTest(wb, repositoryType);
 		// syllablesTest(wb, repositoryType);
 	}
 
+	/**
+	 * This function tries to repair each checksum.c file in bughunt/checksum/ one by one.
+	 * 
+	 * @see CheckSumSearchCase
+	 * @see ESearchCase
+	 *  
+	 * @param wb 	true = whitebox test; false = blackbox test
+	 * @param type	repository type: 0 linux, 1 introclass, 2 future
+	 */
 	public static void checkSumTest(boolean wb, int type) {
 		List<String> list = new ArrayList<String>();
 		File file = new File("./bughunt/checkSum");
@@ -34,9 +72,12 @@ public class GroupTest {
 				String folder = "./bughunt/checkSum/" + root.getName();
 				String fileName = "checkSum.c";
 				if (type == 2) {
+					//get numbor of folder to decide which future Repository to take
 					int value = Integer.parseInt(root.getName());
 					if(value < size / 2) actualRepository = 3;
 					else actualRepository = 4;
+				}else if(type == 1){
+					actualRepository = 1;
 				}
 				CheckSumSearchCase searcher = new CheckSumSearchCase(folder, fileName, actualRepository);
 				searcher.transformAndInitRunDir(false, "");
@@ -51,12 +92,20 @@ public class GroupTest {
 				continue;
 			}
 		}
-
 		for (String s : list) {
 			System.out.println(s);
 		}
 	}
 
+	/**
+	 * This function tries to repair each median.c file in bughunt/median/ one by one.
+	 * 
+	 * @see MedianSearchCase
+	 * @see ESearchCase
+	 *  
+	 * @param wb 	true = whitebox test; false = blackbox test
+	 * @param type	repository type: 0 linux, 1 introclass, 2 future
+	 */
 	public static void medianTest(boolean wb, int type) {
 		List<String> list = new ArrayList<String>();
 		File file = new File("./bughunt/median");
@@ -69,9 +118,17 @@ public class GroupTest {
 				String fileName = "median.c";
 				if (type == 2) {
 					int value = Integer.parseInt(root.getName());
-					if(value < 49 || value > 100) continue;
-					if(value < size / 2) actualRepository = 3;
+					if(value < 40 || value > 40) continue;
+//					if(value < 10 || value >= 20) continue;
+					if(value < size / 2) {
+						actualRepository = 3;
+					}
 					else actualRepository = 4;
+				}else{
+					int value = Integer.parseInt(root.getName());
+					if(value < 40 || value > 40) continue;
+					actualRepository = type;
+
 				}
 				System.out.println(folder);
 				MedianSearchCase searcher = new MedianSearchCase(folder, fileName, actualRepository);
@@ -90,6 +147,15 @@ public class GroupTest {
 
 	}
 
+	/**
+	 * This function tries to repair each smallest.c file in bughunt/smallest/ one by one.
+	 * 
+	 * @see MedianSearchCase
+	 * @see ESearchCase
+	 *  
+	 * @param wb 	true = whitebox test; false = blackbox test
+	 * @param type	repository type: 0 linux, 1 introclass, 2 future
+	 */
 	public static void smallestTest(boolean wb, int type) {
 		List<String> list = new ArrayList<String>();
 		File file = new File("./bughunt/smallest");
@@ -110,6 +176,8 @@ public class GroupTest {
 					int value = Integer.parseInt(root.getName());
 					if(value < size / 2) actualRepository = 3;
 					else actualRepository = 4;
+				}else if(type == 1){
+					actualRepository = 1;
 				}
 				System.out.println(folder);
 				MedianSearchCase searcher = new MedianSearchCase(folder, fileName, actualRepository);
@@ -128,6 +196,15 @@ public class GroupTest {
 
 	}
 
+	/**
+	 * This function tries to repair each grade.c file in bughunt/grade/ one by one.
+	 * 
+	 * @see GradeSearchCase
+	 * @see ESearchCase
+	 *  
+	 * @param wb 	true = whitebox test; false = blackbox test
+	 * @param type	repository type: 0 linux, 1 introclass, 2 future
+	 */
 	public static void gradeTest(boolean wb, int type) {
 		List<String> list = new ArrayList<String>();
 		File file = new File("./bughunt/grade");
@@ -142,6 +219,8 @@ public class GroupTest {
 					if(value < size / 2) actualRepository = 3;
 					else actualRepository = 4;
 					//if(value != 120) continue;
+				}else if(type == 1){
+					actualRepository = 1;
 				}
 				System.out.println(folder);
 				GradeSearchCase instan = new GradeSearchCase(folder, fileName, actualRepository);
@@ -159,6 +238,15 @@ public class GroupTest {
 		}
 	}
 
+	/**
+	 * This function tries to repair each syllables.c file in bughunt/syllables/ one by one.
+	 * 
+	 * @see SyllableSearchCase
+	 * @see ESearchCase
+	 *  
+	 * @param wb 	true = whitebox test; false = blackbox test
+	 * @param type	repository type: 0 linux, 1 introclass, 2 future
+	 */
 	public static void syllablesTest(boolean wb, int type) {
 		List<String> list = new ArrayList<String>();
 		File file = new File("./bughunt/syllables");
@@ -175,6 +263,8 @@ public class GroupTest {
 					int value = Integer.parseInt(root.getName());
 					if(value < size / 2) actualRepository = 3;
 					else actualRepository = 4;
+				}else if(type == 1){
+					actualRepository = 1;
 				}
 				SyllableSearchCase searcher = new SyllableSearchCase(folder, fileName, actualRepository);
 				searcher.transformAndInitRunDir(false, "");

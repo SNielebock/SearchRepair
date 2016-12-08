@@ -40,7 +40,7 @@ public class Utility {
 	public static String runCProgramWithPythonCommand(String testingExe,
 			String tempOuputFile, String inputFile, String outputFile) {
 		String programName = testingExe.substring(testingExe.indexOf("/") + 1);
-		String command = "/Users/clegoues/research/autobugfix/autobugfix-yalin/executors/genprog_tests.py --program "
+		String command = "/home/matthias/git/SearchRepair/executors/genprog_tests.py --program "
 				+ programName
 				+ " "
 				+ tempOuputFile
@@ -55,7 +55,7 @@ public class Utility {
 	public static String invokeZ3onFile(String file) {
 		String out = "";
 		String execString = "executors/z3" + " -smt2 -nw -file:" + file;
-		// System.out.println(execString);
+//		System.out.println("Z3 String: " + execString);
 		String ls_str;
 		StringBuffer sb = new StringBuffer();
 		try {
@@ -81,7 +81,8 @@ public class Utility {
 				}
 				while ((ls_str = ls_in.readLine()) != null) {
 					sb.append(ls_str);
-					// System.out.println(ls_str);
+					//TODO: Commented out
+//					System.out.println("LS_STR: " + ls_str);
 				}
 				// while((ls_str = ls_err.readLine()) != null){
 				// System.out.println(ls_str+ "j");
@@ -146,6 +147,14 @@ public class Utility {
 		return sb.toString();
 	}
 
+	/** 
+	 * Example params, when called from GenerateStandardTestCases
+	 * @param path -> "./tempFolder/test.out"
+	 * @param input -> exmaple:"Enter thresholds for A, B, C, D
+								in that order, decreasing percentages > 
+								Thank you. Now enter student score (percent) 
+								>Student has an A grade"
+	 */
 	public static void writeTOFile(String path, String input) {
 		try {
 			PrintWriter pw = new PrintWriter(new FileOutputStream(path));
@@ -155,7 +164,11 @@ public class Utility {
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * Copies for example the test-files into the bughunt folder.
+	 * @param file1
+	 * @param file2
+	 */
 	public static void copy(String file1, String file2) {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(

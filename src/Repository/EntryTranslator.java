@@ -38,19 +38,21 @@ public class EntryTranslator {
 	private void translateWithSSA() {
 		// deal with two situations, one is path with return statement, one is path without return statement
 		for(String path : method.getPath()){
-			//System.out.println(path);
+			System.out.println("PATH: " + path);
 			PathTranslator pathTranslator = new PathTranslator(path, method.getPathToInput().get(path));
 			List<String> constraints = pathTranslator.getSsa();
 			StringBuilder constraintString = new StringBuilder();
 			String declare = "(declare-fun _output_  () " + TypeTable.getInstance().getType(method.getReturnType()) + " )\n";
-			constraintString.append(declare);
+			if (!declare.contains("Void"))	{
+				constraintString.append(declare);
+			}
 			for(String line : constraints){
 				constraintString.append(line);
 				constraintString.append("\n");
 			}
 			
 			
-			//System.out.println(constraintString.toString());
+			System.out.println("ConstraintString: " + constraintString.toString());
 			this.entryObject.getPathConstraint().put(path, constraintString.toString());
 			
 			Map<String, String> mapping = pathTranslator.getVariableMap();
@@ -60,6 +62,7 @@ public class EntryTranslator {
 				mappingString.append(one);
 			}
 			
+			System.out.println("Mapping: " + mapping.toString());
 			this.entryObject.getPathVariableMap().put(path, mapping.toString());
 			
 			
@@ -70,7 +73,7 @@ public class EntryTranslator {
 				trackString.append(one);
 			}
 			
-			
+			System.out.println("TrackString: " + trackString.toString());
 			this.entryObject.getPathVariableTrack().put(path, trackString.toString());
 			
 			
@@ -81,7 +84,7 @@ public class EntryTranslator {
 				typeString.append(one);
 			}			
 			
-			
+			System.out.println("TypeString: " + typeString.toString());
 			this.entryObject.getPathVariablesTypes().put(path, typeString.toString());
 			
 			
@@ -92,7 +95,7 @@ public class EntryTranslator {
 				formalString.append(one);
 			}			
 			
-			
+			System.out.println("FormalString: " + formalString.toString());
 			this.entryObject.getPathFormalVariables().put(path, formalString.toString());
 			
 		}

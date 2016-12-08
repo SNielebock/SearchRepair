@@ -74,6 +74,10 @@ public class PathTranslator {
 			this.formalVariables.put(id, type);
 		}
 		applySSA();
+		System.out.println("PathTranslatorSSA :");
+		for(String ssaString: this.ssa){
+			System.out.println(ssaString);
+		}
 	}
 	
 	

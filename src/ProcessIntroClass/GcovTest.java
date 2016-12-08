@@ -45,9 +45,13 @@ public class GcovTest {
 	private void initExecutions() {
 		if(!compile()) return;
 		initPositiveExecutions();
-		if(this.positiveExecutions.isEmpty()) return;
+		if(this.positiveExecutions.isEmpty()){
+			return;
+		}
 		initNegativeExecutions();
-		if(this.negativeExecutions.isEmpty()) return;
+		if(this.negativeExecutions.isEmpty()){
+			return;
+		}
 		calculatesuspiciousness();
 //		for(int num : this.suspiciousness.keySet()){
 //			System.out.println("suspiciousness: " + num + " " + this.suspiciousness.get(num));
@@ -59,6 +63,8 @@ public class GcovTest {
 		String filePath = this.folder + "/suspicious";
 		try{
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath)));
+			//TODO: Commented out
+//			System.out.println("After suspicious creation!");
 			for(int num = 1;  num <= this.suspiciousness.keySet().size(); num++){
 				bw.write(Integer.toString(num));
 				bw.write(" ");
@@ -129,7 +135,10 @@ public class GcovTest {
 		Utility.copy(folder + "/" + fileName, "./" + fileName);
 		String command = "gcc -fprofile-arcs -ftest-coverage " + "./" + fileName;
 		String s = Utility.runCProgram(command);
-		if(s.equals("failed")) return false;
+		if(s.equals("failed")) {
+			System.out.println("COMPILE FAILED!");
+			return false;
+		}
 		return true;
 		//String cleanCommand = "rm median.gcda";
 		//Utility.runCProgram(cleanCommand);

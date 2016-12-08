@@ -1,0 +1,26 @@
+        -:    0:Source:median.c
+        -:    0:Graph:./median.gcno
+        -:    0:Data:./median.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/**/
+        -:    2:#include <stdio.h>
+        1:    3:int main()
+        -:    4:  {
+        -:    5:    int a,b,c,median;
+        1:    6:    printf("Enter first integer > ");
+        1:    7:    scanf ("%d", &a);
+        1:    8:    printf("Enter second integer > ");
+        1:    9:    scanf ("%d", &b);
+        1:   10:    printf("Enter third integer > ");
+        1:   11:    scanf ("%d", &c);
+        1:   12:    if ((a>=b && b>=c)||(a<=b && b<=c))
+    #####:   13:       printf("%d is the median\n", b);
+        1:   14:    else if ((b>=a && a>=c)||(c<=a && a<=b))
+    #####:   15:       printf("%d is the median\n", a);
+        1:   16:    else if ((a>=c && c>=b)||(a<=c && c<=b))
+    #####:   17:       printf("%d is the median\n", c);
+        -:   18:    else
+        1:   19:       return 1;
+    #####:   20:    return 0;
+        -:   21:  }

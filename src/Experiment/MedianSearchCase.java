@@ -19,6 +19,7 @@ public class MedianSearchCase extends ESearchCase {
 	@Override
 	public void search(boolean wb) {
 		this.initWbOrBB(wb);
+		System.out.println("in MediansearchCase Search");
 		if(this.getPositives().size() == 0) {
 			this.getInfo().getResult().setState(ResultState.NOPOSITIVE);
 			return;
@@ -29,24 +30,25 @@ public class MedianSearchCase extends ESearchCase {
 		}
 		
 		int[] range = this.getBugLines();
-		System.out.println(Arrays.toString(range));
+		//TODO: Commented out
+//		System.out.println("RANGE: " + Arrays.toString(range));
 		String prefix = this.getRunDir() + "/" + this.getFileName().substring(0, this.getFileName().lastIndexOf('.'));
 		SearchCase instan = new SearchCase(prefix, this.getRepo());
 		instan.setBuggy(range);
 		instan.setNegatives(this.getNegatives());
 		instan.setPositives(this.getPositives());
 		instan.setVerifications(this.getVerifications());
-		instan.search();	
+		System.out.println("before search");
+		instan.search();
 		this.setInfo(instan.getInfo());
 	}
 
 	
 	public static void main(String[] args){
-		MedianSearchCase instan = new MedianSearchCase("./bughunt/median/0", "median.c",  2);
+		MedianSearchCase instan = new MedianSearchCase("./bughunt/median/53", "median.c",  3);
 		instan.transformAndInitRunDir(true, "");
 		instan.initInputAndOutput();
 		instan.search(false);
-//		instan.search(false);
 		instan.recordResult(false);
 	}
 

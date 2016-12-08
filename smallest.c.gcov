@@ -1,0 +1,41 @@
+        -:    0:Source:smallest.c
+        -:    0:Graph:./smallest.gcno
+        -:    0:Data:./smallest.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/**/
+        -:    2:
+        -:    3:#include <stdio.h>
+        -:    4:#include <math.h>
+        -:    5:
+        -:    6:
+        1:    7:int main() {
+        -:    8:
+        -:    9:	int a, b, c, d, num_1, num_2, num_3, num_4;
+        1:   10:	printf("Please enter 4 numbers separated by spaces > ");
+        1:   11:	scanf("%d%d%d%d", &num_1, &num_2, &num_3, &num_4);
+        1:   12:	a = (num_1);
+        1:   13:	b = (num_2);
+        1:   14:	c = (num_3);
+        1:   15:	d = (num_4); 
+        -:   16:	
+        1:   17:	if (a<=b && a<=c && a<=d) {
+    #####:   18:		printf("%d is the smallest\n",a);
+    #####:   19:		return 1;
+        -:   20:	}
+        1:   21:	else if (b<=a && b<=c && b<=d) {
+        1:   22:		printf("%d is the smalles\n",b);
+        1:   23:		return d;
+        -:   24:	}
+    #####:   25:	else if (c<=a && c<=b && c<=d) {
+    #####:   26:		printf("%d is the smallest\n",c);
+    #####:   27:		return 3;
+        -:   28:	}
+    #####:   29:	else if (d<=a && d<=b && d<=c){
+    #####:   30:		printf("%d is the smallest\n",d);
+    #####:   31:		return 43;
+        -:   32:	}
+    #####:   33:	return 0;
+        -:   34:
+        -:   35:
+        -:   36:}

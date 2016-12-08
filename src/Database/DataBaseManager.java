@@ -18,6 +18,7 @@ public class DataBaseManager {
 	public final static String TABLEFUTURE2 = "future2";
 	public final static String TABLEALL = "introclass";
 	public final static String TABLELINUX = "linux";
+	public final static String TABLEMYTEST = "mytest";
 	
 	
 	public static void setParamters(String user, String password, String database){
@@ -118,6 +119,7 @@ public class DataBaseManager {
 			}
 			else {
 				Statement state = conn.createStatement();
+//				System.out.println("STATEMENT: " + state.toString());
 				ResultSet set = state.executeQuery(sql);
 				return set;
 			}
@@ -138,10 +140,12 @@ public class DataBaseManager {
 		String deletefuture2 = "delete  from " + DataBaseManager.TABLEFUTURE2;
 		String deleteall = "delete  from " + DataBaseManager.TABLEALL;
 		String deletelinux = "delete  from " + DataBaseManager.TABLELINUX;
+		String deletemytest = "delete  from " + DataBaseManager.TABLEMYTEST;
 		DataBaseManager.excute(deletefuture1);
 		DataBaseManager.excute(deletefuture2);
 		DataBaseManager.excute(deleteall);
 		DataBaseManager.excute(deletelinux);
+		DataBaseManager.excute(deletemytest);
 	}
 	
 	public static void createTables(){
@@ -149,10 +153,12 @@ public class DataBaseManager {
 		String autofuture2 = "create table " + DataBaseManager.TABLEFUTURE2  + " (source text, constraints text, variableType text, variableTrack text, variableMap text, variableFormal text)";
 		String autoall = "create table " + DataBaseManager.TABLEALL  + " (source text, constraints text, variableType text, variableTrack text, variableMap text, variableFormal text)";
 		String autolinux = "create table " + DataBaseManager.TABLELINUX  + " (source text, constraints text, variableType text, variableTrack text, variableMap text, variableFormal text)";
+		String automytest = "create table " + DataBaseManager.TABLEMYTEST  + " (source text, constraints text, variableType text, variableTrack text, variableMap text, variableFormal text)";
 		DataBaseManager.excute(autofuture1);
 		DataBaseManager.excute(autofuture2);
 		DataBaseManager.excute(autoall);
 		DataBaseManager.excute(autolinux);
+		DataBaseManager.excute(automytest);
 	}
 	
 	public static void rebuildTables(){

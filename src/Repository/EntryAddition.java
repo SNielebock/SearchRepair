@@ -1,3 +1,4 @@
+
 package Repository;
 
 import java.io.BufferedReader;
@@ -22,7 +23,10 @@ public class EntryAddition {
 	private static int save = 0;
 	public static void addOneFile(String filePath, String table){
 		File file = new File(filePath);
-		if(!file.exists()) return;
+		if(!file.exists()){
+			System.out.println("Return in EntryAddition.addOneFile");
+			return;
+		}
 		List<Method> methods = parse(filePath);
 		for(Method method : methods){
 			count++;
@@ -41,20 +45,20 @@ public class EntryAddition {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-//			System.out.println(method.getName());
+			System.out.println(method.getName());
 //			save++;
-//			System.out.println(method.getSource());
+			System.out.println(method.getSource());
 
-//			for(String path : object.getPathConstraint().keySet())
-//			{
-//				System.out.println("constraint:\n" + object.getPathConstraint().get(path));
-//				System.out.println("variable:\n" + object.getPathFormalVariables().get(path));
-//				System.out.println("track:\n" + object.getPathVariableTrack().get(path));
-//				System.out.println("type:\n" + object.getPathVariablesTypes().get(path));
-//				System.out.println("path:\n" + path);
-//			}
+			for(String path : object.getPathConstraint().keySet())
+			{
+				System.out.println("constraint:\n" + object.getPathConstraint().get(path));
+				System.out.println("variable:\n" + object.getPathFormalVariables().get(path));
+				System.out.println("track:\n" + object.getPathVariableTrack().get(path));
+				System.out.println("type:\n" + object.getPathVariablesTypes().get(path));
+				System.out.println("path:\n" + path);
+			}
 		}
-		//System.out.println("count: " + count + "save: " + save);
+		System.out.println("count: " + count + "save: " + save);
 	}
 	
 
@@ -88,7 +92,13 @@ public class EntryAddition {
 		List<Method> methods = new ArrayList<Method>();
 		try {
 			//if(!fileName.equals("./repository/scrape/test41.c")) return methods;
-			String com = "./executors/pathgen " + fileName;
+//			String com = "./executors/pathgen " + fileName;
+			if(!fileName.endsWith(".jpf")){
+				System.out.println("Return in EntryAddition.parse");
+				return methods;
+			}
+			//Remember: Compile .Java files with "javac -g <fileName>" !
+			String com = "java -jar /home/matthias/git/jpf-core/build/RunJPF.jar +shell.port=4242 " + fileName;
 
  			Process p = Runtime.getRuntime().exec(com);
 			BufferedReader ls_in = new BufferedReader(new InputStreamReader(
@@ -102,9 +112,10 @@ public class EntryAddition {
 			Method method = new Method();
 			boolean startParsing = false;
 			boolean correct = true;
+			System.out.println("FILE: " + fileName);
 			while((s = ls_in.readLine()) != null)
 			{
-				System.out.println(s);
+				System.out.println("S:" + s);
 				s = s.trim();
 				if(s.startsWith("Processing:")){
 					if(method.getName() != null){
@@ -134,9 +145,13 @@ public class EntryAddition {
 					path.append(s.substring(5, s.length() - 1));
 					path.append("\n");
 					
+					
 					method.getPath().add(path.toString());
-					method.getPathToInput().put(path.toString(), input.toString());		
-					System.out.println(input.toString());
+					System.out.println("METHOD.GETPATH: " + path.toString());
+					method.getPathToInput().put(path.toString(), input.toString());	
+					System.out.println("METHOD.GETPATHTOINPUT: " + input.toString());
+//					System.out.println("PATHGENPATH: " + method.getPathToInput());
+//					System.out.println(input.toString());
 					path = new StringBuilder();
 					input = new StringBuilder();
 					//startParsing = false;
@@ -197,6 +212,7 @@ public class EntryAddition {
 			return methods;
 		}
 		if(methods.isEmpty()) return methods;
+		//Get  whole file text
 		String fileString = Utility.getStringFromFile(fileName);
 		List<String> sources = new ArrayList<String>();
 		List<String> types = new ArrayList<String>();
@@ -205,6 +221,7 @@ public class EntryAddition {
 		Stack<Character> stack = new Stack<Character>();
 		Stack<Integer> typeStack = new Stack<Integer>();
 		Stack<Integer> index = new Stack<Integer>();
+		//gets first line for getType method and gets method body for sources.add
 		for(int i = 0; i < fileString.length(); i++)
 		{
 			char c = fileString.charAt(i);
@@ -235,6 +252,7 @@ public class EntryAddition {
 		for(int i = 0; i < methods.size(); i++){
 			methods.get(i).setSource(sources.get(i));
 			methods.get(i).setReturnType(types.get(i));
+//			System.out.println("TYPES: " + types);
 		}
 		return methods;
 		

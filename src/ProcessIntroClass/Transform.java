@@ -20,7 +20,9 @@ public class Transform {
 	public String tranform(){
 		String command = "./executors/transform " + this.typeParameter + " " +  this.folder + "/" + this.originalFile;
 		String output = Utility.runCProgram(command);
-		if(output.equals("failed")) return null;
+		//TODO: Commented out
+//		System.out.println("TRANSFORM_RUNC_OUTPUT: " + output);
+		if(output.equals("failed")||output.contains("Use the original instead")) return null;
 		if(output.endsWith("failed")) {
 			output = output.substring(0, output.length() - 6);
 		}
