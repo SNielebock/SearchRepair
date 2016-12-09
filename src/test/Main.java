@@ -11,7 +11,7 @@ import Repository.EntryAddition;
  * patches for faulty C-code. This version is the attempt to convert it, so that it
  * can repair Java-code.
  * 
- * @author Matthias (Java version)
+ * @author Matthias Eiserloh(Java version)
  * @author originally created by Yuriy Brun, Claire Le Goues and Kathryn T. Stolee
  */
 public class Main {

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -91,10 +94,16 @@ public class EntryAddition {
 		//assume only one method
 		List<Method> methods = new ArrayList<Method>();
 		try {
+			String fileNameWOPath = fileName.substring(fileName.lastIndexOf("/") + 1);
+			String fileNameWOExt = fileName.substring(0, fileName.lastIndexOf("."));
+			String pureFileName = fileNameWOPath.substring(0, fileNameWOPath.lastIndexOf("."));
+			
 			//if(!fileName.equals("./repository/scrape/test41.c")) return methods;
 //			String com = "./executors/pathgen " + fileName;
-			if(!fileName.endsWith(".jpf")){
+			if(fileName.endsWith(".java")){
 				System.out.println("Return in EntryAddition.parse");
+				deleteJPFandClass(fileNameWOExt);
+//				compileJava(fileName);
 				return methods;
 			}
 			//Remember: Compile .Java files with "javac -g <fileName>" !
@@ -261,6 +270,21 @@ public class EntryAddition {
 	
 	
 	
+	private static void deleteJPFandClass(String fileNameWOExt) {
+		try {
+			Path JPFpath = Paths.get(fileNameWOExt + ".jpf");
+			Path CLASSpath = Paths.get(fileNameWOExt + ".class");
+		    Files.deleteIfExists(JPFpath);
+		    Files.deleteIfExists(CLASSpath);
+		} catch (IOException x) {
+		    // File permission problems are caught here.
+		    System.err.println(x);
+		}
+		
+	}
+
+
+
 	private static String getType(String declare) {
 		declare = declare.trim();
 		if(declare.startsWith("int")) return "int";
@@ -270,6 +294,7 @@ public class EntryAddition {
 		else if(declare.startsWith("char*")) return "char*";
 		else return "void";
 	}
+
 
 
 
