@@ -335,6 +335,8 @@ public class SearchCase {
 	private boolean fillSearchCase() {
 		System.out.println("---"+Arrays.toString(this.buggy));
 		try{
+			//TODO: Here testfile!
+			System.out.println("THISCASEPREFIX: " + this.casePrefix + ".c");
 			if(insertStateStatements(this.casePrefix + ".c")){
 				obtainPositiveStates();
 				return true;
@@ -403,8 +405,10 @@ public class SearchCase {
 	 * @return
 	 */
 	private boolean insertStateStatements(String original) {
+		System.out.println("Original: " + original);
 		String markFile = insertMark(original);
 		
+		System.out.println("MARKFILE: " + markFile);
 		String target = getFunction(markFile);
 		String[] states = getStatesStatement(target);
 		if(states == null) return false;
@@ -466,7 +470,9 @@ public class SearchCase {
 			FunctionLexer lexer = new FunctionLexer(input);
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			FunctionParser parser = new FunctionParser(tokens);
+			System.out.println("Target: " + target);
 			
+			//TODO: HERE extraneous input
 			getStatesVariables(parser.prog().function(), variables);
 			//stream.close();
 
@@ -536,7 +542,6 @@ public class SearchCase {
 			String id = fp.ID().getText();
 			variables.put(fp.ID().getText(), fp.type().getText());
 		}
-		
 		
 		Map<String, String> local = getBlockVariable(function.block());
 		for(String s : local.keySet()){

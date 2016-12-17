@@ -41,6 +41,7 @@ public class MedianSearchCase extends ESearchCase {
 		System.out.println("before search");
 		instan.search();
 		this.setInfo(instan.getInfo());
+
 	}
 
 	

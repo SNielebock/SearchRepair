@@ -130,7 +130,6 @@ public class GroupTest {
 					actualRepository = type;
 
 				}
-				System.out.println(folder);
 				MedianSearchCase searcher = new MedianSearchCase(folder, fileName, actualRepository);
 				searcher.transformAndInitRunDir(true, "");
 				searcher.initInputAndOutput();

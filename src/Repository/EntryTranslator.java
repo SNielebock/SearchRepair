@@ -62,7 +62,6 @@ public class EntryTranslator {
 				mappingString.append(one);
 			}
 			
-			System.out.println("Mapping: " + mapping.toString());
 			this.entryObject.getPathVariableMap().put(path, mapping.toString());
 			
 			
@@ -73,7 +72,6 @@ public class EntryTranslator {
 				trackString.append(one);
 			}
 			
-			System.out.println("TrackString: " + trackString.toString());
 			this.entryObject.getPathVariableTrack().put(path, trackString.toString());
 			
 			
@@ -81,10 +79,10 @@ public class EntryTranslator {
 			StringBuilder typeString = new StringBuilder();
 			for(String var : types.keySet()){
 				String one = DataHandler.concat(var, types.get(var));
+				System.out.println("TYPES: " + one);
 				typeString.append(one);
 			}			
 			
-			System.out.println("TypeString: " + typeString.toString());
 			this.entryObject.getPathVariablesTypes().put(path, typeString.toString());
 			
 			
@@ -95,7 +93,6 @@ public class EntryTranslator {
 				formalString.append(one);
 			}			
 			
-			System.out.println("FormalString: " + formalString.toString());
 			this.entryObject.getPathFormalVariables().put(path, formalString.toString());
 			
 		}

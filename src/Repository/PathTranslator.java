@@ -74,10 +74,6 @@ public class PathTranslator {
 			this.formalVariables.put(id, type);
 		}
 		applySSA();
-		System.out.println("PathTranslatorSSA :");
-		for(String ssaString: this.ssa){
-			System.out.println(ssaString);
-		}
 	}
 	
 	
@@ -88,7 +84,6 @@ public class PathTranslator {
 		//add formal parameters
 		
 		trackFormal();
-		
 		InputStream stream = new ByteArrayInputStream(path.getBytes());
 		try {
 			ANTLRInputStream input = new ANTLRInputStream(stream);
@@ -97,10 +92,35 @@ public class PathTranslator {
 			PathParser parser = new PathParser(tokens);
 			ProgContext prog = parser.prog();
 			List<StatementContext> statements = prog.statement();
+//			HashMap<String, String> tmpMap = new HashMap<String, String>();
+//			for(String key: this.variableMap.keySet()){
+//				if(key.endsWith("SYMINT")){
+//					String tmp = key.substring(0,key.length()-9);
+//					tmpMap.put(tmp, this.variableMap.get(key));
+//				}
+//			}
+//			this.variableMap.putAll(tmpMap);
+//			tmpMap.clear();
+//			for(String key: this.variableTrack.keySet()){
+//				if(key.endsWith("SYMINT")){
+//					String tmp = key.substring(0,key.length()-9);
+//					tmpMap.put(tmp, this.variableTrack.get(key));
+//				}
+//			}
+//			this.variableTrack.putAll(tmpMap);
+//			tmpMap.clear();
+//			for(String key: this.variableType.keySet()){
+//				if(key.endsWith("SYMINT")){
+//					String tmp = key.substring(0,key.length()-9);
+//					tmpMap.put(tmp, this.variableType.get(key));
+//				}
+//			}
+//			this.variableType.putAll(tmpMap);
+//			tmpMap.clear();
 			convertStatementToConstraints(statements);
 			
 		} catch (IOException e) {
-			//
+			System.out.println("Error in applySSA!");
 			e.printStackTrace();
 		}
 	}
@@ -115,6 +135,7 @@ public class PathTranslator {
 			this.variableMap.put(id, id);
 			this.variableTrack.put(id, id);
 			this.variableType.put(id, type);
+			System.out.println("IN PATHTRANSLATOR.TRACKFORMAL: " + id + " " + type);
 		}
 		
 	}
@@ -128,23 +149,29 @@ public class PathTranslator {
 			for (int i = 0; i < statement.getChildCount(); i++) {
 				ParseTree child = statement.getChild(i);
 				if (child instanceof DeclarationStatContext) {
+//					System.out.println("DeclarationStatContext");
 					DeclarationStatContext c = (DeclarationStatContext) child;
 					convert(c);
 				} else if (child instanceof AssignStatContext) {
+//					System.out.println("AssignStatContext");
 					AssignStatContext c = (AssignStatContext) child;
 					convert(c);
 				} else if (child instanceof ReturnStatContext) {
+//					System.out.println("ReturnStatContext");
 					//do nothing
 					ReturnStatContext c = (ReturnStatContext) child;
 					convert(c);
 				} else if (child instanceof AssumeStatContext) {
+//					System.out.println("AssumeStatContext");
 					AssumeStatContext c = (AssumeStatContext) child;
 					convert(c);
 				} else if(child instanceof CallStatContext){
+//					System.out.println("CallStatContext");
 					CallStatContext c = (CallStatContext) child;
 					convert(c);
 				}
 				else if(child instanceof SelfIncreStatContext){
+//					System.out.println("SelfIncreStatContext");
 					SelfIncreStatContext c = (SelfIncreStatContext) child;
 					convert(c);
 				}
@@ -318,10 +345,12 @@ public class PathTranslator {
 
 
 	private void convert(AssignStatContext assign) {
-		if (assign.getChildCount() == 5) {						
+		if (assign.getChildCount() == 5) {
+//			System.out.println("covertPointerAssgin");
 			covertPointerAssgin(assign);
 		}
 		else if(assign.getChildCount() == 4){
+//			System.out.println("convertNonPointerAssign");
 			convertNonPointerAssign(assign);
 		}
 		
@@ -332,11 +361,13 @@ public class PathTranslator {
 	private void convertNonPointerAssign(AssignStatContext assign) {
 		// call assign or no call assign
 		if(assign.callExpr() != null){
+//			System.out.println("assign.callExpr() != null");
 			String id = assign.ID().getText();
 			String returnId = this.generateNewName(id);
 			convert(returnId, assign.callExpr());
 		}
 		else{
+//			System.out.println("!assign.callExpr()  != null");
 			convertNonCallExprAssign(assign);
 		}
 		
@@ -346,13 +377,16 @@ public class PathTranslator {
 
 
 	private void convertNonCallExprAssign(AssignStatContext assign) {
-		if(assign.StringLiteral() != null || this.variableType.get(assign.ID().getText()).equals("char*")){
+		if(assign.StringLiteral() != null || (this.variableType.get(assign.ID().getText()) != null) && (this.variableType.get(assign.ID().getText()).equals("char*"))){
+//			System.out.println("convertNonCallExprAssign IF");
 			convertString(assign);
 		}
 		else if(assign.condExpr() != null){
+//			System.out.println("convertNonCallExprAssign ELSE IF");
 			convertCondAssign(assign);
 		}
 		else{
+//			System.out.println("convertNonCallExprAssign ELSE");
 			converNonString(assign);
 		}
 		
@@ -419,7 +453,15 @@ public class PathTranslator {
 
 	private void converNonString(AssignStatContext c) {
 		String expr = getExpr(c.expr());
-		String id = this.variableTrack.get(c.ID().getText());
+		System.out.println("CONVERNONSTRINGEXP: " + expr);
+		System.out.println("CONVERNONSTRINGC: " + c.ID().getText());
+		//TODO: JUST FOR TESTING!
+//		String id = this.variableTrack.get(c.ID().getText());
+		String id = c.ID().getText();
+		for(String key: this.variableTrack.keySet()){
+			System.out.println("VARIABLETRACK: " + key + " " + this.variableTrack.get(key));
+		}
+		System.out.println("COMING FROM converNonString(AssignStatContext c) " + id);
 		String newId = generateNewName(id);
 		String constraint = "";
 		if(c.assiginOperator().getText() .equals("=") ){
@@ -711,6 +753,7 @@ public class PathTranslator {
 
 
 	private String generateNewName(String dest) {
+		System.out.println("PATHTRANSLATOR.GENERATENEWNAME: " + dest);
 		String newName = "_" + this.fileName + "_" + count++;
 //		this.variableTrack.put(dest, newName);
 		this.variableTrack.put(this.variableMap.get(dest), newName);

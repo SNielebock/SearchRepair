@@ -2,12 +2,15 @@ package Library;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class Utility {
 
@@ -82,7 +85,7 @@ public class Utility {
 				while ((ls_str = ls_in.readLine()) != null) {
 					sb.append(ls_str);
 					//TODO: Commented out
-//					System.out.println("LS_STR: " + ls_str);
+					System.out.println("LS_STR: " + ls_str);
 				}
 				// while((ls_str = ls_err.readLine()) != null){
 				// System.out.println(ls_str+ "j");
@@ -186,6 +189,22 @@ public class Utility {
 			e.printStackTrace();
 		}
 	}
+	
+
+	
+	public static Class<?> getClassFromFile(String path, String fullClassName) throws Exception {
+		File f = new File(path + fullClassName + ".class");
+		if(!f.exists()) { 
+			System.out.println(path + fullClassName + ".class was not created!");
+		}
+	    URLClassLoader loader = new URLClassLoader(new URL[] {
+	            new URL("file:" + path)
+	    });
+	    System.out.println("PATH: " + path);
+	    return loader.loadClass(fullClassName);
+	}
+
+
 
 	public static String runCProgramWithInput(String command2, String input) {
 		String out = "";

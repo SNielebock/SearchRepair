@@ -109,14 +109,31 @@ public class PrototypeSearch {
 		default: return;
 		}
 		ResultSet result = DataBaseManager.query(database);
+//		System.out.println("PrototypeSearch.search:");
 		while(result.next()){
 			String source = result.getString(1).trim();
+//			System.out.println("Source: " + source);
 			//if(!source.startsWith("if (string[i]") ) continue;
 			String[] pathconstraint = result.getString(2).split(EntryHandler.PATH_SEPERATOR);
+//			for(String thisString: pathconstraint){
+//				System.out.println("Pathchonstraint: " + thisString);
+//			}
 			String[] pathtypes = result.getString(3).split(EntryHandler.PATH_SEPERATOR);
+//			for(String thisString: pathtypes){
+//				System.out.println("Pathtypes: " + thisString);
+//			}
 			String[] pathtracks= result.getString(4).split(EntryHandler.PATH_SEPERATOR);
+//			for(String thisString: pathtracks){
+//				System.out.println("Pathtracks: " + thisString);
+//			}
 			String[] pathmapping = result.getString(5).split(EntryHandler.PATH_SEPERATOR);
+//			for(String thisString: pathmapping){
+//				System.out.println("Pathmapping: " + thisString);
+//			}
 			String[] pathformals = result.getString(6).split(EntryHandler.PATH_SEPERATOR);
+//			for(String thisString: pathformals){
+//				System.out.println("Pathformals: " + thisString);
+//			}
 			try{
 				searchAllPath(pathconstraint, pathtypes, source, info, pathtracks, pathmapping, pathformals);
 			}catch(Exception e){
@@ -144,7 +161,10 @@ public class PrototypeSearch {
 			String[] pathtracks, String[] pathmapping, String[] pathformals) {
 		// only one path can succeed
 		if(!(pathconstraint.length == pathtypes.length && pathtypes.length == pathtracks.length && pathtracks.length == pathmapping.length && pathmapping.length == pathformals.length)) return;
-
+		
+//		for(String s: pathtypes){
+//			System.out.println("PATHTYPES: " + s);
+//		}
 
 		String[] variableTyp = pathtypes[0].split(EntryHandler.PATH_VARIABLE_TYPE)[1].split(DataHandler.VARIABLE_END);
 		String[] variableTra = pathtracks[0].split(EntryHandler.PATH_VARIABLE_TRACK)[1].split(DataHandler.VARIABLE_END);
@@ -156,7 +176,7 @@ public class PrototypeSearch {
 		for(Map<String, String> map : mapp){
 			String s = map.toString().trim();
 			//TODO: Commented out
-//			System.out.println("THISMAP: " + s);
+			System.out.println("THISMAP: " + s);
 			//if(!s.equals("{count=count, string=string, i=i}")) continue;
 			boolean passAllPositive = true;
 			for(List<String> pInputs : info.getPositives().keySet()){
@@ -220,18 +240,30 @@ public class PrototypeSearch {
 	 */
 	private static boolean searchWithMapping( String constraint, String[] variableTypes,
 			 String[] variableTracks, String[] mapping, String[] formals, Map<String, String> map, List<String> pInputs, List<String> pOutputs) {
-
+			
+//			for(int i = 0; i < mapping.length; i++){
+//				System.out.println("SEARCHWITHMAPPING Mapping: " + mapping[i]);
+//			}
+		
 			List<String> delcarations = getVariableTypeConstraint(variableTypes);
 
 			Map<String, String> tracks = getVariableTrack(variableTracks);
+//			for(String s: tracks.keySet()){
+//				System.out.println("SEARCHWITHMAPPING TRACKS Key: " + s + " Value: " + tracks.get(s));
+//			}
 			boolean isReturn = false;
 			if(pOutputs.get(0).contains("_result_")){
 				isReturn = true;
 			}
 
 			boolean loadString = checkLoadString(variableTypes, pInputs);
+			
+//			for(String s: map.keySet()){
+//				System.out.println("SEARCHWITHMAPPING Map Key: " + s + " Value: " + map.get(s));
+//			}
 
 			String mappingConstraint = getMapping(map, tracks, isReturn);
+//			System.out.println("SEARCHWITHMAPPING MappingConstraint: " + mappingConstraint);
 
 			List<String> states = new ArrayList<String>(getStateConstraint(pInputs, "_in"));
 			List<String> output = getStateConstraint(pOutputs, "_out");
@@ -318,6 +350,13 @@ public class PrototypeSearch {
 
 		//Get all permutations of inputs
 		List<List<String>> inputPerms = getPermutation(inputs, variables.size());
+		
+		//Mapping of input values to variables and not variables to repository variables
+//		for(int i = 0; i<inputPerms.size(); i++){
+//			for(int j = 0; j<inputPerms.get(i).size(); j++){
+//				System.out.println("INPUTPERM: " + inputPerms.get(i).get(j));
+//			}
+//		}
 
 		//all permutations are filtered out, which aren't having the correct types
 		for(List<String> input : inputPerms){
@@ -414,17 +453,21 @@ public class PrototypeSearch {
 
 	private static boolean validate(List<String> variableConstraint,
 			String mapping, String constraint, List<String> stateConstraint, List<String> output, boolean isReturn, boolean loadString) {
+//		System.out.println("Mapping: " + mapping);
+//		System.out.println("Constraint: " + constraint);
 		try{
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(DataHandler.z3TempFile)));
 			SearchManager.loadPrototypeTypes(bw);
 			if(loadString)SearchManager.loadPrototypeString(bw);
 			bw.flush();
 			for(String s : variableConstraint){
+//				System.out.println("VARIBALECONSTRAINT: " + s);
 				bw.write(s);
 				bw.write("\n");
 			}
 			bw.flush();
 			for(String s : stateConstraint){
+//				System.out.println("StateConstraint: " + s);
 				bw.write(s);
 				bw.write("\n");
 			}

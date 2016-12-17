@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import Database.EntryHandler;
 import Database.EntryObject;
@@ -26,7 +28,15 @@ public class EntryAddition {
 	
 	private static int count = 0;
 	private static int save = 0;
+	private static String methodVisibility = "";
+	private static String methodReturnType = "";
+	private static String methodName = "";
+	
 	public static void addOneFile(String filePath, String table){
+		methodVisibility = "";
+		methodReturnType = "";
+		methodName = "";
+		
 		File file = new File(filePath);
 		if(!file.exists()){
 			System.out.println("Return in EntryAddition.addOneFile");
@@ -69,6 +79,7 @@ public class EntryAddition {
 
 	
 	private static EntryObject covertMethodToEntry(Method method) {
+		System.out.println("METHOD: " + method.getName() + " RETURNTYPE: " + method.getReturnType() + " SOURCE: " + method.getSource() + " TOSTRING: " + method.toString());
 		EntryTranslator translator = new EntryTranslator(method);
 		return translator.getEntryObject();
 		
@@ -97,16 +108,21 @@ public class EntryAddition {
 		//assume only one method
 		List<Method> methods = new ArrayList<Method>();
 		if(fileName.endsWith(".java")){
+			String fileNameWOPath = fileName.substring(fileName.lastIndexOf("/") + 1);
+			String fileNameWOExt = fileName.substring(0, fileName.lastIndexOf("."));
+			String pureFileName = fileNameWOPath.substring(0, fileNameWOPath.lastIndexOf("."));
+			String testFilePath = fileName.substring(0, fileName.lastIndexOf("/") + 1);
 			try {
-				String fileNameWOPath = fileName.substring(fileName.lastIndexOf("/") + 1);
-				String fileNameWOExt = fileName.substring(0, fileName.lastIndexOf("."));
-				String pureFileName = fileNameWOPath.substring(0, fileNameWOPath.lastIndexOf("."));
-				
 				//if(!fileName.equals("./repository/scrape/test41.c")) return methods;
 	//			String com = "./executors/pathgen " + fileName;
 	
-				createJPFfile(fileNameWOExt);
-				Runtime.getRuntime().exec("javac -g " + fileName);
+				Process javacProcess = Runtime.getRuntime().exec("javac -g " + fileName);
+				try {
+					javacProcess.waitFor();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				createJPFfile(testFilePath, pureFileName);
 				File f = new File(fileNameWOExt + ".jpf");
 				if(!f.exists()) { 
 					System.out.println("JPF was not created!(check EntryAddition.createJPFfile for details)");
@@ -159,11 +175,13 @@ public class EntryAddition {
 						path.append(s.substring(5, s.length() - 1));
 						path.append("\n");
 						
-						
-						method.getPath().add(path.toString());
-						System.out.println("METHOD.GETPATH: " + path.toString());
-						method.getPathToInput().put(path.toString(), input.toString());	
-						System.out.println("METHOD.GETPATHTOINPUT: " + input.toString());
+						//TODO: CHECK IF THIS IS CORRECT!
+						System.out.println("PATH REPLACEMENT: " + path.toString().replaceAll("_\\d+_SYM[A-Z]+", ""));
+						String pathString = path.toString().replaceAll("_\\d+_SYM[A-Z]+", "");
+						System.out.println("INPUT REPLACEMENT COMPARE: " + input.toString() + " "+ input.toString().replaceAll("_\\d+_SYM[A-Z]+", ""));
+						String inputString = input.toString().replaceAll("_\\d+_SYM[A-Z]+", "");
+						method.getPath().add(pathString);
+						method.getPathToInput().put(pathString, inputString);	
 	//					System.out.println("PATHGENPATH: " + method.getPathToInput());
 	//					System.out.println(input.toString());
 						path = new StringBuilder();
@@ -179,7 +197,11 @@ public class EntryAddition {
 					}
 					else if(s.startsWith("STMT(")){
 						if(s.endsWith(";)")){
-							path.append(s.substring(5, s.length() - 1));
+							String tmp = s.substring(5, s.length() - 1);
+							//TODO: not a real solution!
+							tmp = tmp.replaceAll("\\(", "");
+							tmp = tmp.replaceAll("\\)", "");
+							path.append(tmp);
 							path.append("\n");
 						}
 						else{
@@ -204,13 +226,14 @@ public class EntryAddition {
 							path.append(s);
 							path.append("\n");
 						}
-						if(s.contains("error")){
+						if(s.contains("error") && !(s.contains("no errors detected"))){
 							correct = false;
 							break;
 						}
 					}
 				}
 				if(!correct){
+					System.out.println("not correct!");
 					methods.clear();
 					return methods;
 				}
@@ -225,9 +248,31 @@ public class EntryAddition {
 				e.printStackTrace();
 				return methods;
 			}
-			if(methods.isEmpty()) return methods;
+			if(methods.isEmpty()){
+				System.out.println("No methods found!(EntryAddition.parse");
+				return methods;
+			}
 			//Get  whole file text
 			String fileString = Utility.getStringFromFile(fileName);
+			System.out.println("METHODINFOS: " + methodVisibility + " " + methodReturnType + " " + methodName);
+			String tmpFileString = fileString;
+			int indexLastVisibility = 0;
+			while(tmpFileString.contains(methodVisibility)){
+				String onePartOfFile = tmpFileString.substring(tmpFileString.indexOf(methodVisibility));
+				onePartOfFile = onePartOfFile.substring(0,onePartOfFile.indexOf("("));
+				indexLastVisibility += tmpFileString.indexOf(onePartOfFile);
+				tmpFileString = tmpFileString.substring(tmpFileString.indexOf(onePartOfFile));
+
+				if(onePartOfFile.contains(methodReturnType) && onePartOfFile.contains(methodName)){
+					
+				     break;	
+				}
+				indexLastVisibility += onePartOfFile.length();
+				tmpFileString = tmpFileString.substring(onePartOfFile.length());
+				
+			}
+			fileString = fileString.substring(indexLastVisibility);
+
 			List<String> sources = new ArrayList<String>();
 			List<String> types = new ArrayList<String>();
 			int start = -1;
@@ -243,7 +288,9 @@ public class EntryAddition {
 					if(stack.isEmpty()){
 						int g = typeStack.isEmpty() ? 0 : typeStack.pop() + 1;
 						String declare = fileString.substring(g, i);
-						types.add(getType(declare));
+						System.out.println("DECLARE: " + declare);
+//						types.add(getType(declare));
+						types.add(getType(methodReturnType));
 					}
 					index.push(i);
 					stack.add(c);
@@ -259,6 +306,8 @@ public class EntryAddition {
 						end = i;
 						String body = fileString.substring(start+1, end);
 						sources.add(body);
+						//TODO: I only look at one method per file for now. 
+						break;
 					}				
 				}
 			}
@@ -266,7 +315,6 @@ public class EntryAddition {
 			for(int i = 0; i < methods.size(); i++){
 				methods.get(i).setSource(sources.get(i));
 				methods.get(i).setReturnType(types.get(i));
-	//			System.out.println("TYPES: " + types);
 			}
 			return methods;
 		}else{//no *.java-file
@@ -277,19 +325,56 @@ public class EntryAddition {
 
 
 
-	private static void createJPFfile(String fileNameWOExt) {
-		List<String> lines = Arrays.asList( "target=Example",
+	private static void createJPFfile(String path, String pureFileName) {
+		String symbolicMethodCall = getSymbolicMethodCall(path, pureFileName);
+		List<String> lines = Arrays.asList( "target=" + pureFileName,
 											"classpath=/home/matthias/git/SearchRepair/repository/myTest",
-											"symbolic.method=Example.foo(sym#sym)",
+											"symbolic.method=" + symbolicMethodCall,
 											"listener = gov.nasa.jpf.symbc.SymbolicListener",
 											"vm.storage.class=nil",
 											"search.multiple_errors=true");
-		Path file = Paths.get(fileNameWOExt + ".jpf");
+		Path file = Paths.get(path + pureFileName + ".jpf");
 		try {
 			Files.write(file, lines, Charset.forName("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+	}
+
+
+
+	private static String getSymbolicMethodCall(String path, String pureFileName) {
+		String fullMethodName = "";
+		String argumentsToSyms = "";
+		try {
+			Class<?> clazz = Utility.getClassFromFile(path, pureFileName);
+			for(java.lang.reflect.Method method : clazz.getMethods()){
+				String returnType = method.getReturnType().toString().substring(((method.getReturnType().toString().lastIndexOf(".")) > 0) ? method.getReturnType().toString().lastIndexOf(".") : 0);
+				if(method.toString().substring(method.toString().indexOf(returnType) + returnType.length(), method.toString().indexOf(method.getName())).contains(pureFileName)){
+					if(!((method.toString().contains("public static void"))&&(method.toString().contains("main")))){
+						if(fullMethodName.equals("")){
+							fullMethodName = method.toString().substring(method.toString().indexOf(returnType) + returnType.length() + 1, method.toString().indexOf("("));
+							
+							methodVisibility = method.toString().substring(0, method.toString().indexOf(returnType));
+							methodReturnType = returnType;
+							methodName = method.getName();
+						}else{
+							//TODO: more than one relevant method here! How to handle?
+							System.out.println("More than one relevant method detected!");
+						}
+						for(int i = 0; i < method.getParameterCount(); i++){
+							argumentsToSyms += "sym";
+							if(i < (method.getParameterCount() - 1)){
+								argumentsToSyms += "#";
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return fullMethodName + "(" + argumentsToSyms + ")";
 	}
 
 
