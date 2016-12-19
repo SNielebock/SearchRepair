@@ -43,6 +43,7 @@ public class Utility {
 	public static String runCProgramWithPythonCommand(String testingExe,
 			String tempOuputFile, String inputFile, String outputFile) {
 		String programName = testingExe.substring(testingExe.indexOf("/") + 1);
+		System.out.println("GENPROG ARGUMENTS: programName: " + programName + "\n tempOuputFile: " + tempOuputFile + "\n outputFile: " + outputFile + "\n inputFile: " + inputFile);
 		String command = "/home/matthias/git/SearchRepair/executors/genprog_tests.py --program "
 				+ programName
 				+ " "
@@ -211,6 +212,7 @@ public class Utility {
 		String ls_str;
 		StringBuffer sb = new StringBuffer();
 		try {
+			System.out.println("Utility.runCProgramWithInput Command: " + command2);
 			Process ls_proc = Runtime.getRuntime().exec(command2);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
 					ls_proc.getOutputStream()));
@@ -237,13 +239,14 @@ public class Utility {
 				while ((ls_str = ls_in.readLine()) != null) {
 					sb.append(ls_str);
 					sb.append("\n");
-					// System.out.println(ls_str);
 				}
 
 			} catch (IOException e) {
+				e.printStackTrace();
 				out = "";
 				// System.exit(0);
 			} catch (Exception e) {
+				e.printStackTrace();
 				out = "";
 			}
 		} catch (Exception e) {
@@ -251,6 +254,7 @@ public class Utility {
 			out = "";
 		}
 		out = sb.toString();
+		System.out.println("Utility.runCProgramWithInput returning output: " + out);
 		return out;
 	}
 
@@ -268,7 +272,7 @@ public class Utility {
 					ls_proc.getErrorStream()));
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 100L * 10; // timeout in seconds
+			long timeoutInMillis = 500L * 10; // timeout in seconds
 			long finish = now + timeoutInMillis;
 
 			try {
@@ -278,6 +282,7 @@ public class Utility {
 				}
 				if (isAlive(ls_proc)) {
 					ls_proc.destroy();
+					System.out.println("Utility.runCProgram Failed, because of isAlive(ls_proc)");
 					sb.append("failed");
 				}
 				while ((ls_str = ls_in.readLine()) != null) {
@@ -286,19 +291,23 @@ public class Utility {
 					// System.out.println(ls_str);
 				}
 				while ((ls_str = ls_err.readLine()) != null) {
-					// System.out.println(ls_str);
+					 System.out.println("LS_STR: " + ls_str);
+					System.out.println("Utility.runCProgram Failed, because of (ls_str = ls_err.readLine()) != null)");
 					sb.append("failed");
-					break;
+//					break;
 				}
 				// System.out.println(ls_proc.exitValue());
 
 			} catch (IOException e) {
+				System.out.println("Utility.runCProgram Failed, because of IOException");
 				sb.append("failed");
 			} catch (Exception e) {
+				System.out.println("Utility.runCProgram Failed, because of Exception");
 				sb.append("failed");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("Utility.runCProgram Failed, because of outer Exception");
 			sb.append("failed");
 		}
 

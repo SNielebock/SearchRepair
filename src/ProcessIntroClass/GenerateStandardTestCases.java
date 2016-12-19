@@ -3,6 +3,7 @@ package ProcessIntroClass;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,7 +106,7 @@ public class GenerateStandardTestCases {
 			if(depth != 2) return;
 			
 			int count = 0;
-			//call init on each folder n queue
+			//call init on each folder in queue
 			for(File temp : queue){
 				File caseFolder = new File(outputFolderFile.getAbsolutePath() + "/" + count++);
 				init(temp, caseFolder, functionName);
@@ -128,14 +129,30 @@ public class GenerateStandardTestCases {
 	 * @param functionName 	current Function
 	 */
 	private void init(File temp, File caseFolder, String functionName) {
-		String inputFolder = temp.getAbsolutePath();
+		String inputFolder = temp.getAbsolutePath() + "/src/main/java/introclassJava";
 		String outputFolder = caseFolder.getAbsolutePath();
+		
+//		inputFolder = "/home/matthias/git/SearchRepair/TestCases/MedianJavaTest";
 		new File(outputFolder).mkdir();
 		System.out.println(inputFolder + "\n" + outputFolder);
 	
-		Utility.copy(inputFolder + "/" + functionName + ".c", outputFolder + "/" + functionName + ".c");
-		Utility.writeTOFile(outputFolder + "/original", inputFolder);
-		generateWhiteAndBlack(outputFolder, inputFolder, functionName + ".c");
+		File inputDirectory = new File(inputFolder);
+		for(File tmpFile: inputDirectory.listFiles()){
+			if(tmpFile.getName().endsWith(".java")){
+				System.out.println("TEMPFILE GET NAME: " + tmpFile.getName());
+				
+				Utility.copy(inputFolder + "/" + tmpFile.getName(), outputFolder + "/" + tmpFile.getName());
+				Utility.writeTOFile(outputFolder + "/original", inputFolder);
+				generateWhiteAndBlack(outputFolder, inputFolder, tmpFile.getName());
+				
+				
+//				Utility.copy(inputFolder + "/" + functionName + ".java", outputFolder + "/" + functionName + ".java");
+//				Utility.writeTOFile(outputFolder + "/original", inputFolder);
+//				generateWhiteAndBlack(outputFolder, inputFolder, functionName + ".java");
+			}
+		}
+		
+		
 		getOtherTechInfo(inputFolder, outputFolder);
 	}
 	
@@ -213,6 +230,11 @@ public class GenerateStandardTestCases {
 	private void generateWhiteAndBlack(String outputFolder, String inputFolder, String fileName) {
 		String whiteboxPath = inputFolder + "/../../tests/whitebox";
 		String blackboxPath = inputFolder + "/../../tests/blackbox";
+		
+		//TODO: works only for median!
+		blackboxPath = "/home/matthias/git/IntroClass-master/median/tests/blackbox";
+		whiteboxPath = "/home/matthias/git/IntroClass-master/median/tests/whitebox";
+		
 		new File(outputFolder + "/whitebox").mkdir();
 		new File(outputFolder + "/whitebox/positive").mkdir();
 		new File(outputFolder + "/whitebox/negative").mkdir();
@@ -220,10 +242,18 @@ public class GenerateStandardTestCases {
 		new File(outputFolder + "/blackbox/positive").mkdir();
 		new File(outputFolder + "/blackbox/negative").mkdir();
 		try{
-			String testingExe =  "./" + fileName.substring(0, fileName.lastIndexOf("."));
+			String testingExe =  "introclassJava." + fileName.substring(0, fileName.lastIndexOf("."));
+			System.out.println("TestingExeString: " + testingExe);
+			
+			
+			//TODO: doesn't work with current testingExe String
 			if(new File(testingExe).exists()) new File(testingExe).delete();
 			
-			String s = Utility.runCProgram("gcc -o " + testingExe + " " + inputFolder + '/'+fileName);
+//			String s = Utility.runCProgram("gcc -o " + testingExe + " " + inputFolder + '/'+fileName);
+			System.out.println("FILENAME: " + inputFolder + '/' + fileName);
+			String s = Utility.runCProgram("javac -d . " + inputFolder + '/' + fileName);
+			System.out.println("Output Javac Compile Process: " + s);
+
 			if(s.equals("failed")) {
 				list.add(s);
 				return;
@@ -257,11 +287,16 @@ public class GenerateStandardTestCases {
 			String path = file.getAbsolutePath();
 			if(path.endsWith(".in")){
 				String input = Utility.getStringFromFile1(path);
+				System.out.println("Utility.initBlackBox Input: " + input);
 				String outPath = path.substring(0, path.length() - 3) + ".out";
-				String runOutput = Utility.runCProgramWithInput(testingExe, input);
+				String runOutput = Utility.runCProgramWithInput("java " + testingExe, input);
 				String tempOuputFile = "./tempFolder/test.out";
 				Utility.writeTOFile(tempOuputFile, runOutput);
-				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
+				
+				//TODO: works only for median and not very elegant
+//				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
+				String s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+				System.out.println("Utility.initBlackBox Python output: " + s);
 				if(s.equals("Test passed.")){
 					String index = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
 					Utility.copy(path, outputFolder + "/blackbox/positive/" + index + ".in");
@@ -273,8 +308,7 @@ public class GenerateStandardTestCases {
 					Utility.copy(outPath, outputFolder + "/blackbox/negative/" + index + ".out");
 				}
 			}
-		}
-		
+		}		
 	}
 	
 
@@ -294,10 +328,15 @@ public class GenerateStandardTestCases {
 			if(path.endsWith(".in")){
 				String input = Utility.getStringFromFile1(path);
 				String outPath = path.substring(0, path.length() - 3) + ".out";
-				String runOutput = Utility.runCProgramWithInput(testingExe, input);
+				String runOutput = Utility.runCProgramWithInput("java " + testingExe, input);
 				String tempOuputFile = "./tempFolder/test.out";
 				Utility.writeTOFile(tempOuputFile, runOutput);
-				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
+				
+				//TODO: works only for median and not very elegant
+//				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
+				String s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+				
+				System.out.println("Utility.initWhiteBox Python output: " + s);
 				if(s.equals("Test passed.")){
 					String index = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
 					Utility.copy(path, outputFolder + "/whitebox/positive/" + index + ".in");

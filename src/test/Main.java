@@ -25,7 +25,8 @@ public class Main {
 		int repositoryType = 5;
 		
 		//introclass path
-		String introclassPath = "/home/matthias/git/IntroClass-master";
+//		String introclassPath = "/home/matthias/git/IntroClass-master";
+		String introclassPath = "/home/matthias/git/IntroClassJava-master/dataset";
 		
 		
 		//get data directly 0 or re run to get data:1
@@ -41,7 +42,7 @@ public class Main {
 			//rerun
 			GenerateStandardTestCases test = new GenerateStandardTestCases(introclassPath, "./bughunt");
 			//TODO: Commenting in!
-//			test.generate();
+			test.generate();
 			rerun(wb, repositoryType);
 			Analyzer.getCSVData();
 		}
