@@ -162,7 +162,7 @@ public  class ESearchCase {
 		Transform trans = new Transform(this.getFolder(), this.getFileName(), typeParameter);
 		String pass = trans.tranform();
 		//TODO: Commented out
-//		System.out.println("PASS: " + pass);
+		System.out.println("PASS: " + pass);
 		//transform here, if there is a true transform, no need to copy
 		if(pass != null) {
 			Utility.copy(pass, runDir + "/" + this.getFileName());
@@ -402,6 +402,7 @@ public  class ESearchCase {
 	}
 
 
+	//TODO: GCC..
 	private int passNegatives(String source, String outputFile) {
 		File file = new File( this.casePrefix);
 		if(file.exists()) file.delete();
@@ -433,6 +434,7 @@ public  class ESearchCase {
 
 
 
+	//TODO: GCC...
 	private boolean passAllPositive(String source, String outputFile) {
 		File file = new File( this.casePrefix);
 		if(file.exists()) file.delete();

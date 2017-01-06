@@ -203,6 +203,7 @@ public class SearchCase {
 	}
 
 	
+	//TODO: GCC...
 	private int passTestSuite(String source, String outputFile, Map<String, String> suite){
 		File file = new File( this.casePrefix);
 		if(file.exists()) file.delete();
@@ -241,6 +242,7 @@ public class SearchCase {
 		
 	}
 
+	//TODO: GCC...
 	private boolean passAllPositive(String source, String outputFile) {
 		File file = new File( this.casePrefix);
 		if(file.exists()) file.delete();
@@ -349,6 +351,7 @@ public class SearchCase {
 		
 	}
 
+	//TODO: Full of C crap
 	private void obtainPositiveStates() {
 		String sourceFile = this.casePrefix + "state.c";
 		for(String input : this.positives.keySet()){
@@ -413,6 +416,7 @@ public class SearchCase {
 		String[] states = getStatesStatement(target);
 		if(states == null) return false;
 		writeStatesStatement(states);
+		System.out.println("returned true(SearchCase.insertStateStatements)");
 		return true;
 
 		
@@ -420,6 +424,7 @@ public class SearchCase {
 
 	private String writeStatesStatement(String[] states) {
 		String fileName = this.casePrefix + "state.c";
+		System.out.println("FILENAME writeStatesStatement: " + fileName);
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".c")));
@@ -475,12 +480,18 @@ public class SearchCase {
 			//TODO: HERE extraneous input
 			getStatesVariables(parser.prog().function(), variables);
 			//stream.close();
-
+			System.out.println("Test1");
 		}catch(Exception e){
+			System.out.println("Test5");
 			return null;
 		}
-		if(variables.isEmpty()) return null;
+		if(variables.isEmpty()){
+			System.out.println("Test4");
+			return null;
+		}
+		System.out.println("Test2");
 		states = configureStatStatment(variables);
+		System.out.println("Test3");
 		return states;
 	}
 
@@ -540,6 +551,7 @@ public class SearchCase {
 		for(FormalParameterContext fp : fpc){
 			String type = fp.type().getText();
 			String id = fp.ID().getText();
+			System.out.println("GetStatesVariables Type: " + type + " ID: " + id);
 			variables.put(fp.ID().getText(), fp.type().getText());
 		}
 		
@@ -662,7 +674,9 @@ public class SearchCase {
 		String output = this.casePrefix + ".mark";
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".c")));
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".c")));
+			//TODO: just testing
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".java")));
 			String s = null;
 			
 			

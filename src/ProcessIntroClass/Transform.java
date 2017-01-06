@@ -18,6 +18,7 @@ public class Transform {
 	}
 	
 	public String tranform(){
+		//TODO: transform still usable? -> no. But probably not needed either. (IntroClassJava already has part of the transformation in the code).
 		String command = "./executors/transform " + this.typeParameter + " " +  this.folder + "/" + this.originalFile;
 		String output = Utility.runCProgram(command);
 		//TODO: Commented out
@@ -28,6 +29,7 @@ public class Transform {
 		}
 		output = cropPre(output);
 		output = addPrefix(Utility.getStringFromFile(this.folder + "/" + this.originalFile), output);
+		//TODO: C-File containing "failed" or pass-String(pass String = transformed File). Need to change?
 		String pass = this.folder + "/" + this.originalFile.substring(0, this.originalFile.lastIndexOf(".")) + "T.c";
 		Utility.writeTOFile(pass, output);
 		

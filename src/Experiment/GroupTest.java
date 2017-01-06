@@ -114,8 +114,15 @@ public class GroupTest {
 		for (File root : file.listFiles()) {
 			try {
 				// if(!root.getName().equals("225"))continue;
-				String folder = "./bughunt/median/" + root.getName();
-				String fileName = "median.c";
+				String folderPath = "./bughunt/median/" + root.getName();
+				File folder = new File(folderPath);
+				String javaFileName = "";
+				for(File thisFile: folder.listFiles()){
+					if(thisFile.getName().endsWith(".java")){
+						javaFileName = thisFile.getName();
+						break;
+					}
+				}
 				if (type == 2) {
 					int value = Integer.parseInt(root.getName());
 					if(value < 40 || value > 40) continue;
@@ -130,13 +137,16 @@ public class GroupTest {
 					actualRepository = type;
 
 				}
-				MedianSearchCase searcher = new MedianSearchCase(folder, fileName, actualRepository);
+				MedianSearchCase searcher = new MedianSearchCase(folderPath, javaFileName, actualRepository);
+				System.out.println("Test1");
 				searcher.transformAndInitRunDir(true, "");
+				System.out.println("Test2");
 				searcher.initInputAndOutput();
+				System.out.println("Test3");
 				searcher.search(wb);
 				searcher.recordResult(wb);
 				if (searcher.getInfo().getResult().getState() == ResultState.SUCCESS) {
-					list.add(folder);
+					list.add(folderPath);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

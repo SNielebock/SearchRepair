@@ -30,7 +30,9 @@ public class GcovTest {
 	public GcovTest(String folder, String fileName, boolean wb) {
 		super();
 		this.folder = folder;
+		System.out.println("GCov Test Folder: " + folder);
 		this.fileName = fileName;
+		System.out.println("GCov Test FileName: " + fileName);
 		this.wb = wb;
 		System.out.println(folder);
 		this.positiveExecutions = new HashMap<Integer, Integer>();
@@ -44,6 +46,22 @@ public class GcovTest {
 
 	private void initExecutions() {
 		if(!compile()) return;
+		File instrClasses = new File(this.folder + "/instr_classes");
+		if(!instrClasses.exists()){
+			instrClasses.mkdir();
+		}
+		File classes = new File(this.folder + "/classes");
+		if(!classes.exists()){
+			classes.mkdir();
+		}
+		try {
+			Process javacProcess = Runtime.getRuntime().exec("javac -g -d " + folder + "/classes/ " + folder + "/" + fileName);
+			javacProcess.waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		initPositiveExecutions();
 		if(this.positiveExecutions.isEmpty()){
 			return;
@@ -108,11 +126,19 @@ public class GcovTest {
 	}
 
 	private void initNegativeExecutions() {
+		//TODO: All different for IntroClassJava due to f.e. median_2c155667_000
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
+		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
+		String s = Utility.runCProgram(jcovCommand);
+		System.out.println("JCOV STRING: " + s);
 		for(String input : this.negatives.keySet()){
-			String cleanCommand = "rm " + functionName + ".gcda";
+			
+			//remove gcda file
+			/*String cleanCommand = "rm " + functionName + ".gcda";
 			Utility.runCProgram(cleanCommand);
-			//System.out.println(input);
+			System.out.println("GCOV INPUT:" + input);
+			
+			//unused
 			String s = runWithUserInput("./a.out", input);
 			//System.out.println(s);
 			String gcovCommand = "gcov " + "./" + fileName;
@@ -126,13 +152,14 @@ public class GcovTest {
 				else{
 					this.negativeExecutions.put(lineNumber, parser.getExecutions().get(lineNumber) + this.negativeExecutions.get(lineNumber));
 				}
-			}
+			}*/
 		}
 		
 	}
 
 	private boolean compile() {
 		Utility.copy(folder + "/" + fileName, "./" + fileName);
+		//TODO: GCC!
 		String command = "gcc -fprofile-arcs -ftest-coverage " + "./" + fileName;
 		String s = Utility.runCProgram(command);
 		if(s.equals("failed")) {
@@ -146,14 +173,18 @@ public class GcovTest {
 
 	private void initPositiveExecutions() {
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		for(String input : this.positives.keySet()){
+		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
+		String s = Utility.runCProgram(jcovCommand);
+		System.out.println("JCOV STRING: " + s);
+		/*for(String input : this.positives.keySet()){
 			String cleanCommand = "rm " + functionName + ".gcda";
 			Utility.runCProgram(cleanCommand);
-			//System.out.println(input);
+			System.out.println("GCOV INPUT:" + input);
 			String s = runWithUserInput("./a.out", input);
 			//System.out.println(s);
 			String gcovCommand = "gcov " + "./" + fileName;
 			Utility.runCProgram(gcovCommand);
+			//TODO: gcov? should I change it?
 			String gcovFile = this.fileName + ".gcov";
 			GcovFileParse parser = new GcovFileParse(gcovFile);
 			for(int lineNumber : parser.getExecutions().keySet()){
@@ -164,7 +195,7 @@ public class GcovTest {
 					this.positiveExecutions.put(lineNumber, parser.getExecutions().get(lineNumber) + this.positiveExecutions.get(lineNumber));
 				}
 			}
-		}
+		}*/
 		
 	}
 
@@ -290,6 +321,7 @@ public class GcovTest {
 		try{
 			File dir = new File(root);
 			for(String typeName : dir.list()){
+				//TODO: Comment in?
 //				if(typeName.equals("smallest")){
 //					generate(root + "/smallest", "smallest.c", wb);
 //				}

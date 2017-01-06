@@ -86,7 +86,7 @@ public class Utility {
 				while ((ls_str = ls_in.readLine()) != null) {
 					sb.append(ls_str);
 					//TODO: Commented out
-					System.out.println("LS_STR: " + ls_str);
+//					System.out.println("LS_STR: " + ls_str);
 				}
 				// while((ls_str = ls_err.readLine()) != null){
 				// System.out.println(ls_str+ "j");
@@ -102,6 +102,7 @@ public class Utility {
 			e.printStackTrace();
 		}
 		out = sb.toString();
+		System.out.println("LS_STR: " + out);
 		return out;
 	}
 
@@ -290,11 +291,14 @@ public class Utility {
 					sb.append("\n");
 					// System.out.println(ls_str);
 				}
-				while ((ls_str = ls_err.readLine()) != null) {
-					 System.out.println("LS_STR: " + ls_str);
-					System.out.println("Utility.runCProgram Failed, because of (ls_str = ls_err.readLine()) != null)");
-					sb.append("failed");
-//					break;
+				if((ls_str = ls_err.readLine()) != null){		
+					System.out.println("Utility.runCProgram Failed, because of (ls_str = ls_err.readLine()) != null). Output: ");
+					System.out.println(ls_str);
+					while ((ls_str = ls_err.readLine()) != null) {
+						 System.out.println(ls_str);						
+						sb.append("failed");
+	//					break;
+					}
 				}
 				// System.out.println(ls_proc.exitValue());
 
