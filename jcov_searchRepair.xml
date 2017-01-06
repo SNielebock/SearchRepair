@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JCov_scales" default="build" basedir=".">
+    <property file="jcov_searchRepair.build.properties"/>
+
+    <target name="build">
+
+    <!--instrument classes-->
+    <java classname="com.sun.tdk.jcov.Instr" fork="true" failonerror="true">
+        <classpath>
+            <pathelement location="${jcov.jar}"/>
+        </classpath>
+        <arg line="-template ${jcovRoot}/template.xml -output ${instr_classes} ${classes}"/>
+    </java>
+
+    <parallel>
+    <!--start grabber-->
+    <java classname="com.sun.tdk.jcov.Grabber" fork="true" failonerror="true">
+        <classpath>
+            <pathelement location="${jcov.jar}"/>
+        </classpath>
+        <arg line="-template ${jcovRoot}/template.xml -outtestlist ${jcovRoot}/testlist.txt -o ${jcovRoot}/result.xml"/>
+    </java>
+
+    <sequential>
+
+        <!--running tests-->
+        <java classname="${fileName}" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="${jcov.network.saver.jar}"/>
+                <pathelement location="${instr_classes}"/>
+            </classpath>
+            <jvmarg value="-Djcov.testname=${fileName}"/>
+            <arg value="${args}"/>
+        </java>
+
+
+        <!--stop grabber-->
+        <java classname="com.sun.tdk.jcov.GrabberManager" fork="true">
+            <classpath>
+                <pathelement location="${jcov.jar}"/>
+            </classpath>
+            <arg line="-kill"/>
+        </java>
+
+        <!--generate report-->
+        <java classname="com.sun.tdk.jcov.RepGen" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="${jcov.jar}"/>
+            </classpath>
+            <arg line="-output ${jcovRoot}/coverage/report -tests ${jcovRoot}/testlist.txt -testsinfo -src ${root}  ${jcovRoot}/result.xml"/>
+        </java>
+    </sequential>
+    </parallel>
+
+    </target>
+
+</project>

@@ -2,19 +2,19 @@
 fixed by each technique
 tsp
 median,smallest,grade,checksum,digits,syllables,
-93,0,0,0,0,0,
+0,0,0,0,0,0,
 searchfix
 median,smallest,grade,checksum,digits,syllables,
 0,0,0,0,0,0,
 genprog
 median,smallest,grade,checksum,digits,syllables,
-108,0,0,0,0,0,
+0,0,0,0,0,0,
 ae
 median,smallest,grade,checksum,digits,syllables,
-58,0,0,0,0,0,
+0,0,0,0,0,0,
 total number of defects of each program
 median, smallest, grade, checksum, digits, syllables, 
-168,0,0,0,0,0,
+0,0,0,0,0,0,
 overfitting data, average passing number
 median,smallest,grade,checksum,digits,syllables,
 NaN, NaN, NaN, NaN, NaN, NaN, 
@@ -25,28 +25,28 @@ partial fixes
 digitsp, medianp, smallestp, checksump, gradep, syllablesp, 
 0 0 0 0 0 0 
 searchfix only, ae only, genprog only, tsp only
-median, 0, 1, 15, 0
+median, 0, 0, 0, 0
 smallest, 0, 0, 0, 0
 grade, 0, 0, 0, 0
 checksum, 0, 0, 0, 0
 digits, 0, 0, 0, 0
 syllables, 0, 0, 0, 0
 search & genprog, search & Ae, search & Tsp, genprog & Tsp, genprog & Ae, ae & Tsp
-median, 0, 0, 0, 36, 0, 0
+median, 0, 0, 0, 0, 0, 0
 smallest, 0, 0, 0, 0, 0, 0
 grade, 0, 0, 0, 0, 0, 0
 checksum, 0, 0, 0, 0, 0, 0
 digits, 0, 0, 0, 0, 0, 0
 syllables, 0, 0, 0, 0, 0, 0
 search & genprog & tsp, search & genprog & ae, search & ae & tsp, genprog & ae & tsp
-median, 0, 0, 0, 57
+median, 0, 0, 0, 0
 smallest, 0, 0, 0, 0
 grade, 0, 0, 0, 0
 checksum, 0, 0, 0, 0
 digits, 0, 0, 0, 0
 syllables, 0, 0, 0, 0
 all succeed, all failed
-median, 0, 59
+median, 0, 0
 smallest, 0, 0
 grade, 0, 0
 checksum, 0, 0
