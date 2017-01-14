@@ -3,14 +3,28 @@ package ProcessIntroClass;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import Library.Utility;
+import antlr.preprocess.JavaLexer;
+import antlr.preprocess.JavaParser;
+import antlr.preprocess.JavaParser.CompilationUnitContext;
+import antlr.preprocess.MyJavaListener;
 
 public class GcovTest {
 	
@@ -34,7 +48,6 @@ public class GcovTest {
 		this.fileName = fileName;
 		System.out.println("GCov Test FileName: " + fileName);
 		this.wb = wb;
-		System.out.println(folder);
 		this.positiveExecutions = new HashMap<Integer, Integer>();
 		this.negativeExecutions = new HashMap<Integer, Integer>();
 		this.positives = new HashMap<String, String>();
@@ -46,13 +59,17 @@ public class GcovTest {
 
 	private void initExecutions() {
 		if(!compile()) return;
-		File instrClasses = new File(this.folder + "/instr_classes");
-		if(!instrClasses.exists()){
-			instrClasses.mkdir();
-		}
 		File classes = new File(this.folder + "/classes");
 		if(!classes.exists()){
 			classes.mkdir();
+		}
+		File jcov = new File(this.folder + "/jcov");
+		if(!jcov.exists()){
+			jcov.mkdir();
+		}
+		File instrClasses = new File(this.folder + "/jcov/instr_classes");
+		if(!instrClasses.exists()){
+			instrClasses.mkdir();
 		}
 		try {
 			Process javacProcess = Runtime.getRuntime().exec("javac -g -d " + folder + "/classes/ " + folder + "/" + fileName);
@@ -128,11 +145,49 @@ public class GcovTest {
 	private void initNegativeExecutions() {
 		//TODO: All different for IntroClassJava due to f.e. median_2c155667_000
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
-		String s = Utility.runCProgram(jcovCommand);
-		System.out.println("JCOV STRING: " + s);
 		for(String input : this.negatives.keySet()){
+			createPropertiesWithInput(input);
+			String jcovCommand = "ant -f ./jcov_searchRepair.xml";
+			String s = Utility.runCProgram(jcovCommand);
+			System.out.println("JCOV STRING: " + s);
 			
+			try{
+				System.out.println("HTML FILE: " + this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html");
+				//TODO: "introclassJava" :(
+				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html"));
+				
+				String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
+				Pattern pattern = Pattern.compile(HTMLRegex);
+
+			    String line;
+			    while ((line = br.readLine()) != null) {
+			    	if(line.matches(HTMLRegex)){
+						Matcher matcher = pattern.matcher(line);
+						while (matcher.find()) {
+						    System.out.println("Covered Line: " + matcher.group(2));
+						    int lineNumber = Integer.parseInt(matcher.group(2));
+							if(!this.negativeExecutions.containsKey(lineNumber)){
+//								this.negativeExecutions.put(lineNumber, parser.getExecutions().get(lineNumber));
+							}
+							else{
+//								this.negativeExecutions.put(lineNumber, parser.getExecutions().get(lineNumber) + this.negativeExecutions.get(lineNumber));
+							}
+						}
+			    	}
+			    }
+			    br.close();
+			} catch(FileNotFoundException e){
+				e.printStackTrace();
+			} catch(IOException e){
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			
+			
+			//getRelevantLineNumbers();
 			//remove gcda file
 			/*String cleanCommand = "rm " + functionName + ".gcda";
 			Utility.runCProgram(cleanCommand);
@@ -173,11 +228,42 @@ public class GcovTest {
 
 	private void initPositiveExecutions() {
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
-		String s = Utility.runCProgram(jcovCommand);
-		System.out.println("JCOV STRING: " + s);
-		/*for(String input : this.positives.keySet()){
-			String cleanCommand = "rm " + functionName + ".gcda";
+		for(String input : this.positives.keySet()){
+			createPropertiesWithInput(input);
+	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
+			String jcovString = Utility.runCProgram(jcovCommand);
+			System.out.println("JCOV STRING: " + jcovString);
+			
+			
+			
+			try{
+				System.out.println("HTML FILE: " + this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html");
+				//TODO: "introclassJava" :(
+				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html"));
+				
+				String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
+				Pattern pattern = Pattern.compile(HTMLRegex);
+
+			    String line;
+			    while ((line = br.readLine()) != null) {
+			    	if(line.matches(HTMLRegex)){
+						Matcher matcher = pattern.matcher(line);
+						while (matcher.find()) {
+						    System.out.println("Covered Line: " + matcher.group(2));
+						}
+			    	}
+			    }
+			    br.close();
+			} catch(FileNotFoundException e){
+				e.printStackTrace();
+			} catch(IOException e){
+				e.printStackTrace();
+			}
+			
+			
+			
+			//getRelevantLineNumbers();
+			/*String cleanCommand = "rm " + functionName + ".gcda";
 			Utility.runCProgram(cleanCommand);
 			System.out.println("GCOV INPUT:" + input);
 			String s = runWithUserInput("./a.out", input);
@@ -194,8 +280,8 @@ public class GcovTest {
 				else{
 					this.positiveExecutions.put(lineNumber, parser.getExecutions().get(lineNumber) + this.positiveExecutions.get(lineNumber));
 				}
-			}
-		}*/
+			}*/
+		}
 		
 	}
 
@@ -317,6 +403,84 @@ public class GcovTest {
 		
 	}
 	
+	private void createPropertiesWithInput(String input) {
+      String defaultProperties = "default.build.properties";
+      String thisFileProperties = "jcov_searchRepair.build.properties";
+
+      BufferedReader br = null;
+      BufferedWriter bw = null;
+      try {
+         br = new BufferedReader(new FileReader(defaultProperties));
+         bw = new BufferedWriter(new FileWriter(thisFileProperties));
+         String line;
+         while ((line = br.readLine()) != null) {
+            bw.write(line+"\n");
+         }
+         bw.write("root = " + folder + "\n");
+         String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
+         bw.write("fileName = introclassJava." + functionName + "\n");
+         bw.write("args = " + input + "\n");
+      } catch (Exception e) {
+         return;
+      } finally {
+         try {
+            if(br != null)
+               br.close();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         try {
+            if(bw != null)
+               bw.close();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+	
+	private int[] getRelevantLineNumbers(){
+		/*int[] lineRange = new int[2];
+		try{
+			BufferedReader br = new BufferedReader(new FileReader(this.folder + "/" + this.fileName));
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		    	if(((line.contains("public ")) && (line.contains("static ")) && (line.contains("void ")) && (line.contains("main ")))){
+		    		
+		    	}
+		       System.out.println("SUCCESS! " + line);
+		    }
+		    br.close();
+		} catch(FileNotFoundException e){
+			e.printStackTrace();
+		} catch(IOException e){
+			e.printStackTrace();
+		}*/
+		
+
+		try {
+		    // Get our lexer
+			System.out.println("At Lexer. File: " + this.folder + "/" + this.fileName);
+			JavaLexer lexer = new JavaLexer(new ANTLRFileStream(this.folder + "/" + this.fileName));
+
+		    // Get a list of matched tokens
+		    CommonTokenStream tokens = new CommonTokenStream(lexer);
+		 
+		    // Pass the tokens to the parser
+		    JavaParser parser = new JavaParser(tokens);
+		 
+		    // Specify our entry point
+		    CompilationUnitContext compilationUnitContext = parser.compilationUnit();
+		 
+		    // Walk it and attach our listener
+		    ParseTreeWalker walker = new ParseTreeWalker();
+		    MyJavaListener listener = new MyJavaListener();
+		    walker.walk(listener, compilationUnitContext);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void groupExperiment(String root, boolean wb){
 		try{
 			File dir = new File(root);
@@ -366,7 +530,8 @@ public class GcovTest {
 	}
 
 	public static void main(String[] args){
-		GcovTest test = new GcovTest("./bughunt/median/225", "median.c", false);
+		GcovTest test = new GcovTest("./bughunt/median/40", "median_2c155667_000.java", false);
+//		test.createPropertiesWithInput("2 3 4");
 		//groupExperiment("./bughunt");
 	}
 

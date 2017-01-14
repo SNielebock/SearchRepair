@@ -9,7 +9,7 @@
         <classpath>
             <pathelement location="${jcov.jar}"/>
         </classpath>
-        <arg line="-template ${jcovRoot}/template.xml -output ${instr_classes} ${classes}"/>
+        <arg line="-template ${root}/jcov/template.xml -output ${root}/jcov/instr_classes ${root}/classes"/>
     </java>
 
     <parallel>
@@ -18,7 +18,7 @@
         <classpath>
             <pathelement location="${jcov.jar}"/>
         </classpath>
-        <arg line="-template ${jcovRoot}/template.xml -outtestlist ${jcovRoot}/testlist.txt -o ${jcovRoot}/result.xml"/>
+        <arg line="-template ${root}/jcov/template.xml -outtestlist ${root}/jcov/testlist.txt -o ${root}/jcov/result.xml"/>
     </java>
 
     <sequential>
@@ -27,7 +27,7 @@
         <java classname="${fileName}" fork="true" failonerror="true">
             <classpath>
                 <pathelement location="${jcov.network.saver.jar}"/>
-                <pathelement location="${instr_classes}"/>
+                <pathelement location="${root}/jcov/instr_classes"/>
             </classpath>
             <jvmarg value="-Djcov.testname=${fileName}"/>
             <arg value="${args}"/>
@@ -47,7 +47,7 @@
             <classpath>
                 <pathelement location="${jcov.jar}"/>
             </classpath>
-            <arg line="-output ${jcovRoot}/coverage/report -tests ${jcovRoot}/testlist.txt -testsinfo -src ${root}  ${jcovRoot}/result.xml"/>
+            <arg line="-output ${root}/jcov/coverage/report -tests ${root}/jcov/testlist.txt -testsinfo -src ${root}  ${root}/jcov/result.xml"/>
         </java>
     </sequential>
     </parallel>
