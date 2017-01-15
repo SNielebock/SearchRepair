@@ -63,14 +63,14 @@ public class GcovTest {
 		if(!classes.exists()){
 			classes.mkdir();
 		}
-		File jcov = new File(this.folder + "/jcov");
-		if(!jcov.exists()){
-			jcov.mkdir();
-		}
-		File instrClasses = new File(this.folder + "/jcov/instr_classes");
-		if(!instrClasses.exists()){
-			instrClasses.mkdir();
-		}
+//		File jcov = new File(this.folder + "/jcov");
+//		if(!jcov.exists()){
+//			jcov.mkdir();
+//		}
+//		File instrClasses = new File(this.folder + "/jcov/instr_classes");
+//		if(!instrClasses.exists()){
+//			instrClasses.mkdir();
+//		}
 		try {
 			Process javacProcess = Runtime.getRuntime().exec("javac -g -d " + folder + "/classes/ " + folder + "/" + fileName);
 			javacProcess.waitFor();
@@ -100,6 +100,7 @@ public class GcovTest {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath)));
 			//TODO: Commented out
 //			System.out.println("After suspicious creation!");
+			System.out.println("Suspiciousness: " + this.suspiciousness.toString());
 			for(int num = 1;  num <= this.suspiciousness.keySet().size(); num++){
 				bw.write(Integer.toString(num));
 				bw.write(" ");
@@ -134,6 +135,7 @@ public class GcovTest {
 			//the other way
 			double left = failed * 1.0 / totalFail;
 			double right = failed * 1.0 / (failed + success);
+			System.out.println("CalculateSuspiciousness num: " + num + " failed: " + failed + " success: " + success + " totalFail: " + totalFail);
 			if(denom == 0) this.suspiciousness.put(num, 0.0);
 			else{
 				this.suspiciousness.put(num, Math.sqrt(left * right));
@@ -145,35 +147,59 @@ public class GcovTest {
 	private void initNegativeExecutions() {
 		//TODO: All different for IntroClassJava due to f.e. median_2c155667_000
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		for(String input : this.negatives.keySet()){
+		for(String input : this.positives.keySet()){
 			createPropertiesWithInput(input);
-			String jcovCommand = "ant -f ./jcov_searchRepair.xml";
-			String s = Utility.runCProgram(jcovCommand);
-			System.out.println("JCOV STRING: " + s);
+//	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
+	 		String coberturaCommand = "ant -f ./cobertura_searchRepair.xml";
+			String coberturaString = Utility.runCProgram(coberturaCommand);
+			System.out.println("COBERTURA STRING: " + coberturaString);
 			
 			try{
-				System.out.println("HTML FILE: " + this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html");
+//				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");
 				//TODO: "introclassJava" :(
-				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html"));
+				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html"));
 				
-				String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
-				Pattern pattern = Pattern.compile(HTMLRegex);
+				//String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
+				String HTMLCoveredRegex = "(.*?<tr>  <td class=\"numLineCover\">&nbsp;)(?<line>\\d+)(</td>  <td class=\"nbHits(Un)?[Cc]overed\">)(<a .*?>)?(&nbsp;)(?<executions>\\d+)(</a>)?(</td>.*)";
+				Pattern pattern = Pattern.compile(HTMLCoveredRegex);
+
+				String HTMLAllLinesRegex = "(.*?<tr>  <td class=\"numLine)(Cover|Uncover)?(\">&nbsp;)(?<line>\\d+)(</td>.*)";
+				Pattern HTMLAllLinesPattern = Pattern.compile(HTMLAllLinesRegex);
 
 			    String line;
+			    int lastLine = 0;
 			    while ((line = br.readLine()) != null) {
-			    	if(line.matches(HTMLRegex)){
+			    	if(line.matches(HTMLCoveredRegex)){
 						Matcher matcher = pattern.matcher(line);
 						while (matcher.find()) {
-						    System.out.println("Covered Line: " + matcher.group(2));
-						    int lineNumber = Integer.parseInt(matcher.group(2));
-							if(!this.negativeExecutions.containsKey(lineNumber)){
-//								this.negativeExecutions.put(lineNumber, parser.getExecutions().get(lineNumber));
-							}
-							else{
-//								this.negativeExecutions.put(lineNumber, parser.getExecutions().get(lineNumber) + this.negativeExecutions.get(lineNumber));
-							}
+//						    System.out.println("Covered Line: " + matcher.group(2));
+						    int lineNumber = Integer.parseInt(matcher.group("line"));
+						    int executions = Integer.parseInt(matcher.group("executions"));
+						    if(executions > 0){
+								if(!this.negativeExecutions.containsKey(lineNumber)){
+									//TODO: number of executions irrelevant due to Tarantula formel.(?)
+									//this.negativeExecutions.put(lineNumber, executions);
+									this.negativeExecutions.put(lineNumber, 1);
+								}
+								else{
+									//TODO: number of executions irrelevant due to Tarantula formel.(?)
+									//this.negativeExecutions.put(lineNumber, executions + this.negativeExecutions.get(lineNumber));
+									this.negativeExecutions.put(lineNumber, 1 + this.negativeExecutions.get(lineNumber));
+								}
+						    }
 						}
 			    	}
+			    	if(line.matches(HTMLAllLinesRegex)){
+			    		Matcher matcher = HTMLAllLinesPattern.matcher(line);
+			    		while (matcher.find()) {
+			    			lastLine = Integer.parseInt(matcher.group("line"));
+			    		}
+			    	}
+			    }
+			    for(int i = 1; i < lastLine; i++){
+			    	if(!this.negativeExecutions.containsKey(i)){
+						this.negativeExecutions.put(i, 0);
+					}
 			    }
 			    br.close();
 			} catch(FileNotFoundException e){
@@ -211,47 +237,64 @@ public class GcovTest {
 		}
 		
 	}
-
-	private boolean compile() {
-		Utility.copy(folder + "/" + fileName, "./" + fileName);
-		//TODO: GCC!
-		String command = "gcc -fprofile-arcs -ftest-coverage " + "./" + fileName;
-		String s = Utility.runCProgram(command);
-		if(s.equals("failed")) {
-			System.out.println("COMPILE FAILED!");
-			return false;
-		}
-		return true;
-		//String cleanCommand = "rm median.gcda";
-		//Utility.runCProgram(cleanCommand);
-	}
-
+	
+	
 	private void initPositiveExecutions() {
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
 		for(String input : this.positives.keySet()){
 			createPropertiesWithInput(input);
-	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
-			String jcovString = Utility.runCProgram(jcovCommand);
-			System.out.println("JCOV STRING: " + jcovString);
-			
-			
+//	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
+	 		String coberturaCommand = "ant -f ./cobertura_searchRepair.xml";
+			String coberturaString = Utility.runCProgram(coberturaCommand);
+			System.out.println("COBERTURA STRING: " + coberturaString);
 			
 			try{
-				System.out.println("HTML FILE: " + this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html");
+//				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");
 				//TODO: "introclassJava" :(
-				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/jcov/coverage/report/introclassJava/" + functionName + ".html"));
+				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html"));
 				
-				String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
-				Pattern pattern = Pattern.compile(HTMLRegex);
+				//String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
+				String HTMLCoveredRegex = "(.*?<tr>  <td class=\"numLineCover\">&nbsp;)(?<line>\\d+)(</td>  <td class=\"nbHits(Un)?[Cc]overed\">)(<a .*?>)?(&nbsp;)(?<executions>\\d+)(</a>)?(</td>.*)";
+				Pattern HTMLCoveredPattern = Pattern.compile(HTMLCoveredRegex);
+				
+				String HTMLAllLinesRegex = "(.*?<tr>  <td class=\"numLine)(Cover|Uncover)?(\">&nbsp;)(?<line>\\d+)(</td>.*)";
+				Pattern HTMLAllLinesPattern = Pattern.compile(HTMLAllLinesRegex);
 
 			    String line;
+			    int lastLine = 0;
 			    while ((line = br.readLine()) != null) {
-			    	if(line.matches(HTMLRegex)){
-						Matcher matcher = pattern.matcher(line);
+			    	if(line.matches(HTMLCoveredRegex)){
+						Matcher matcher = HTMLCoveredPattern.matcher(line);
 						while (matcher.find()) {
-						    System.out.println("Covered Line: " + matcher.group(2));
+//						    System.out.println("Covered Line: " + matcher.group("line") + " executions: " + matcher.group("executions"));
+						    int lineNumber = Integer.parseInt(matcher.group("line"));
+						    int executions = Integer.parseInt(matcher.group("executions"));
+						    if(executions > 0){
+								if(!this.positiveExecutions.containsKey(lineNumber)){
+									//TODO: number of executions irrelevant due to Tarantula formel.(?)
+									//this.positiveExecutions.put(lineNumber, executions);
+									this.positiveExecutions.put(lineNumber, 1);
+								}
+								else{
+									//TODO: number of executions irrelevant due to Tarantula formel.(?)
+									//this.positiveExecutions.put(lineNumber, executions + this.positiveExecutions.get(lineNumber));
+									this.positiveExecutions.put(lineNumber, 1 + this.positiveExecutions.get(lineNumber));
+								}
+							}
 						}
 			    	}
+			    	
+			    	if(line.matches(HTMLAllLinesRegex)){
+			    		Matcher matcher = HTMLAllLinesPattern.matcher(line);
+			    		while (matcher.find()) {
+			    			lastLine = Integer.parseInt(matcher.group("line"));
+			    		}
+			    	}
+			    }
+			    for(int i = 1; i < lastLine; i++){
+			    	if(!this.positiveExecutions.containsKey(i)){
+						this.positiveExecutions.put(i, 0);
+					}
 			    }
 			    br.close();
 			} catch(FileNotFoundException e){
@@ -284,6 +327,22 @@ public class GcovTest {
 		}
 		
 	}
+	
+
+	private boolean compile() {
+		Utility.copy(folder + "/" + fileName, "./" + fileName);
+		//TODO: GCC!
+		String command = "gcc -fprofile-arcs -ftest-coverage " + "./" + fileName;
+		String s = Utility.runCProgram(command);
+		if(s.equals("failed")) {
+			System.out.println("COMPILE FAILED!");
+			return false;
+		}
+		return true;
+		//String cleanCommand = "rm median.gcda";
+		//Utility.runCProgram(cleanCommand);
+	}
+	
 
 	private String runWithUserInput(String command, String input) {
 		String out = "";
@@ -404,22 +463,26 @@ public class GcovTest {
 	}
 	
 	private void createPropertiesWithInput(String input) {
-      String defaultProperties = "default.build.properties";
-      String thisFileProperties = "jcov_searchRepair.build.properties";
+//      String defaultProperties = "default.build.properties";
+//      String thisFileProperties = "jcov_searchRepair.build.properties";
+		String defaultProperties = "coberturaDefault.build.properties";
+		String thisFileProperties = "cobertura_searchRepair.build.properties";
 
       BufferedReader br = null;
       BufferedWriter bw = null;
       try {
          br = new BufferedReader(new FileReader(defaultProperties));
          bw = new BufferedWriter(new FileWriter(thisFileProperties));
-         String line;
-         while ((line = br.readLine()) != null) {
-            bw.write(line+"\n");
-         }
+         
          bw.write("root = " + folder + "\n");
          String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
          bw.write("fileName = introclassJava." + functionName + "\n");
          bw.write("args = " + input + "\n");
+         
+         String line;
+         while ((line = br.readLine()) != null) {
+            bw.write(line+"\n");
+         }
       } catch (Exception e) {
          return;
       } finally {
@@ -531,7 +594,7 @@ public class GcovTest {
 
 	public static void main(String[] args){
 		GcovTest test = new GcovTest("./bughunt/median/40", "median_2c155667_000.java", false);
-//		test.createPropertiesWithInput("2 3 4");
+		//test.createPropertiesWithInput("2 3 4");
 		//groupExperiment("./bughunt");
 	}
 
