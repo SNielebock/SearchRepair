@@ -147,7 +147,7 @@ public class GcovTest {
 	private void initNegativeExecutions() {
 		//TODO: All different for IntroClassJava due to f.e. median_2c155667_000
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-		for(String input : this.positives.keySet()){
+		for(String input : this.negatives.keySet()){
 			createPropertiesWithInput(input);
 //	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
 	 		String coberturaCommand = "ant -f ./cobertura_searchRepair.xml";
@@ -432,7 +432,6 @@ public class GcovTest {
 				this.negatives.put(input, output);
 			}
 		}
-		
 	}
 
 	private void initPositives() {
@@ -459,7 +458,6 @@ public class GcovTest {
 				this.positives.put(input, output);
 			}
 		}
-		
 	}
 	
 	private void createPropertiesWithInput(String input) {
