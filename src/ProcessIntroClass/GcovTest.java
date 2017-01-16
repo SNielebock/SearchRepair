@@ -55,30 +55,12 @@ public class GcovTest {
 		this.suspiciousness = new HashMap<Integer, Double>();
 		initInputs();
 		initExecutions();
+		System.out.println("Finished suspiciousness calculation");
 	}
 
 	private void initExecutions() {
 		if(!compile()) return;
-		File classes = new File(this.folder + "/classes");
-		if(!classes.exists()){
-			classes.mkdir();
-		}
-//		File jcov = new File(this.folder + "/jcov");
-//		if(!jcov.exists()){
-//			jcov.mkdir();
-//		}
-//		File instrClasses = new File(this.folder + "/jcov/instr_classes");
-//		if(!instrClasses.exists()){
-//			instrClasses.mkdir();
-//		}
-		try {
-			Process javacProcess = Runtime.getRuntime().exec("javac -g -d " + folder + "/classes/ " + folder + "/" + fileName);
-			javacProcess.waitFor();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 		initPositiveExecutions();
 		if(this.positiveExecutions.isEmpty()){
 			return;
@@ -100,7 +82,7 @@ public class GcovTest {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath)));
 			//TODO: Commented out
 //			System.out.println("After suspicious creation!");
-			System.out.println("Suspiciousness: " + this.suspiciousness.toString());
+//			System.out.println("Suspiciousness: " + this.suspiciousness.toString());
 			for(int num = 1;  num <= this.suspiciousness.keySet().size(); num++){
 				bw.write(Integer.toString(num));
 				bw.write(" ");
@@ -135,7 +117,7 @@ public class GcovTest {
 			//the other way
 			double left = failed * 1.0 / totalFail;
 			double right = failed * 1.0 / (failed + success);
-			System.out.println("CalculateSuspiciousness num: " + num + " failed: " + failed + " success: " + success + " totalFail: " + totalFail);
+//			System.out.println("CalculateSuspiciousness num: " + num + " failed: " + failed + " success: " + success + " totalFail: " + totalFail);
 			if(denom == 0) this.suspiciousness.put(num, 0.0);
 			else{
 				this.suspiciousness.put(num, Math.sqrt(left * right));
@@ -152,7 +134,7 @@ public class GcovTest {
 //	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
 	 		String coberturaCommand = "ant -f ./cobertura_searchRepair.xml";
 			String coberturaString = Utility.runCProgram(coberturaCommand);
-			System.out.println("COBERTURA STRING: " + coberturaString);
+//			System.out.println("COBERTURA STRING: " + coberturaString);
 			
 			try{
 //				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");
@@ -246,7 +228,7 @@ public class GcovTest {
 //	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
 	 		String coberturaCommand = "ant -f ./cobertura_searchRepair.xml";
 			String coberturaString = Utility.runCProgram(coberturaCommand);
-			System.out.println("COBERTURA STRING: " + coberturaString);
+//			System.out.println("COBERTURA STRING: " + coberturaString);
 			
 			try{
 //				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");
@@ -330,17 +312,19 @@ public class GcovTest {
 	
 
 	private boolean compile() {
-		Utility.copy(folder + "/" + fileName, "./" + fileName);
-		//TODO: GCC!
-		String command = "gcc -fprofile-arcs -ftest-coverage " + "./" + fileName;
+		File classes = new File(this.folder + "/classes");
+		if(!classes.exists()){
+			classes.mkdir();
+		}
+		
+		String command = "javac -g -d " + folder + "/classes/ " + folder + "/" + fileName;
 		String s = Utility.runCProgram(command);
+		
 		if(s.equals("failed")) {
 			System.out.println("COMPILE FAILED!");
 			return false;
 		}
 		return true;
-		//String cleanCommand = "rm median.gcda";
-		//Utility.runCProgram(cleanCommand);
 	}
 	
 
