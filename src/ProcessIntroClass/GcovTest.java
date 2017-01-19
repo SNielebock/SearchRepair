@@ -178,7 +178,7 @@ public class GcovTest {
 			    		}
 			    	}
 			    }
-			    for(int i = 1; i < lastLine; i++){
+			    for(int i = 1; i <= lastLine; i++){
 			    	if(!this.negativeExecutions.containsKey(i)){
 						this.negativeExecutions.put(i, 0);
 					}
@@ -273,7 +273,7 @@ public class GcovTest {
 			    		}
 			    	}
 			    }
-			    for(int i = 1; i < lastLine; i++){
+			    for(int i = 1; i <= lastLine; i++){
 			    	if(!this.positiveExecutions.containsKey(i)){
 						this.positiveExecutions.put(i, 0);
 					}
@@ -483,49 +483,7 @@ public class GcovTest {
       }
    }
 	
-	private int[] getRelevantLineNumbers(){
-		/*int[] lineRange = new int[2];
-		try{
-			BufferedReader br = new BufferedReader(new FileReader(this.folder + "/" + this.fileName));
-		    String line;
-		    while ((line = br.readLine()) != null) {
-		    	if(((line.contains("public ")) && (line.contains("static ")) && (line.contains("void ")) && (line.contains("main ")))){
-		    		
-		    	}
-		       System.out.println("SUCCESS! " + line);
-		    }
-		    br.close();
-		} catch(FileNotFoundException e){
-			e.printStackTrace();
-		} catch(IOException e){
-			e.printStackTrace();
-		}*/
-		
 
-		try {
-		    // Get our lexer
-			System.out.println("At Lexer. File: " + this.folder + "/" + this.fileName);
-			JavaLexer lexer = new JavaLexer(new ANTLRFileStream(this.folder + "/" + this.fileName));
-
-		    // Get a list of matched tokens
-		    CommonTokenStream tokens = new CommonTokenStream(lexer);
-		 
-		    // Pass the tokens to the parser
-		    JavaParser parser = new JavaParser(tokens);
-		 
-		    // Specify our entry point
-		    CompilationUnitContext compilationUnitContext = parser.compilationUnit();
-		 
-		    // Walk it and attach our listener
-		    ParseTreeWalker walker = new ParseTreeWalker();
-		    MyJavaListener listener = new MyJavaListener();
-		    walker.walk(listener, compilationUnitContext);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	public static void groupExperiment(String root, boolean wb){
 		try{
 			File dir = new File(root);

@@ -139,7 +139,8 @@ public class GroupTest {
 				}
 				MedianSearchCase searcher = new MedianSearchCase(folderPath, javaFileName, actualRepository);
 				System.out.println("Test1");
-				searcher.transformAndInitRunDir(true, "");
+				//TODO: for now no transformation. later maybe switch back to "true"?
+				searcher.transformAndInitRunDir(false, "");
 				System.out.println("Test2");
 				searcher.initInputAndOutput();
 				System.out.println("Test3");

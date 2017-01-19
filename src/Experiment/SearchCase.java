@@ -679,6 +679,9 @@ public class SearchCase {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".java")));
 			String s = null;
 			
+			for(int i = 0; i < buggy.length; i++){
+				System.out.println("Buggy " + i + ": " + buggy[i]);
+			}
 			
 			for(int i = 1; i < buggy[0]; i++){
 				s = reader.readLine();
