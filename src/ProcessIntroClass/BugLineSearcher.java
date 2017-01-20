@@ -108,7 +108,7 @@ public class BugLineSearcher {
 		    //get Buggy lines
 		    int lineNumber = getBigSupicious();
 		    System.out.println("LineNumber: " + lineNumber);
-		    Pair temp = listener.getMaxRange(lineNumber);
+		    Pair temp = listener.getBigSuspiciousRange(lineNumber);
 		    this.buggy[0] = temp.getLeft();
 		    this.buggy[1] = temp.getRight();
 

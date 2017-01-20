@@ -21,6 +21,7 @@ import java.util.Stack;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import search.PrototypeSearch;
 import search.ResultObject;
@@ -28,13 +29,17 @@ import search.ResultObject.ResultState;
 import Library.Utility;
 import antlr.preprocess.FunctionLexer;
 import antlr.preprocess.FunctionParser;
+import antlr.preprocess.JavaLexer;
+import antlr.preprocess.JavaParser;
+import antlr.preprocess.MyJavaListener;
 import antlr.preprocess.FunctionParser.AssignStatContext;
-import antlr.preprocess.FunctionParser.BlockContext;
+//import antlr.preprocess.FunctionParser.BlockContext;
 import antlr.preprocess.FunctionParser.DeclarationStatContext;
-import antlr.preprocess.FunctionParser.FormalParameterContext;
+//import antlr.preprocess.FunctionParser.FormalParameterContext;
 import antlr.preprocess.FunctionParser.FunctionContext;
 import antlr.preprocess.FunctionParser.If_statContext;
 import antlr.preprocess.FunctionParser.StatContext;
+import antlr.preprocess.JavaParser.*;
 
 
 
@@ -338,12 +343,16 @@ public class SearchCase {
 		System.out.println("---"+Arrays.toString(this.buggy));
 		try{
 			//TODO: Here testfile!
-			System.out.println("THISCASEPREFIX: " + this.casePrefix + ".c");
-			if(insertStateStatements(this.casePrefix + ".c")){
+			System.out.println("THISCASEPREFIX: " + this.casePrefix + ".java");
+			if(insertStateStatements(this.casePrefix + ".java")){
+				System.out.println("SearchCase.fillSearchCase insertStateStatements true");
 				obtainPositiveStates();
 				return true;
 			}
-			else return false;
+			else{
+				System.out.println("SearchCase.fillSearchCase insertStateStatements false");
+				return false;
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 			return true;
@@ -413,7 +422,8 @@ public class SearchCase {
 		
 		System.out.println("MARKFILE: " + markFile);
 		String target = getFunction(markFile);
-		String[] states = getStatesStatement(target);
+//old:	String[] states = getStatesStatement(target);
+		String[] states = getStatesStatement(original);
 		if(states == null) return false;
 		writeStatesStatement(states);
 		System.out.println("returned true(SearchCase.insertStateStatements)");
@@ -470,19 +480,40 @@ public class SearchCase {
 		
 		Map<String, String> variables = new HashMap<String, String>();
 		try{
-			InputStream stream = new ByteArrayInputStream(target.getBytes());
-			ANTLRInputStream input = new ANTLRInputStream(stream);
-			FunctionLexer lexer = new FunctionLexer(input);
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			FunctionParser parser = new FunctionParser(tokens);
+//			InputStream stream = new ByteArrayInputStream(target.getBytes());
+//			ANTLRInputStream input = new ANTLRInputStream(stream);
+//			FunctionLexer lexer = new FunctionLexer(input);
+//			CommonTokenStream tokens = new CommonTokenStream(lexer);
+//			FunctionParser parser = new FunctionParser(tokens);
+			System.out.println("GETSTATESSTATEMENT TARGET: " + target);
+
+		    File file = new File(target);
+		    FileInputStream fis = new FileInputStream(file);
+
+		    ANTLRInputStream input = new ANTLRInputStream(fis);
+//			InputStream stream = new ByteArrayInputStream(target.getBytes());
+//		    ANTLRInputStream input = new ANTLRInputStream(stream);
+		    JavaLexer lexer = new JavaLexer(input);
+		    CommonTokenStream tokens = new CommonTokenStream(lexer);
+		    JavaParser parser = new JavaParser(tokens);
+		    CompilationUnitContext context = parser.compilationUnit();
+		    ParseTreeWalker walker = new ParseTreeWalker();	
+		    MyJavaListener listener = new MyJavaListener();
+		    walker.walk(listener, context);
+		    MethodDeclarationContext method = listener.getSpecificMethodContext(this.buggy[0]);
 			System.out.println("Target: " + target);
 			
-			//TODO: HERE extraneous input
-			getStatesVariables(parser.prog().function(), variables);
+			if(!method.isEmpty()){
+				System.out.println("Method not empty! " + method.getText());
+			}
+
+//old:		getStatesVariables(parser.prog().function(), variables);
+			getStatesVariables(method, variables);
 			//stream.close();
 			System.out.println("Test1");
 		}catch(Exception e){
 			System.out.println("Test5");
+			e.printStackTrace();
 			return null;
 		}
 		if(variables.isEmpty()){
@@ -543,19 +574,30 @@ public class SearchCase {
 		return states;
 	}
 
-	private void getStatesVariables(FunctionContext function,
+	//changed parameters! originally: FunctionContext function, Map<String, String> variables
+	private void getStatesVariables(MethodDeclarationContext method,
 			Map<String, String> variables) {
 		// formals
-		List<FormalParameterContext> fpc = function.parameters().formalParameter();
-		this.outputType = function.type().getText().trim();
-		for(FormalParameterContext fp : fpc){
-			String type = fp.type().getText();
-			String id = fp.ID().getText();
-			System.out.println("GetStatesVariables Type: " + type + " ID: " + id);
-			variables.put(fp.ID().getText(), fp.type().getText());
+//old:	List<FormalParameterContext> fpc = function.parameters().formalParameter();
+		List<FormalParameterContext> fpc = null;
+		if(!method.formalParameters().getText().equals("()")){
+			fpc = method.formalParameters().formalParameterList().formalParameter();
+		}
+		if(method.getText().startsWith("void")){
+			this.outputType = "void";
+		}else{
+			this.outputType = method.typeType().getText().trim();
+		}
+		if(!(fpc==null)){
+			for(FormalParameterContext fp : fpc){
+				String type = fp.typeType().getText();
+				String id = fp.variableDeclaratorId().getText();
+				System.out.println("GetStatesVariables Type: " + type + " ID: " + id);
+				variables.put(id, type);
+			}
 		}
 		
-		Map<String, String> local = getBlockVariable(function.block());
+		Map<String, String> local = getBlockVariable(method.methodBody().block());
 		for(String s : local.keySet()){
 			variables.put(s, local.get(s));
 		}
@@ -563,18 +605,20 @@ public class SearchCase {
 	}
 
 	private boolean find = false;
+	
+	//TODO: I don't understand this method. If I am correct, then local == variables and that means that this for loop is just unnecessary
 	private void add(If_statContext ifstat, Map<String, String> variables) {
-		for(BlockContext block : ifstat.block()){
-			Map<String, String> local = getBlockVariable(block);
-			if(find){
-				for(String s : local.keySet()){
-					variables.put(s, local.get(s));
-				}
-				break;
-			}
-			else continue;
-		}
-		
+//		for(BlockContext block : ifstat.block()){
+//			Map<String, String> local = getBlockVariable(block);
+//			if(find){
+//				for(String s : local.keySet()){
+//					variables.put(s, local.get(s));
+//				}
+//				break;
+//			}
+//			else continue;
+//		}
+//		
 	}
 
 
@@ -582,50 +626,53 @@ public class SearchCase {
 	private Map<String, String> getBlockVariable(BlockContext block) {
 		Map<String, String> variables = new HashMap<String, String>();
 		if(find) return variables;
-		for(StatContext statCon : block.stat()){
+		for(BlockStatementContext blockStateCon : block.blockStatement()){
 			//System.out.println(statCon.getText());
-			if(statCon.getText().equals(MARKINPUT)){
+			if(blockStateCon.start.getLine() >= this.buggy[0]){
 				find = true;
 				break;
 			}
-			ParseTree child = statCon.getChild(0);
-			if(child instanceof DeclarationStatContext){
-				DeclarationStatContext decl = (DeclarationStatContext) child;
+			ParseTree child = blockStateCon.getChild(0);
+			if(child instanceof LocalVariableDeclarationStatementContext){
+				LocalVariableDeclarationStatementContext decl = (LocalVariableDeclarationStatementContext) child;
 				add(decl, variables);
 			}
-			else if(child instanceof AssignStatContext){
-				AssignStatContext assign = (AssignStatContext) child;
+			else if(child instanceof StatementExpressionContext){
+				StatementExpressionContext assign = (StatementExpressionContext) child;
 				add(assign, variables);
 			}
-			else if(child instanceof If_statContext) {
-				If_statContext ifstat = (If_statContext) child;
-				add(ifstat, variables);
-			}
+//			else if(child instanceof If_statContext) {
+//				If_statContext ifstat = (If_statContext) child;
+//				add(ifstat, variables);
+//			}
 		}
 		return variables;
 	}
 
-	private void add(AssignStatContext assign, Map<String, String> variables) {
-		if(assign.type() == null) return;
-		String type = assign.type().getText();
-		String id  = assign.ID().getText();
-		variables.put(id, type);
+	//TODO: Fix assigns!
+	private void add(StatementExpressionContext assign, Map<String, String> variables) {
+//		if(assign.type() == null) return;
+//		String type = assign.type().getText();
+//		String id  = assign.ID().getText();
+//		variables.put(id, type);
 		
 	}
 
-	private void add(DeclarationStatContext decl, Map<String, String> variables) {
-		String type = decl.type().getText();
+	private void add(LocalVariableDeclarationStatementContext decl, Map<String, String> variables) {
+		String type = decl.localVariableDeclaration().typeType().getText();
+		//TODO: How to handle Arrays?
 		if(decl.getText().contains("[") || decl.getText().contains("*")){
 			type = type + '*';
 		}
-		for(int i = 0; i < decl.ID().size(); i++)
+		for(int i = 0; i < decl.localVariableDeclaration().variableDeclarators().variableDeclarator().size(); i++)
 		{
-			variables.put(decl.ID(i).getText(), type);
+			variables.put(decl.localVariableDeclaration().variableDeclarators().variableDeclarator().get(i).variableDeclaratorId().getText(), type);
 		}
 	}
 
 	/**
 	 * extract the target function, whose name is the same as casePrefix
+	 * TODO: Picks only the last class in file! And there is no comparison with the casePrefix String
 	 * @param markFile
 	 * @return
 	 */
@@ -657,6 +704,7 @@ public class SearchCase {
 			
 			start = fileString.substring(0, start - 1).lastIndexOf('}');
 			output = fileString.substring(start + 1, end + 1);
+			System.out.println("SearchCase.getFunction: " + output);
 			
 		}catch(Exception e){
 			System.out.println(e);
