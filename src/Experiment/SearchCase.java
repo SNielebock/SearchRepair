@@ -180,29 +180,29 @@ public class SearchCase {
 //		System.out.println("IN HERE! (TESTALLRESULTS)");
 		boolean pass = passAllPositive(source, outputFile);
 		if(!pass){
-//			System.out.println("NOT PASS -> RETURNED FALSE");
+			System.out.println("NOT PASS -> RETURNED FALSE");
 			return false;
 		}
 		int count = passNegatives(source, outputFile);
 		if(count == this.getNegatives().size()) {
 			info.getResult().getPositive().add(source);
-//			System.out.println("COUNT = PASSNEGATIVES -> RETURNED TRUE");
+			System.out.println("COUNT = PASSNEGATIVES -> RETURNED TRUE");
 			return true;
 		}
 		else if(count == 0){
 			info.getResult().getFalsePositve().add(source);
-//			System.out.println("COUNT = 0 -> RETURNED FALSE");
+			System.out.println("COUNT = 0 -> RETURNED FALSE");
 			return false;
 		}
 		else {
 			info.getResult().getPartial().put(source, count * 1.0 / this.getNegatives().size());
-//			System.out.println("ELSE -> RETURNED TRUE");
+			System.out.println("ELSE -> RETURNED TRUE");
 			return true;
 		}
 	}
 
 
-
+	//This is nonsense...
 	private int passNegatives(String source, String outputFile) {
 		return this.passTestSuite(source, outputFile, this.negatives);
 	}
@@ -210,20 +210,26 @@ public class SearchCase {
 	
 	//TODO: GCC...
 	private int passTestSuite(String source, String outputFile, Map<String, String> suite){
-		File file = new File( this.casePrefix);
-		if(file.exists()) file.delete();
-		String command1 = "gcc " + outputFile + " -o " + this.casePrefix;
+//		File file = new File( this.casePrefix);
+//		if(file.exists()) file.delete();
+//		String command1 = "gcc " + outputFile + " -o " + this.casePrefix;
+		String command1 = "javac -d " + this.folder + "/new/ " + outputFile;
 		Utility.runCProgram(command1);
-		if(!new File(this.casePrefix).exists()){
-			return 0;
-		}
+		
+		//TODO: commented out for now
+//		if(!new File(this.casePrefix).exists()){
+//			return 0;
+//		}
 		int count = 0;
 		for(String input : suite.keySet()){
 			String output = suite.get(input);
 			
-			String command2 = "./" + this.casePrefix;
+//			String command2 = "./" + this.casePrefix;
+			String command2 = "java -cp " + this.folder + "/new/" + " introclassJava." + this.functionName;
 			
 			String s2 = Utility.runCProgramWithInput(command2, input);
+			
+			System.out.println("SearchCase.passTestSuite S2: " + s2);
 			
 			if(s2.isEmpty() ){
 				continue;
@@ -241,44 +247,64 @@ public class SearchCase {
 		Utility.writeTOFile(this.tempOutput, s2);
 		Utility.writeTOFile(this.outputfile, output);
 		Utility.writeTOFile(this.inputfile, input);
-		String s = Utility.runCProgramWithPythonCommand(this.functionName, this.tempOutput, this.inputfile, this.outputfile);
+//		String s = Utility.runCProgramWithPythonCommand(this.functionName, this.tempOutput, this.inputfile, this.outputfile);
+		//TODO: only median!
+		String s = Utility.runCProgramWithPythonCommand("median", this.tempOutput, this.inputfile, this.outputfile);
+
+		System.out.println("SearchCase.checkPassForOneCase output: " + s);	
+		
 		if(s.trim().endsWith("Test passed.")) return true;
 		else return false;
 		
 	}
 
-	//TODO: GCC...
 	private boolean passAllPositive(String source, String outputFile) {
-		File file = new File( this.casePrefix);
-		if(file.exists()) file.delete();
-		String command1 = "gcc " + outputFile + " -o " + this.casePrefix;
+		//TODO: Commented out for now
+//		File file = new File( this.casePrefix);
+//		if(file.exists()) file.delete();
+		System.out.println("PASSALLPOSITIVES OUTPUTFILE: " + outputFile);
+
+//		String command1 = "gcc " + outputFile + " -o " + this.casePrefix;
+		String command1 = "javac -d " + this.folder + "/new/ " + outputFile;
 		Utility.runCProgram(command1);
-		if(!new File(this.casePrefix).exists()){
-			return false;
-		}
+		
+		//TODO: Commented out for now
+//		if(!new File(this.casePrefix).exists()){
+//			System.out.println("NO NEW FILE?! -> Returned False in \"SearchCase.passAllPositives\"");
+//			return false;
+//		}
 		for(String input : this.positives.keySet()){
 			String output = this.positives.get(input);
 			
-			String command2 = "./" + this.casePrefix;
+//			String command2 = "./" + this.casePrefix;
+//			//TODO: introclassJava...
+			String command2 = "java -cp " + this.folder + "/new/" + " introclassJava." + this.functionName;
+
 			
 			String s2 = Utility.runCProgramWithInput(command2, input);
 			//TODO: Commented out
-//			System.out.println("S2 OUTPUT: " + s2);
+			System.out.println("S2 OUTPUT: " + s2);
 			
 			if(s2.isEmpty() ){
 				return false;
 			}
-			if(!checkPassForOneCase(s2, output, input)) return false;
+			if(!checkPassForOneCase(s2, output, input)){
+				System.out.println("SearchCase.passAllPositives checkPassForOneCase returned false");
+				return false;
+			}
 	
 		}
 		return true;
 	}
 
 	private String generateOutputFile(String input) {
-		String outputfile = this.casePrefix + "new.c";
+		File dir = new File(this.folder + "/new/");
+		dir.mkdir();
+		String outputfile = this.folder + "/new/" + this.functionName + ".java";
+//		String outputfile = this.casePrefix + "new.c";
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputfile)));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".c")));	
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".java")));	
 			String s = null;
 			
 			
@@ -361,7 +387,6 @@ public class SearchCase {
 		
 	}
 
-	//TODO: Full of C crap
 	private void obtainPositiveStates() {
 //		String sourceFile = this.casePrefix + "state.java";
 		String sourceFile = this.folder + "/state/" + this.functionName + ".java";
@@ -405,9 +430,6 @@ public class SearchCase {
 				}
 				//TODO: Commented out
 				info.getPositives().put(inputList, outputList);
-				System.out.println("inputList: " + inputList.toString());
-				System.out.println("outputList: " + outputList.toString());
-				System.out.println("info.getpositives: " + info.getPositives().toString());
 			}
 		}
 

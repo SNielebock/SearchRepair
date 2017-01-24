@@ -1,1 +1,28 @@
-failed
+success
+extra pass:6
+True fix:1
+
+
+True fix 1
+From: 
+if ((a <= b && b <= c) || (c <= b && b <= a)){
+			printf_tmp = b;
+		}
+		else if ((b <= a && a <= c) || (c <= a && a <= b)){
+			printf_tmp = a;
+		}
+		else{
+			printf_tmp = c;
+		}
+To: 
+if((i3 <= i2 &&i2 <= i1 )  ||(i1 <= i2 &&i2 <= i3 )  )  { result = i2  ;
+}
+else if((i2 <= i3 &&i3 <= i1 )  ||(i1 <= i3 &&i3 <= i2 )  )  { result = i3  ;
+}
+
+else { result = i1  ;
+}
+
+
+Partial fix:0
+Not a fix:0
