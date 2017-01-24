@@ -109,7 +109,10 @@ public class GenerateStandardTestCases {
 			//call init on each folder in queue
 			for(File temp : queue){
 				File caseFolder = new File(outputFolderFile.getAbsolutePath() + "/" + count++);
-				init(temp, caseFolder, functionName);
+				//TODO: only for testing!
+				if(count == 40){
+					init(temp, caseFolder, functionName);
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();

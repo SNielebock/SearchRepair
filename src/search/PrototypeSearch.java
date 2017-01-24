@@ -411,7 +411,7 @@ public class PrototypeSearch {
 			}
 			String type = TypeTable.getInstance().getType(con[2]);
 			String id;
-			//dustinguish output
+			//distinguish output
 			if(con[0].contains("_result_")){
 				id = con[0];
 			}

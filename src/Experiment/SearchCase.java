@@ -304,6 +304,7 @@ public class SearchCase {
 			reader.close();
 			writer.close();
 		}catch(Exception e){
+			e.printStackTrace();
 			return "";
 		}
 		return outputfile;
@@ -362,12 +363,18 @@ public class SearchCase {
 
 	//TODO: Full of C crap
 	private void obtainPositiveStates() {
-		String sourceFile = this.casePrefix + "state.c";
+//		String sourceFile = this.casePrefix + "state.java";
+		String sourceFile = this.folder + "/state/" + this.functionName + ".java";
+
+		System.out.println("ObtainPositiveStates sourceFile: " + sourceFile);
+		
 		for(String input : this.positives.keySet()){
 			File file = new File( this.casePrefix);
 			if(file.exists()) file.delete();
-			String command1 = "gcc " + sourceFile + " -o " + this.casePrefix;
-			String command2 = "./" + this.casePrefix;
+//			String command1 = "gcc " + sourceFile + " -o " + this.casePrefix;
+			String command1 = "javac -d " + this.folder + "/state/ " + sourceFile;
+			//TODO: introclassJava...
+			String command2 = "java -cp " + this.folder + "/state/" + " introclassJava." + this.functionName;
 			String s1 = Utility.runCProgram(command1);
 			if(s1.equals("failed")) continue;
 			String s2 = Utility.runCProgramWithInput(command2, input);
@@ -397,11 +404,10 @@ public class SearchCase {
 					outputList.add(o);
 				}
 				//TODO: Commented out
-//				System.out.println("info.getpositives: " + info.getPositives().toString());
 				info.getPositives().put(inputList, outputList);
-//				System.out.println("inputList: " + inputList.toString());
-//				System.out.println("outputList: " + outputList.toString());
-//				System.out.println("info.getpositives: " + info.getPositives().toString());
+				System.out.println("inputList: " + inputList.toString());
+				System.out.println("outputList: " + outputList.toString());
+				System.out.println("info.getpositives: " + info.getPositives().toString());
 			}
 		}
 
@@ -421,7 +427,7 @@ public class SearchCase {
 		String markFile = insertMark(original);
 		
 		System.out.println("MARKFILE: " + markFile);
-		String target = getFunction(markFile);
+//		String target = getFunction(markFile);
 //old:	String[] states = getStatesStatement(target);
 		String[] states = getStatesStatement(original);
 		if(states == null) return false;
@@ -433,11 +439,15 @@ public class SearchCase {
 	}
 
 	private String writeStatesStatement(String[] states) {
-		String fileName = this.casePrefix + "state.c";
+//		String fileName = this.casePrefix + "state.java";
+		File dir = new File(this.folder + "/state/");
+		dir.mkdir();
+		String fileName = this.folder + "/state/" + this.functionName + ".java";
+
 		System.out.println("FILENAME writeStatesStatement: " + fileName);
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".c")));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".java")));
 			String s = null;
 			
 			
@@ -470,6 +480,7 @@ public class SearchCase {
 			reader.close();
 			writer.close();
 		}catch(Exception e){
+			e.printStackTrace();
 			return "";
 		}
 		return fileName;
@@ -503,8 +514,9 @@ public class SearchCase {
 		    MethodDeclarationContext method = listener.getSpecificMethodContext(this.buggy[0]);
 			System.out.println("Target: " + target);
 			
-			if(!method.isEmpty()){
-				System.out.println("Method not empty! " + method.getText());
+			if(method == null){
+				System.out.println("SearchCase.getStatesStatement: Method is null!");
+				return states;
 			}
 
 //old:		getStatesVariables(parser.prog().function(), variables);
@@ -528,13 +540,14 @@ public class SearchCase {
 
 	private String[] configureStatStatment(Map<String, String> variables) {
 		String[] states = new String[2];
-		String inputbegin = "printf(\"inputStart:";
+		String inputbegin = "System.out.printf(\"inputStart:";
 		String inputend = "";
-		String outputbegin = "printf(\"outputStart:";
+		String outputbegin = "System.out.printf(\"outputStart:";
 		String outputend = "";
 		
 		for(String id : variables.keySet()){
 			String type = variables.get(id);
+			System.out.println("VARIABLES: " + id + " TYPE: " + type);
 			if(type.equals("int")){
 				String begin = id + ":%d:int_VBC_";
 				String end = id + ", ";
@@ -567,8 +580,18 @@ public class SearchCase {
 				outputbegin += begin;
 				outputend += end;
 			}
+			else if(type.equals("String")){
+				//Stings
+			}
+			else{
+				//Objects
+			}
 		}
-		System.out.println(inputend);
+		System.out.println("InputBegin: " + inputbegin);
+		System.out.println("InputEnd: " + inputend);
+		System.out.println("OutputBegin: " + outputbegin);
+		System.out.println("OutputEnd: " + outputend);
+
 		states[0] = inputbegin.subSequence(0, inputbegin.length()) + "inputEnd\", " + inputend.substring(0, inputend.length() - 2) + ");";
 		states[1] = outputbegin.subSequence(0, outputbegin.length()) + "_nextloop_\", " + outputend.substring(0, outputend.length() - 2) + ");";
 		return states;
@@ -637,9 +660,12 @@ public class SearchCase {
 				LocalVariableDeclarationStatementContext decl = (LocalVariableDeclarationStatementContext) child;
 				add(decl, variables);
 			}
-			else if(child instanceof StatementExpressionContext){
-				StatementExpressionContext assign = (StatementExpressionContext) child;
-				add(assign, variables);
+			else if(child instanceof StatementContext){
+				StatementContext statement = (StatementContext) child;
+				if(statement.statementExpression()!=null){
+					add(statement.statementExpression(), variables);
+				}
+				
 			}
 //			else if(child instanceof If_statContext) {
 //				If_statContext ifstat = (If_statContext) child;
@@ -649,8 +675,20 @@ public class SearchCase {
 		return variables;
 	}
 
-	//TODO: Fix assigns!
+	//TODO: Unnecessary because all important cases are already in LocalVariableDeclarationStatementContext
 	private void add(StatementExpressionContext assign, Map<String, String> variables) {
+//		if((assign.getText().contains("=")) &&
+//			((!assign.getText().contains("!=")) ||
+//			(!assign.getText().contains("==")) ||
+//			(!assign.getText().contains("<=")) ||
+//			(!assign.getText().contains(">=")))){
+//			System.out.println("Assign found!: " + assign.getText());
+//			String type = assign.expression().expression(0).typeType().getText();
+//			String id  = assign.expression().expression(0).Identifier().getText();
+//			System.out.println("Assign ID: " + id + " Type: " + type);
+//			variables.put(id, type);
+//		}
+		
 //		if(assign.type() == null) return;
 //		String type = assign.type().getText();
 //		String id  = assign.ID().getText();
@@ -667,6 +705,7 @@ public class SearchCase {
 		for(int i = 0; i < decl.localVariableDeclaration().variableDeclarators().variableDeclarator().size(); i++)
 		{
 			variables.put(decl.localVariableDeclaration().variableDeclarators().variableDeclarator().get(i).variableDeclaratorId().getText(), type);
+			System.out.println("Declaration found!: " + decl.localVariableDeclaration().variableDeclarators().variableDeclarator().get(i).variableDeclaratorId().getText() + " Type: " + type);
 		}
 	}
 
