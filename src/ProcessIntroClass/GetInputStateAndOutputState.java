@@ -45,7 +45,7 @@ public class GetInputStateAndOutputState {
 	}
 
 
-	//TODO: Find out what this does and if I need this.
+	//TODO: Find out what this does and if I need this. Not called for now, since MedianSearchcase overrides ESearchCase.search . Check if needed later!
 	private void compileGDB() {
 		String exeFile =  this.folder + "/a.out";
 		String command = "gcc -g " + this.folder + "/" + this.fileName + " -o " + exeFile;

@@ -385,7 +385,7 @@ public class Analyzer {
 			int value = Integer.parseInt(secondline.substring(secondline.lastIndexOf(":") + 1));
 			this.successlist.put(id, value);
 			//System.out.println(value);
-			//TODO
+			//TODO ?
 			this.extraPass.put(name, this.extraPass.get(name) + value);
 			if(value == this.extraSuiteSize.get(name)){
 				this.extraComplete.put(name, this.extraComplete.get(name) + 1);
@@ -489,7 +489,6 @@ public class Analyzer {
 		try {
 			System.setOut(new PrintStream("./csvlog/log"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Analyzer ana = new Analyzer("./bughunt", false, 2);
@@ -505,7 +504,6 @@ public class Analyzer {
 		try {
 			System.setOut(new PrintStream("./csvlog/log"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Analyzer ana = new Analyzer("./bughuntbackup", false, 2);
@@ -903,7 +901,6 @@ public class Analyzer {
 			pw.flush();
 			pw.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

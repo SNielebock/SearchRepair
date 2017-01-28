@@ -21,8 +21,6 @@ public class Transform {
 		//TODO: transform still usable? -> no. But probably not needed either. (IntroClassJava already has part of the transformation in the code).
 		String command = "./executors/transform " + this.typeParameter + " " +  this.folder + "/" + this.originalFile;
 		String output = Utility.runCProgram(command);
-		//TODO: Commented out
-//		System.out.println("TRANSFORM_RUNC_OUTPUT: " + output);
 		if(output.equals("failed")||output.contains("Use the original instead")) return null;
 		if(output.endsWith("failed")) {
 			output = output.substring(0, output.length() - 6);

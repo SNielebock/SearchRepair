@@ -124,7 +124,6 @@ public class GetDrecrepency {
 		try {
 			System.setOut(new PrintStream("smallestdiscrepency"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String s : this.tedSmallest){
@@ -140,7 +139,6 @@ public class GetDrecrepency {
 		try {
 			System.setOut(new PrintStream("mediandiscrepency"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String s : this.tedMedian){
@@ -156,7 +154,6 @@ public class GetDrecrepency {
 		try {
 			System.setOut(new PrintStream("checkSumdiscrepency"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String s : this.tedChecksum){
@@ -172,7 +169,6 @@ public class GetDrecrepency {
 		try {
 			System.setOut(new PrintStream("syllablesdiscrepency"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String s : this.tedSyllables){
@@ -188,7 +184,6 @@ public class GetDrecrepency {
 		try {
 			System.setOut(new PrintStream("digitsdiscrepency"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String s : this.tedDigits){
@@ -204,7 +199,6 @@ public class GetDrecrepency {
 		try {
 			System.setOut(new PrintStream("gradediscrepency"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String s : this.tedGrade){

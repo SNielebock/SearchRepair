@@ -161,7 +161,7 @@ public  class ESearchCase {
 		}
 		Transform trans = new Transform(this.getFolder(), this.getFileName(), typeParameter);
 		String pass = trans.tranform();
-		//TODO: Commented out
+		//TODO: Syso
 		System.out.println("PASS: " + pass);
 		//transform here, if there is a true transform, no need to copy
 		if(pass != null) {
@@ -402,7 +402,7 @@ public  class ESearchCase {
 	}
 
 
-	//TODO: GCC..
+	//TODO: GCC... -> again not called due to overridden search method of ESearchCase by MedianSearchCase(f.e.)
 	private int passNegatives(String source, String outputFile) {
 		File file = new File( this.casePrefix);
 		if(file.exists()) file.delete();
@@ -422,7 +422,6 @@ public  class ESearchCase {
 			if(s2.isEmpty() ){
 				continue;
 			}
-			//TODO: Commented out
 //			System.out.println(input);
 //			System.out.println(s2);
 //			System.out.println(output);
@@ -434,7 +433,7 @@ public  class ESearchCase {
 
 
 
-	//TODO: GCC...
+	//TODO: GCC... -> again not called due to overridden search method of ESearchCase by MedianSearchCase(f.e.)
 	private boolean passAllPositive(String source, String outputFile) {
 		File file = new File( this.casePrefix);
 		if(file.exists()) file.delete();
@@ -453,7 +452,6 @@ public  class ESearchCase {
 			if(s2.isEmpty() ){
 				return false;
 			}
-			//TODO: Commented out
 //			System.out.println(input);
 //			System.out.println(output);
 //			System.out.println(s2);

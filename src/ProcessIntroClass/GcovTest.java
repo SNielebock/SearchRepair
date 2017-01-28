@@ -80,9 +80,6 @@ public class GcovTest {
 		String filePath = this.folder + "/suspicious";
 		try{
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath)));
-			//TODO: Commented out
-//			System.out.println("After suspicious creation!");
-//			System.out.println("Suspiciousness: " + this.suspiciousness.toString());
 			for(int num = 1;  num <= this.suspiciousness.keySet().size(); num++){
 				bw.write(Integer.toString(num));
 				bw.write(" ");
@@ -295,7 +292,6 @@ public class GcovTest {
 			//System.out.println(s);
 			String gcovCommand = "gcov " + "./" + fileName;
 			Utility.runCProgram(gcovCommand);
-			//TODO: gcov? should I change it?
 			String gcovFile = this.fileName + ".gcov";
 			GcovFileParse parser = new GcovFileParse(gcovFile);
 			for(int lineNumber : parser.getExecutions().keySet()){

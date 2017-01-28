@@ -20,8 +20,6 @@ public class GenerateStandardTestCases {
 	private String introPath;
 	private String outputFolderPath;
 	public GenerateStandardTestCases(String introPath, String outputFolderPath) {
-		//TODO: I think this doesn't do anything.
-		//super();
 		this.introPath = introPath;
 		this.outputFolderPath = outputFolderPath;
 		new File(outputFolderPath).mkdir();
@@ -231,12 +229,9 @@ public class GenerateStandardTestCases {
 	 * @param fileName 		self-explanatory
 	 */
 	private void generateWhiteAndBlack(String outputFolder, String inputFolder, String fileName) {
-		String whiteboxPath = inputFolder + "/../../tests/whitebox";
-		String blackboxPath = inputFolder + "/../../tests/blackbox";
-		
-		//TODO: works only for median!
-		blackboxPath = "/home/matthias/git/IntroClass-master/median/tests/blackbox";
-		whiteboxPath = "/home/matthias/git/IntroClass-master/median/tests/whitebox";
+		//TODO: works for now, but is not very beautiful
+		String whiteboxPath = inputFolder + "/../../../../../../tests/whitebox";
+		String blackboxPath = inputFolder + "/../../../../../../tests/blackbox";
 		
 		new File(outputFolder + "/whitebox").mkdir();
 		new File(outputFolder + "/whitebox/positive").mkdir();
@@ -245,6 +240,7 @@ public class GenerateStandardTestCases {
 		new File(outputFolder + "/blackbox/positive").mkdir();
 		new File(outputFolder + "/blackbox/negative").mkdir();
 		try{
+			//TODO: introclassJava...
 			String testingExe =  "introclassJava." + fileName.substring(0, fileName.lastIndexOf("."));
 			System.out.println("TestingExeString: " + testingExe);
 			
@@ -296,9 +292,24 @@ public class GenerateStandardTestCases {
 				String tempOuputFile = "./tempFolder/test.out";
 				Utility.writeTOFile(tempOuputFile, runOutput);
 				
-				//TODO: works only for median and not very elegant
 //				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
-				String s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+				
+				//TestingExe = introclassJava.median_cd2d9b5b_010
+				String className = testingExe.substring(testingExe.lastIndexOf(".") + 1);
+				String s = "";
+				if(className.startsWith("median")){
+					s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("checksum")){
+					s = Utility.runCProgramWithPythonCommand("checksum", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("digits")){
+					s = Utility.runCProgramWithPythonCommand("digits", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("grade")){
+					s = Utility.runCProgramWithPythonCommand("grade", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("smallest")){
+					s = Utility.runCProgramWithPythonCommand("smallest", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("syllables")){
+					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
+				}
 				System.out.println("Utility.initBlackBox Python output: " + s);
 				if(s.equals("Test passed.")){
 					String index = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
@@ -335,9 +346,24 @@ public class GenerateStandardTestCases {
 				String tempOuputFile = "./tempFolder/test.out";
 				Utility.writeTOFile(tempOuputFile, runOutput);
 				
-				//TODO: works only for median and not very elegant
 //				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
-				String s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+				
+				String className = testingExe.substring(testingExe.lastIndexOf(".") + 1);
+				System.out.println("CLASSNAME: " + className);
+				String s = "";
+				if(className.startsWith("median")){
+					s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("checksum")){
+					s = Utility.runCProgramWithPythonCommand("checksum", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("digits")){
+					s = Utility.runCProgramWithPythonCommand("digits", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("grade")){
+					s = Utility.runCProgramWithPythonCommand("grade", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("smallest")){
+					s = Utility.runCProgramWithPythonCommand("smallest", tempOuputFile, path, outPath).trim();
+				}else if(className.startsWith("syllables")){
+					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
+				}
 				
 				System.out.println("Utility.initWhiteBox Python output: " + s);
 				if(s.equals("Test passed.")){

@@ -161,7 +161,6 @@ public class PrototypeSearch {
 			String[] pathtracks, String[] pathmapping, String[] pathformals) {
 		// only one path can succeed
 		if(!(pathconstraint.length == pathtypes.length && pathtypes.length == pathtracks.length && pathtracks.length == pathmapping.length && pathmapping.length == pathformals.length)) return;
-		
 //		for(String s: pathtypes){
 //			System.out.println("PATHTYPES: " + s);
 //		}
@@ -173,9 +172,10 @@ public class PrototypeSearch {
 		//get all permutations of info.getPositives().keySet() that have the correct type
 		List<Map<String, String>> mapp = getValidateMapping(info, variableFor);
 		if(mapp.isEmpty()) return;
+
 		for(Map<String, String> map : mapp){
 			String s = map.toString().trim();
-			//TODO: Commented out
+			//TODO: Syso
 			System.out.println("THISMAP: " + s);
 			//if(!s.equals("{count=count, string=string, i=i}")) continue;
 			boolean passAllPositive = true;
@@ -344,13 +344,15 @@ public class PrototypeSearch {
 		for(String s : formalTypes.keySet()){
 			variables.add(s);
 		}
+
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		if(inputs.size() < variables.size()) return list;
+
 		if(inputs.size() > 7 || variables.size() > 6) return list;
 
 		//Get all permutations of inputs
 		List<List<String>> inputPerms = getPermutation(inputs, variables.size());
-		
+
 		//Mapping of input values to variables and not variables to repository variables
 //		for(int i = 0; i<inputPerms.size(); i++){
 //			for(int j = 0; j<inputPerms.get(i).size(); j++){

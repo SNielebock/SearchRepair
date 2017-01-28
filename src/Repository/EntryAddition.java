@@ -57,7 +57,6 @@ public class EntryAddition {
 //			try {
 //				System.setOut(new PrintStream("log"));
 //			} catch (FileNotFoundException e) {
-//				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
 			System.out.println(method.getName());

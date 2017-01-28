@@ -85,8 +85,6 @@ public class Utility {
 				}
 				while ((ls_str = ls_in.readLine()) != null) {
 					sb.append(ls_str);
-					//TODO: Commented out
-//					System.out.println("LS_STR: " + ls_str);
 				}
 				// while((ls_str = ls_err.readLine()) != null){
 				// System.out.println(ls_str+ "j");

@@ -78,11 +78,13 @@ public class StringRepresentation {
 
 	private void generateConstraints(){
 		this.declareConstraint = getDeclareConstraint(name);
+		this.constraints.add("(assert (= " + name + " " + "\"" + this.content + "\"))");
 		//constraints.add(getDeclareConstraint(name));
-		constraints.add(getLengthConstraints(name, content));
-		for(int i = 0; i < content.length(); i++){
-			constraints.add(getCharOfConstraint(name, content,i));
-		}
+		
+//		constraints.add(getLengthConstraints(name, content));
+//		for(int i = 0; i < content.length(); i++){
+//			constraints.add(getCharOfConstraint(name, content,i));
+//		}
 	}
 	
 	

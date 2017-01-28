@@ -41,7 +41,6 @@ public class Main {
 		else{
 			//rerun
 			GenerateStandardTestCases test = new GenerateStandardTestCases(introclassPath, "./bughunt");
-			//TODO: Commenting in!
 			test.generate();
 			rerun(wb, repositoryType);
 			Analyzer.getCSVData();

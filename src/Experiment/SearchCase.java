@@ -150,8 +150,6 @@ public class SearchCase {
 		for(String source : info.getResult().getSearchMapping().keySet()){
 			for(Map<String, String> map : info.getResult().getSearchMapping().get(source)){
 				try{
-					//TODO: Commented out
-//					System.out.println("IN HERE! (RULEOUTFALSEPOSITIVE): " + map.toString());
 					String input = Restore.getMappingString(source, map);
 					String outputFile = generateOutputFile(input);
 					if(testAllResults(source, outputFile)){
@@ -176,8 +174,6 @@ public class SearchCase {
 
 
 	private boolean testAllResults(String source, String outputFile) {
-		//TODO: Commented out
-//		System.out.println("IN HERE! (TESTALLRESULTS)");
 		boolean pass = passAllPositive(source, outputFile);
 		if(!pass){
 			System.out.println("NOT PASS -> RETURNED FALSE");
@@ -208,7 +204,6 @@ public class SearchCase {
 	}
 
 	
-	//TODO: GCC...
 	private int passTestSuite(String source, String outputFile, Map<String, String> suite){
 //		File file = new File( this.casePrefix);
 //		if(file.exists()) file.delete();
@@ -248,8 +243,22 @@ public class SearchCase {
 		Utility.writeTOFile(this.outputfile, output);
 		Utility.writeTOFile(this.inputfile, input);
 //		String s = Utility.runCProgramWithPythonCommand(this.functionName, this.tempOutput, this.inputfile, this.outputfile);
-		//TODO: only median!
-		String s = Utility.runCProgramWithPythonCommand("median", this.tempOutput, this.inputfile, this.outputfile);
+		//PROGRAMS = {'checksum', 'digits', 'grade', 'median', 'smallest', 'syllables'}
+		String s = "";
+		if(this.functionName.startsWith("median")){
+			s = Utility.runCProgramWithPythonCommand("median", this.tempOutput, this.inputfile, this.outputfile);
+		}else if(this.functionName.startsWith("checksum")){
+			s = Utility.runCProgramWithPythonCommand("checksum", this.tempOutput, this.inputfile, this.outputfile);
+		}else if(this.functionName.startsWith("digits")){
+			s = Utility.runCProgramWithPythonCommand("digits", this.tempOutput, this.inputfile, this.outputfile);
+		}else if(this.functionName.startsWith("grade")){
+			s = Utility.runCProgramWithPythonCommand("grade", this.tempOutput, this.inputfile, this.outputfile);
+		}else if(this.functionName.startsWith("smallest")){
+			s = Utility.runCProgramWithPythonCommand("smallest", this.tempOutput, this.inputfile, this.outputfile);
+		}else if(this.functionName.startsWith("syllables")){
+			s = Utility.runCProgramWithPythonCommand("syllables", this.tempOutput, this.inputfile, this.outputfile);
+		}
+		System.out.println("THIS FUNTIONNAME CHECKPASSFORONECASE: " + this.functionName);
 
 		System.out.println("SearchCase.checkPassForOneCase output: " + s);	
 		
@@ -282,7 +291,7 @@ public class SearchCase {
 
 			
 			String s2 = Utility.runCProgramWithInput(command2, input);
-			//TODO: Commented out
+			//TODO: Syso
 			System.out.println("S2 OUTPUT: " + s2);
 			
 			if(s2.isEmpty() ){
@@ -369,7 +378,6 @@ public class SearchCase {
 	private boolean fillSearchCase() {
 		System.out.println("---"+Arrays.toString(this.buggy));
 		try{
-			//TODO: Here testfile!
 			System.out.println("THISCASEPREFIX: " + this.casePrefix + ".java");
 			if(insertStateStatements(this.casePrefix + ".java")){
 				System.out.println("SearchCase.fillSearchCase insertStateStatements true");
@@ -403,8 +411,6 @@ public class SearchCase {
 			String s1 = Utility.runCProgram(command1);
 			if(s1.equals("failed")) continue;
 			String s2 = Utility.runCProgramWithInput(command2, input);
-			//TODO: Commented out
-//			System.out.println("S2!: " + s2);
 			if(s2.trim().isEmpty()) return;
 			String[] entries = s2.split("_nextloop_");
 			for(String entry : entries){
@@ -428,7 +434,6 @@ public class SearchCase {
 					if(o.equals("")) continue;
 					outputList.add(o);
 				}
-				//TODO: Commented out
 				info.getPositives().put(inputList, outputList);
 			}
 		}
@@ -518,8 +523,6 @@ public class SearchCase {
 //			FunctionLexer lexer = new FunctionLexer(input);
 //			CommonTokenStream tokens = new CommonTokenStream(lexer);
 //			FunctionParser parser = new FunctionParser(tokens);
-			System.out.println("GETSTATESSTATEMENT TARGET: " + target);
-
 		    File file = new File(target);
 		    FileInputStream fis = new FileInputStream(file);
 
@@ -534,29 +537,24 @@ public class SearchCase {
 		    MyJavaListener listener = new MyJavaListener();
 		    walker.walk(listener, context);
 		    MethodDeclarationContext method = listener.getSpecificMethodContext(this.buggy[0]);
-			System.out.println("Target: " + target);
 			
 			if(method == null){
-				System.out.println("SearchCase.getStatesStatement: Method is null!");
+				System.out.println("SearchCase.getStatesStatement return, because of method == null");
 				return states;
 			}
 
 //old:		getStatesVariables(parser.prog().function(), variables);
 			getStatesVariables(method, variables);
 			//stream.close();
-			System.out.println("Test1");
 		}catch(Exception e){
-			System.out.println("Test5");
 			e.printStackTrace();
 			return null;
 		}
 		if(variables.isEmpty()){
-			System.out.println("Test4");
+			System.out.println("SearchCase.getStatesStatement return, because of variables.isEmpty()");
 			return null;
 		}
-		System.out.println("Test2");
 		states = configureStatStatment(variables);
-		System.out.println("Test3");
 		return states;
 	}
 
@@ -604,6 +602,12 @@ public class SearchCase {
 			}
 			else if(type.equals("String")){
 				//Stings
+				String begin = id + ":%s:String_VBC_";
+				String end = id + ", ";
+				inputbegin += begin;
+				inputend += end;
+				outputbegin += begin;
+				outputend += end;
 			}
 			else{
 				//Objects
@@ -733,7 +737,7 @@ public class SearchCase {
 
 	/**
 	 * extract the target function, whose name is the same as casePrefix
-	 * TODO: Picks only the last class in file! And there is no comparison with the casePrefix String
+	 * TODO: Picks only the last class in file! And there is no comparison with the casePrefix String -> not called for now
 	 * @param markFile
 	 * @return
 	 */
@@ -784,7 +788,6 @@ public class SearchCase {
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)));
 //			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".c")));
-			//TODO: just testing
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".java")));
 			String s = null;
 			

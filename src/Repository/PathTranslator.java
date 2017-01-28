@@ -455,6 +455,7 @@ public class PathTranslator {
 		String expr = getExpr(c.expr());
 		System.out.println("CONVERNONSTRINGEXP: " + expr);
 		System.out.println("CONVERNONSTRINGC: " + c.ID().getText());
+		System.out.println("CONVERNONSTRINGC: " + this.variableTrack.get(c.ID().getText()));
 		//TODO: JUST FOR TESTING!
 //		String id = this.variableTrack.get(c.ID().getText());
 		String id = c.ID().getText();
