@@ -12,6 +12,15 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import antlr.preprocess.JavaLexer;
+import antlr.preprocess.JavaParser;
+import antlr.preprocess.MyJavaListener;
+import antlr.preprocess.JavaParser.CompilationUnitContext;
+
 public class Utility {
 
 	/**
@@ -315,6 +324,29 @@ public class Utility {
 
 		out = sb.toString();
 		return out;
+	}
+	
+	public static MyJavaListener getANTLRListener(String target){
+		MyJavaListener listener = new MyJavaListener();
+		try {
+			File file = new File(target);
+		    FileInputStream fis = new FileInputStream(file);
+	
+		    ANTLRInputStream input;
+	
+			input = new ANTLRInputStream(fis);
+	
+		    JavaLexer lexer = new JavaLexer(input);
+		    CommonTokenStream tokens = new CommonTokenStream(lexer);
+		    JavaParser parser = new JavaParser(tokens);
+		    CompilationUnitContext context = parser.compilationUnit();
+		    ParseTreeWalker walker = new ParseTreeWalker();	
+		    walker.walk(listener, context);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return listener;
 	}
 
 	// public void

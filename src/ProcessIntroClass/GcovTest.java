@@ -3,6 +3,7 @@ package ProcessIntroClass;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -135,8 +136,11 @@ public class GcovTest {
 			
 			try{
 //				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");
-				//TODO: "introclassJava" :(
-				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html"));
+				String packages = Utility.getANTLRListener(this.folder + "/" + this.fileName).getPackageName();
+				if(!packages.isEmpty()){
+					packages += ".";
+				}
+				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/reports/cobertura-html/" + packages + functionName + ".html"));
 				
 				//String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
 				String HTMLCoveredRegex = "(.*?<tr>  <td class=\"numLineCover\">&nbsp;)(?<line>\\d+)(</td>  <td class=\"nbHits(Un)?[Cc]overed\">)(<a .*?>)?(&nbsp;)(?<executions>\\d+)(</a>)?(</td>.*)";
@@ -229,8 +233,11 @@ public class GcovTest {
 			
 			try{
 //				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");
-				//TODO: "introclassJava" :(
-				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html"));
+				String packages = Utility.getANTLRListener(this.folder + "/" + this.fileName).getPackageName();
+				if(!packages.isEmpty()){
+					packages += ".";
+				}
+				BufferedReader br = new BufferedReader(new FileReader(this.folder + "/reports/cobertura-html/" + packages + functionName + ".html"));
 				
 				//String HTMLRegex = "(.*?<td class=\"numLineCover\">&nbsp;)(\\d+)(<a name=\"src_\\d+\"></a>)?(</td>.*)";
 				String HTMLCoveredRegex = "(.*?<tr>  <td class=\"numLineCover\">&nbsp;)(?<line>\\d+)(</td>  <td class=\"nbHits(Un)?[Cc]overed\">)(<a .*?>)?(&nbsp;)(?<executions>\\d+)(</a>)?(</td>.*)";
@@ -454,7 +461,13 @@ public class GcovTest {
          
          bw.write("root = " + folder + "\n");
          String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
-         bw.write("fileName = introclassJava." + functionName + "\n");
+         
+		String packages = Utility.getANTLRListener(this.folder + "/" + this.fileName).getPackageName();
+		if(!packages.isEmpty()){
+			packages += ".";
+		}
+			
+         bw.write("fileName = " + packages + functionName + "\n");
          bw.write("args = " + input + "\n");
          
          String line;

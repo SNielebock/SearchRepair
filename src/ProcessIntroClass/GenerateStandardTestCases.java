@@ -240,8 +240,11 @@ public class GenerateStandardTestCases {
 		new File(outputFolder + "/blackbox/positive").mkdir();
 		new File(outputFolder + "/blackbox/negative").mkdir();
 		try{
-			//TODO: introclassJava...
-			String testingExe =  "introclassJava." + fileName.substring(0, fileName.lastIndexOf("."));
+			String packages = Utility.getANTLRListener(inputFolder + '/' + fileName).getPackageName();
+			if(!packages.isEmpty()){
+				packages += ".";
+			}
+			String testingExe =  packages + fileName.substring(0, fileName.lastIndexOf("."));
 			System.out.println("TestingExeString: " + testingExe);
 			
 			

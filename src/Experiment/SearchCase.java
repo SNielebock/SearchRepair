@@ -221,7 +221,7 @@ public class SearchCase {
 			String output = suite.get(input);
 			
 //			String command2 = "./" + this.casePrefix;
-			String packages = getANTLRListener(outputFile).getPackageName();
+			String packages = Utility.getANTLRListener(outputFile).getPackageName();
 			if(!packages.isEmpty()){
 				packages += ".";
 			}
@@ -240,27 +240,6 @@ public class SearchCase {
 		return count;
 	}
 	
-	
-
-
-	private String getpackageString(String folder, String functionName) {
-		File dir = new File(folder);
-		String returnString = "";
-		if(!dir.exists()) return "";
-		for(File file : dir.listFiles()){
-			if(file.isDirectory()){
-				returnString += file.getName() + ".";
-				getpackageString(file.getAbsolutePath(), functionName);
-			}
-			else if(file.getName().equals(functionName + ".java")){
-				continue;
-			}else{
-				break;
-			}
-			
-		}
-		return returnString;
-	}
 
 	private boolean checkPassForOneCase(String s2, String output, String input) {
 		Utility.writeTOFile(this.tempOutput, s2);
@@ -310,7 +289,7 @@ public class SearchCase {
 			String output = this.positives.get(input);
 			
 //			String command2 = "./" + this.casePrefix;
-			String packages = getANTLRListener(outputFile).getPackageName();
+			String packages = Utility.getANTLRListener(outputFile).getPackageName();
 			if(!packages.isEmpty()){
 				packages += ".";
 			}
@@ -434,7 +413,7 @@ public class SearchCase {
 //			String command1 = "gcc " + sourceFile + " -o " + this.casePrefix;
 			String command1 = "javac -d " + this.folder + "/state/ " + sourceFile;
 
-			String packages = getANTLRListener(sourceFile).getPackageName();
+			String packages = Utility.getANTLRListener(sourceFile).getPackageName();
 			if(!packages.isEmpty()){
 				packages += ".";
 			}
@@ -549,27 +528,7 @@ public class SearchCase {
 		
 		Map<String, String> variables = new HashMap<String, String>();
 		try{
-//			InputStream stream = new ByteArrayInputStream(target.getBytes());
-//			ANTLRInputStream input = new ANTLRInputStream(stream);
-//			FunctionLexer lexer = new FunctionLexer(input);
-//			CommonTokenStream tokens = new CommonTokenStream(lexer);
-//			FunctionParser parser = new FunctionParser(tokens);
-//		    File file = new File(target);
-//		    FileInputStream fis = new FileInputStream(file);
-//
-//		    ANTLRInputStream input = new ANTLRInputStream(fis);
-////			InputStream stream = new ByteArrayInputStream(target.getBytes());
-////		    ANTLRInputStream input = new ANTLRInputStream(stream);
-//		    JavaLexer lexer = new JavaLexer(input);
-//		    CommonTokenStream tokens = new CommonTokenStream(lexer);
-//		    JavaParser parser = new JavaParser(tokens);
-//		    CompilationUnitContext context = parser.compilationUnit();
-//		    ParseTreeWalker walker = new ParseTreeWalker();	
-//		    MyJavaListener listener = new MyJavaListener();
-//		    walker.walk(listener, context);
-//		    MethodDeclarationContext method = listener.getSpecificMethodContext(this.buggy[0]);
-		    MethodDeclarationContext method = getANTLRListener(target).getSpecificMethodContext(this.buggy[0]);
-
+		    MethodDeclarationContext method = Utility.getANTLRListener(target).getSpecificMethodContext(this.buggy[0]);
 			
 			if(method == null){
 				System.out.println("SearchCase.getStatesStatement return, because of method == null");
@@ -591,30 +550,7 @@ public class SearchCase {
 		return states;
 	}
 	
-	private MyJavaListener getANTLRListener(String target){
-		MyJavaListener listener = new MyJavaListener();
-		try {
-			File file = new File(target);
-		    FileInputStream fis = new FileInputStream(file);
-	
-		    ANTLRInputStream input;
-	
-				input = new ANTLRInputStream(fis);
-	
-	//		InputStream stream = new ByteArrayInputStream(target.getBytes());
-	//	    ANTLRInputStream input = new ANTLRInputStream(stream);
-		    JavaLexer lexer = new JavaLexer(input);
-		    CommonTokenStream tokens = new CommonTokenStream(lexer);
-		    JavaParser parser = new JavaParser(tokens);
-		    CompilationUnitContext context = parser.compilationUnit();
-		    ParseTreeWalker walker = new ParseTreeWalker();	
-		    walker.walk(listener, context);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    return listener;
-	}
+
 
 	private String[] configureStatStatment(Map<String, String> variables) {
 		String[] states = new String[2];
