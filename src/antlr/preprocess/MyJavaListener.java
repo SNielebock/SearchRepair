@@ -14,6 +14,7 @@ import antlr.preprocess.JavaParser.*;
 public class MyJavaListener extends JavaBaseListener {
 	private Map<Pair, MethodDeclarationContext> methodRanges = new HashMap<Pair, MethodDeclarationContext>(); 
 	private List<Pair> statementRanges = new ArrayList<Pair>(); 
+	private String packageName = "";
 
 	@Override 
 	public void enterMethodDeclaration(@NotNull MethodDeclarationContext ctx) {
@@ -32,6 +33,15 @@ public class MyJavaListener extends JavaBaseListener {
 	@Override 
 	public void enterEveryRule(@NotNull ParserRuleContext ctx) { 
 //		System.out.println("EveryRule: " + ctx.getText());
+	}
+	
+	@Override
+	public void enterPackageDeclaration(@NotNull PackageDeclarationContext ctx) { 
+		packageName = ctx.qualifiedName().getText();
+	}
+	
+	public String getPackageName(){
+		return packageName;
 	}
 	
 	public Pair getBigSuspiciousRange(int bigSuspicious){
