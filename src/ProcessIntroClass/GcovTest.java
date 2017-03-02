@@ -229,7 +229,7 @@ public class GcovTest {
 //	 		String jcovCommand = "ant -f ./jcov_searchRepair.xml";
 	 		String coberturaCommand = "ant -f ./cobertura_searchRepair.xml";
 			String coberturaString = Utility.runCProgram(coberturaCommand);
-//			System.out.println("COBERTURA STRING: " + coberturaString);
+			System.out.println("COBERTURA STRING: " + coberturaString);
 			
 			try{
 //				System.out.println("HTML FILE: " + this.folder + "/reports/cobertura-html/introclassJava." + functionName + ".html");

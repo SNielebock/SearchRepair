@@ -280,7 +280,7 @@ public class Utility {
 					ls_proc.getErrorStream()));
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 500L * 10; // timeout in seconds
+			long timeoutInMillis = 1000L * 10; // timeout in seconds
 			long finish = now + timeoutInMillis;
 
 			try {

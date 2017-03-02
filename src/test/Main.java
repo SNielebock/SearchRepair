@@ -55,7 +55,8 @@ public class Main {
 
 	private static void generateANTLR() {
 		String command1 = "java -jar ./lib/antlr-4.4-complete.jar -package antlr.preprocess ./src/antlr/preprocess/Java.g4";
-		Utility.runCProgram(command1);		
+		String output = Utility.runCProgram(command1);		
+		System.out.println("ANTLR output: " + output);
 	}
 
 	private static void rerun(boolean wb, int repositoryType) {

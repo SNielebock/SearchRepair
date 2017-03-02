@@ -41,8 +41,10 @@ public class GenerateStandardTestCases {
 		try{
 			File dir = new File(introPath);
 			System.out.println(dir.getAbsolutePath());
+			System.out.println("test");
 			for(String typeName : dir.list()){
-				File file = new File(typeName);
+				File file = new File(dir.getAbsolutePath() + "/" + typeName);
+				System.out.println("GenerateStandardTestCases.generate - typeName: " + typeName);
 				if(file.isDirectory()){
 					generate(introPath + "/" + typeName, outputFolderPath + "/" + typeName);
 				}
@@ -84,6 +86,7 @@ public class GenerateStandardTestCases {
 		String functionName = inputFolder.substring(inputFolder.lastIndexOf("/") + 1);
 		File outputFolderFile = new File(outputFolder);
 		outputFolderFile.mkdir();
+		System.out.println("GeneralStandardTestCases.generate");
 		try{
 			int depth = 0;
 			File file = new File(inputFolder);
@@ -105,7 +108,10 @@ public class GenerateStandardTestCases {
 				queue = list;
 				depth++;
 			}
-			if(depth != 2) return;
+			if(depth != 2){
+				System.out.println("GeneralStandardTestCases.generate - Return because: \"depth != 2\"");
+				return;
+			}
 			
 			int count = 0;
 			//call init on each folder in queue
@@ -134,19 +140,31 @@ public class GenerateStandardTestCases {
 	 * @param functionName 	current Function
 	 */
 	private void init(File temp, File caseFolder, String functionName) {
+		//TODO: IntroClassjava
 		String inputFolder = temp.getAbsolutePath() + "/src/main/java/introclassJava";
 		String outputFolder = caseFolder.getAbsolutePath();
 		
 //		inputFolder = "/home/matthias/git/SearchRepair/TestCases/MedianJavaTest";
 		new File(outputFolder).mkdir();
+		new File(outputFolder + "/src").mkdir();
 		System.out.println(inputFolder + "\n" + outputFolder);
 	
 		File inputDirectory = new File(inputFolder);
+		System.out.println("GenerateStandardTestCases.init - InputFolder: " + inputDirectory.getName());
 		for(File tmpFile: inputDirectory.listFiles()){
 			if(tmpFile.getName().endsWith(".java")){
 				System.out.println("TEMPFILE GET NAME: " + tmpFile.getName());
 				
 				Utility.copy(inputFolder + "/" + tmpFile.getName(), outputFolder + "/" + tmpFile.getName());
+				
+				String packages = Utility.getANTLRListener(inputFolder + "/" + tmpFile.getName()).getPackageName();
+				String packagesPath = packages.replaceAll("\\.", "/");
+				System.out.println("PACKAGESPATH: " + packagesPath);
+				
+				new File(outputFolder + "/src/" + packagesPath).mkdir();
+				
+				Utility.copy(inputFolder + "/" + tmpFile.getName(), outputFolder + "/src/" + packagesPath + "/" + tmpFile.getName());
+				
 				Utility.writeTOFile(outputFolder + "/original", inputFolder);
 				generateWhiteAndBlack(outputFolder, inputFolder, tmpFile.getName());
 				

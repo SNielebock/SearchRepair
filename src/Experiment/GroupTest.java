@@ -46,7 +46,7 @@ public class GroupTest {
 	 * 							repository type: 0 linux, 1 introclass, 2 future
 	 */
 	public static void rerun(boolean wb, int repositoryType) {
-		medianTest(wb, repositoryType);
+		//medianTest(wb, repositoryType);
 		//smallestTest(wb, repositoryType);
 		// gradeTest(wb, repositoryType);
 		// checkSumTest(wb, repositoryType);
@@ -75,7 +75,9 @@ public class GroupTest {
 				for(File subRoot: root.listFiles()){
 					try {
 						String folder = "./bughunt/" + root.getName() + "/" + subRoot.getName();
-						for(File javaFile: root.listFiles()){
+						System.out.println("FolderName: " + folder);
+						for(File javaFile: subRoot.listFiles()){
+							System.out.println("JavaFile: " + javaFile.getName());
 							if(!javaFile.isDirectory() && javaFile.getName().endsWith(".java")){
 								String fileName = javaFile.getName();
 								if (type == 2) {
@@ -86,7 +88,8 @@ public class GroupTest {
 								}else if(type == 1){
 									actualRepository = 1;
 								}
-								CheckSumSearchCase searcher = new CheckSumSearchCase(folder, fileName, actualRepository);
+								System.out.println("Before GeneralSearchCase - Folder: " + folder + " FileName: " + fileName + " ActualRepository: " + actualRepository);
+								GeneralSearchCase searcher = new GeneralSearchCase(folder, fileName, actualRepository);
 								searcher.transformAndInitRunDir(false, "");
 								searcher.initInputAndOutput();
 								searcher.search(wb);
