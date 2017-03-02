@@ -53,7 +53,7 @@ public class Utility {
 			String tempOuputFile, String inputFile, String outputFile) {
 		String programName = testingExe.substring(testingExe.indexOf("/") + 1);
 		System.out.println("GENPROG ARGUMENTS: programName: " + programName + "\n tempOuputFile: " + tempOuputFile + "\n outputFile: " + outputFile + "\n inputFile: " + inputFile);
-		String command = "/home/matthias/git/SearchRepair/executors/genprog_tests.py --program "
+		String command = "./executors/genprog_tests.py --program "
 				+ programName
 				+ " "
 				+ tempOuputFile
