@@ -125,7 +125,7 @@ public class GcovTest {
 	}
 
 	private void initNegativeExecutions() {
-		//TODO: All different for IntroClassJava due to f.e. median_2c155667_000
+		//All different for IntroClassJava due to f.e. median_2c155667_000
 		String functionName = this.fileName.substring(0, this.fileName.lastIndexOf('.'));
 		for(String input : this.negatives.keySet()){
 			createPropertiesWithInput(input);

@@ -45,7 +45,7 @@ public class Scraper {
 		if(!dir.exists() || !dir.isDirectory()) {
 			dir.mkdir();
 		}
-		//scrape(new File(folder));
+		scrape(new File(folder));
 	}
 	
 	public List<String> scrape(){

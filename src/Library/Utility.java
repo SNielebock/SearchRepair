@@ -343,7 +343,6 @@ public class Utility {
 		    ParseTreeWalker walker = new ParseTreeWalker();	
 		    walker.walk(listener, context);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    return listener;

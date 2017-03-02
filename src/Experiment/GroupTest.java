@@ -51,7 +51,64 @@ public class GroupTest {
 		// gradeTest(wb, repositoryType);
 		// checkSumTest(wb, repositoryType);
 		// syllablesTest(wb, repositoryType);
+		allTest(wb, repositoryType);
 	}
+	
+	/**
+	 * This function tries to repair each java file in bughunt/XYZ/ one by one.
+	 * 
+	 * @see AllSearchCase
+	 * @see ESearchCase
+	 *  
+	 * @param wb 	true = whitebox test; false = blackbox test
+	 * @param type	repository type: 0 linux, 1 introclass, 2 future
+	 */
+	//TODO: finish!
+	public static void allTest(boolean wb, int type) {
+		List<String> list = new ArrayList<String>();
+		File file = new File("./bughunt");
+		int size = file.listFiles().length;
+		int actualRepository = 0;
+		for (File root : file.listFiles()) {
+			System.out.println("THISROOT: " + root.getName());
+			if(root.isDirectory()){
+				for(File subRoot: root.listFiles()){
+					try {
+						String folder = "./bughunt/" + root.getName() + "/" + subRoot.getName();
+						for(File javaFile: root.listFiles()){
+							if(!javaFile.isDirectory() && javaFile.getName().endsWith(".java")){
+								String fileName = javaFile.getName();
+								if (type == 2) {
+									//get number of folder to decide which future Repository to take
+									int value = Integer.parseInt(subRoot.getName());
+									if(value < size / 2) actualRepository = 3;
+									else actualRepository = 4;
+								}else if(type == 1){
+									actualRepository = 1;
+								}
+								CheckSumSearchCase searcher = new CheckSumSearchCase(folder, fileName, actualRepository);
+								searcher.transformAndInitRunDir(false, "");
+								searcher.initInputAndOutput();
+								searcher.search(wb);
+								searcher.recordResult(wb);
+								if (searcher.getInfo().getResult().getState() == ResultState.SUCCESS) {
+									list.add(folder);
+								}
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						continue;
+					}
+				}
+			}
+
+		}
+		for (String s : list) {
+			System.out.println(s);
+		}
+	}
+
 
 	/**
 	 * This function tries to repair each checksum.c file in bughunt/checksum/ one by one.

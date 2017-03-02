@@ -1,1 +1,7 @@
 /scraper/
+/Java.tokens
+/JavaBaseListener.java
+/JavaLexer.java
+/JavaLexer.tokens
+/JavaListener.java
+/JavaParser.java

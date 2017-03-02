@@ -3,6 +3,7 @@ package test;
 import Database.DataBaseManager;
 import Experiment.Analyzer;
 import Experiment.GroupTest;
+import Library.Utility;
 import ProcessIntroClass.GenerateStandardTestCases;
 import Repository.EntryAddition;
 
@@ -40,6 +41,9 @@ public class Main {
 		}
 		else{
 			//rerun
+			//generate new ANTLR Java files, because they don't seem to work sometimes, if not generated new (and I don't know why).
+			generateANTLR();
+
 			GenerateStandardTestCases test = new GenerateStandardTestCases(introclassPath, "./bughunt");
 			test.generate();
 			rerun(wb, repositoryType);
@@ -47,6 +51,11 @@ public class Main {
 		}
 		
 		
+	}
+
+	private static void generateANTLR() {
+		String command1 = "java -jar ./lib/antlr-4.4-complete.jar -package antlr.preprocess ./src/antlr/preprocess/Java.g4";
+		Utility.runCProgram(command1);		
 	}
 
 	private static void rerun(boolean wb, int repositoryType) {

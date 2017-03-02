@@ -127,6 +127,7 @@ public class EntryAddition {
 					System.out.println("JPF was not created!(check EntryAddition.createJPFfile for details)");
 				    return methods;
 				}
+				//TODO: not relative
 				String com = "java -jar /home/matthias/git/jpf-core/build/RunJPF.jar +shell.port=4242 " + fileNameWOExt + ".jpf";
 	
 	 			Process p = Runtime.getRuntime().exec(com);
