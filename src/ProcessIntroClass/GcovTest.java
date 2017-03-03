@@ -468,8 +468,8 @@ public class GcovTest {
 		}
 			
          bw.write("fileName = " + packages + functionName + "\n");
-         String inputNoLineBreak = input.replace("\n", " ");
-         inputNoLineBreak = inputNoLineBreak.replace("\r", " ");
+         
+         String inputNoLineBreak = input.replace(System.lineSeparator(), " ");
          bw.write("args = " + inputNoLineBreak + "\n");
          
          String line;

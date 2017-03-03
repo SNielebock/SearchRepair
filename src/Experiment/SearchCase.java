@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -248,19 +249,50 @@ public class SearchCase {
 //		String s = Utility.runCProgramWithPythonCommand(this.functionName, this.tempOutput, this.inputfile, this.outputfile);
 		//PROGRAMS = {'checksum', 'digits', 'grade', 'median', 'smallest', 'syllables'}
 		String s = "";
-		if(this.functionName.startsWith("median")){
-			s = Utility.runCProgramWithPythonCommand("median", this.tempOutput, this.inputfile, this.outputfile);
-		}else if(this.functionName.startsWith("checksum")){
-			s = Utility.runCProgramWithPythonCommand("checksum", this.tempOutput, this.inputfile, this.outputfile);
-		}else if(this.functionName.startsWith("digits")){
-			s = Utility.runCProgramWithPythonCommand("digits", this.tempOutput, this.inputfile, this.outputfile);
-		}else if(this.functionName.startsWith("grade")){
-			s = Utility.runCProgramWithPythonCommand("grade", this.tempOutput, this.inputfile, this.outputfile);
-		}else if(this.functionName.startsWith("smallest")){
-			s = Utility.runCProgramWithPythonCommand("smallest", this.tempOutput, this.inputfile, this.outputfile);
-		}else if(this.functionName.startsWith("syllables")){
-			s = Utility.runCProgramWithPythonCommand("syllables", this.tempOutput, this.inputfile, this.outputfile);
+		
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(this.outputfile));
+			try {
+			    StringBuilder sb = new StringBuilder();
+			    String line = br.readLine();
+
+			    while (line != null) {
+			        sb.append(line);
+			        sb.append(System.lineSeparator());
+			        
+					line = br.readLine();
+			    }
+			    String expectedOutput = sb.toString();
+			    System.out.println("Expected Output: " + expectedOutput);
+			    System.out.println("Actual Output: " + this.tempOutput);
+			    if(expectedOutput.equals(this.tempOutput)){
+			    	s = "Test passed.";
+			    }else{
+			    	s = "Test failed.";
+			    }
+			    System.out.println("Result of Comparison: " + s);
+			} finally {
+			    br.close();
+			}
+		}catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}catch (IOException e) {
+			e.printStackTrace();
 		}
+//		if(this.functionName.startsWith("median")){
+//			s = Utility.runCProgramWithPythonCommand("median", this.tempOutput, this.inputfile, this.outputfile);
+//		}else if(this.functionName.startsWith("checksum")){
+//			s = Utility.runCProgramWithPythonCommand("checksum", this.tempOutput, this.inputfile, this.outputfile);
+//		}else if(this.functionName.startsWith("digits")){
+//			s = Utility.runCProgramWithPythonCommand("digits", this.tempOutput, this.inputfile, this.outputfile);
+//		}else if(this.functionName.startsWith("grade")){
+//			s = Utility.runCProgramWithPythonCommand("grade", this.tempOutput, this.inputfile, this.outputfile);
+//		}else if(this.functionName.startsWith("smallest")){
+//			s = Utility.runCProgramWithPythonCommand("smallest", this.tempOutput, this.inputfile, this.outputfile);
+//		}else if(this.functionName.startsWith("syllables")){
+//			s = Utility.runCProgramWithPythonCommand("syllables", this.tempOutput, this.inputfile, this.outputfile);
+//		}
 		System.out.println("THIS FUNTIONNAME CHECKPASSFORONECASE: " + this.functionName);
 
 		System.out.println("SearchCase.checkPassForOneCase output: " + s);	

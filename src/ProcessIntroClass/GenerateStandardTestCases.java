@@ -2,6 +2,9 @@ package ProcessIntroClass;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -314,27 +317,58 @@ public class GenerateStandardTestCases {
 				System.out.println("Utility.initBlackBox Input: " + input);
 				String outPath = path.substring(0, path.length() - 3) + ".out";
 				String runOutput = Utility.runCProgramWithInput("java " + testingExe, input);
-				String tempOuputFile = "./tempFolder/test.out";
-				Utility.writeTOFile(tempOuputFile, runOutput);
+//				String tempOuputFile = "./tempFolder/test.out";
+//				Utility.writeTOFile(tempOuputFile, runOutput);
 				
 //				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
 				
 				//TestingExe = introclassJava.median_cd2d9b5b_010
-				String className = testingExe.substring(testingExe.lastIndexOf(".") + 1);
+//				String className = testingExe.substring(testingExe.lastIndexOf(".") + 1);
 				String s = "";
-				if(className.startsWith("median")){
-					s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("checksum")){
-					s = Utility.runCProgramWithPythonCommand("checksum", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("digits")){
-					s = Utility.runCProgramWithPythonCommand("digits", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("grade")){
-					s = Utility.runCProgramWithPythonCommand("grade", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("smallest")){
-					s = Utility.runCProgramWithPythonCommand("smallest", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("syllables")){
-					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
+				
+				
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(outPath));
+					try {
+					    StringBuilder sb = new StringBuilder();
+					    String line = br.readLine();
+	
+					    while (line != null) {
+					        sb.append(line);
+					        sb.append(System.lineSeparator());
+					        
+							line = br.readLine();
+					    }
+					    String expectedOutput = sb.toString();
+					    System.out.println("Expected Output: " + expectedOutput);
+					    System.out.println("Actual Output: " + runOutput);
+					    if(expectedOutput.equals(runOutput)){
+					    	s = "Test passed.";
+					    }else{
+					    	s = "Test failed.";
+					    }
+					    System.out.println("Result of Comparison: " + s);
+					} finally {
+					    br.close();
+					}
+				}catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}catch (IOException e) {
+					e.printStackTrace();
 				}
+//				if(className.startsWith("median")){
+//					s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("checksum")){
+//					s = Utility.runCProgramWithPythonCommand("checksum", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("digits")){
+//					s = Utility.runCProgramWithPythonCommand("digits", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("grade")){
+//					s = Utility.runCProgramWithPythonCommand("grade", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("smallest")){
+//					s = Utility.runCProgramWithPythonCommand("smallest", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("syllables")){
+//					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
+//				}
 				System.out.println("Utility.initBlackBox Python output: " + s);
 				if(s.equals("Test passed.")){
 					String index = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
@@ -368,27 +402,58 @@ public class GenerateStandardTestCases {
 				String input = Utility.getStringFromFile1(path);
 				String outPath = path.substring(0, path.length() - 3) + ".out";
 				String runOutput = Utility.runCProgramWithInput("java " + testingExe, input);
-				String tempOuputFile = "./tempFolder/test.out";
-				Utility.writeTOFile(tempOuputFile, runOutput);
+//				String tempOuputFile = "./tempFolder/test.out";
+//				Utility.writeTOFile(tempOuputFile, runOutput);
 				
 //				String s = Utility.runCProgramWithPythonCommand(testingExe, tempOuputFile, path, outPath).trim();
 				
-				String className = testingExe.substring(testingExe.lastIndexOf(".") + 1);
-				System.out.println("CLASSNAME: " + className);
+//				String className = testingExe.substring(testingExe.lastIndexOf(".") + 1);
+//				System.out.println("CLASSNAME: " + className);
 				String s = "";
-				if(className.startsWith("median")){
-					s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("checksum")){
-					s = Utility.runCProgramWithPythonCommand("checksum", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("digits")){
-					s = Utility.runCProgramWithPythonCommand("digits", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("grade")){
-					s = Utility.runCProgramWithPythonCommand("grade", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("smallest")){
-					s = Utility.runCProgramWithPythonCommand("smallest", tempOuputFile, path, outPath).trim();
-				}else if(className.startsWith("syllables")){
-					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
+				
+				
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(outPath));
+					try {
+					    StringBuilder sb = new StringBuilder();
+					    String line = br.readLine();
+	
+					    while (line != null) {
+					        sb.append(line);
+					        sb.append(System.lineSeparator());
+					        
+							line = br.readLine();
+					    }
+					    String expectedOutput = sb.toString();
+					    System.out.println("Expected Output: " + expectedOutput);
+					    System.out.println("Actual Output: " + runOutput);
+					    if(expectedOutput.equals(runOutput)){
+					    	s = "Test passed.";
+					    }else{
+					    	s = "Test failed.";
+					    }
+					    System.out.println("Result of Comparison: " + s);
+					} finally {
+					    br.close();
+					}
+				}catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}catch (IOException e) {
+					e.printStackTrace();
 				}
+//				if(className.startsWith("median")){
+//					s = Utility.runCProgramWithPythonCommand("median", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("checksum")){
+//					s = Utility.runCProgramWithPythonCommand("checksum", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("digits")){
+//					s = Utility.runCProgramWithPythonCommand("digits", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("grade")){
+//					s = Utility.runCProgramWithPythonCommand("grade", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("smallest")){
+//					s = Utility.runCProgramWithPythonCommand("smallest", tempOuputFile, path, outPath).trim();
+//				}else if(className.startsWith("syllables")){
+//					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
+//				}
 				
 				System.out.println("Utility.initWhiteBox Python output: " + s);
 				if(s.equals("Test passed.")){
