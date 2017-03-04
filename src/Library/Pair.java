@@ -1,6 +1,6 @@
 package Library;
 
-public class Pair {
+public class Pair implements Comparable {
 
 	  private int left;
 	  private int right;
@@ -29,4 +29,17 @@ public class Pair {
 	  public String toString(){
 		  return "(" + this.left + "," + this.right + ")";
 	  }
+
+	@Override
+	public int compareTo(Object o) {
+		if (!(o instanceof Pair)) throw new UnsupportedOperationException();
+	    Pair pairo = (Pair) o;
+	    if((this.left < pairo.left) || ((this.left == pairo.left) && (this.right < pairo.right))){
+	    	return -1;
+	    }else if((this.left > pairo.left) || ((this.left == pairo.left) && (this.right > pairo.right))){
+	    	return 1;
+	    }else{
+	    	return 0;
+	    }
 	}
+}

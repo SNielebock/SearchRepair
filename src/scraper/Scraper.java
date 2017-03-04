@@ -1,12 +1,18 @@
 package scraper;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +31,9 @@ import scraper.ScrapeParser.If_statContext;
 import scraper.ScrapeParser.ProgContext;
 import scraper.ScrapeParser.ReturnStatContext;
 import scraper.ScrapeParser.StatContext;
+import Library.Pair;
 import Library.Utility;
+import antlr.preprocess.MyJavaListener;
 
 
 public class Scraper {
@@ -81,7 +89,8 @@ public class Scraper {
 	}
 
 	private  void parse(File file, List<String> list) {
-		if(!file.getAbsolutePath().endsWith(".c")) return;
+		
+		if(!file.getAbsolutePath().endsWith(".java")) return;
 		String fileString = Utility.getStringFromFile1(file.getAbsolutePath());
 		List<String> array = new ArrayList<String>();
 		
@@ -89,63 +98,100 @@ public class Scraper {
 		int end = -1;
 		Stack<Character> stack = new Stack<Character>();
 		Stack<Integer> index = new Stack<Integer>();
-		for(int i = 0; i < fileString.length(); i++)
-		{
-			char c = fileString.charAt(i);
-			if(c == '{' ){
-				stack.add(c);
-				index.push(i);
-			}
-			else if(c == '}'){
-				if(stack.isEmpty()) {
-					index.clear();
-					continue;
+		//TODO: probably not needed
+//		for(int i = 0; i < fileString.length(); i++)
+//		{
+//			char c = fileString.charAt(i);
+//			if(c == '{' ){
+//				stack.add(c);
+//				index.push(i);
+//			}
+//			else if(c == '}'){
+//				if(stack.isEmpty()) {
+//					index.clear();
+//					continue;
+//				}
+//				stack.pop();
+//				int temp = index.pop();
+//				if(stack.isEmpty()){
+//					start = temp;
+//					end = i;
+//					start = fileString.substring(0, start - 1).lastIndexOf('}');
+//					//System.out.println(fileString.substring(start + 1, end + 1));
+//					array.add (fileString.substring(start + 1, end + 1));
+//				}				
+//			}
+//		}
+		
+		MyJavaListener listener = Utility.getANTLRListener(file.getAbsolutePath());
+		List<Pair> biggestRanges = listener.getBiggestRanges();
+		Collections.sort(biggestRanges);
+		
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file.getAbsolutePath())));
+			String s = null;
+			
+			int lineNumber = 0;
+			int listIndex = 0;
+			String snippetString = "";
+			while(lineNumber <= biggestRanges.get(biggestRanges.size() - 1).getRight()){
+				s = reader.readLine();
+				lineNumber++;
+				if(lineNumber >= biggestRanges.get(listIndex).getLeft() && lineNumber <= biggestRanges.get(listIndex).getRight()){
+					snippetString += s;
+					if(lineNumber == biggestRanges.get(listIndex).getRight()){
+						list.add(snippetString);
+						System.out.println("SNIPPETSTRING: " + snippetString);
+						snippetString = "";
+						listIndex++;
+					}else{
+						snippetString += System.getProperty("line.separator");
+					}
 				}
-				stack.pop();
-				int temp = index.pop();
-				if(stack.isEmpty()){
-					start = temp;
-					end = i;
-					start = fileString.substring(0, start - 1).lastIndexOf('}');
-					//System.out.println(fileString.substring(start + 1, end + 1));
-					array.add (fileString.substring(start + 1, end + 1));
-				}				
 			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
+		
 		
 		for(String target : array){
 			try{
 				//System.out.println(target);
 				//target = Utility.getStringFromFile(this.casePrefix + ".c");
-				InputStream stream = new ByteArrayInputStream(target.getBytes());
-				ANTLRInputStream input = new ANTLRInputStream(stream);
-				ScrapeLexer lexer = new ScrapeLexer(input);
-				CommonTokenStream tokens = new CommonTokenStream(lexer);
-				ScrapeParser parser = new ScrapeParser(tokens);
-				ProgContext prog = parser.prog();
-				//List<StatContext> stats = prog.stat();
-				List<StatContext> stats = prog.stat();;
-				for(StatContext con : stats){
-					ParseTree child = con.getChild(0);
-					if(child instanceof DeclarationStatContext){
-						list.add(getTreeString(child) + ";");
-					}
-					else if(child instanceof AssignStatContext){
-						AssignStatContext assign = (AssignStatContext) child;
-						list.add(getTreeString(child) + ";");
-					}
-					else if(child instanceof If_statContext) {
-						If_statContext ifstat = (If_statContext) child;
-						list.add(getTreeString(ifstat));
-					}
-					else if(child instanceof ReturnStatContext){
-						ReturnStatContext returnStat = (ReturnStatContext) child;
-						list.add(getTreeString(child) + ";");
-					}
-					else{
-						//do nothing
-					}
-				}
+				
+				
+				
+//				InputStream stream = new ByteArrayInputStream(target.getBytes());
+//				ANTLRInputStream input = new ANTLRInputStream(stream);
+//				ScrapeLexer lexer = new ScrapeLexer(input);
+//				CommonTokenStream tokens = new CommonTokenStream(lexer);
+//				ScrapeParser parser = new ScrapeParser(tokens);
+//				ProgContext prog = parser.prog();
+//				List<StatContext> stats = prog.stat();
+//				for(StatContext con : stats){
+//					ParseTree child = con.getChild(0);
+//					if(child instanceof DeclarationStatContext){
+//						list.add(getTreeString(child) + ";");
+//					}
+//					else if(child instanceof AssignStatContext){
+//						AssignStatContext assign = (AssignStatContext) child;
+//						list.add(getTreeString(child) + ";");
+//					}
+//					else if(child instanceof If_statContext) {
+//						If_statContext ifstat = (If_statContext) child;
+//						list.add(getTreeString(ifstat));
+//					}
+//					else if(child instanceof ReturnStatContext){
+//						ReturnStatContext returnStat = (ReturnStatContext) child;
+//						list.add(getTreeString(child) + ";");
+//					}
+//					else{
+//						//do nothing
+//					}
+//				}
 				//if(!g) continue;
 				//for()
 				//System.out.println(parser.prog().function().block().getText());
@@ -160,12 +206,12 @@ public class Scraper {
 		//
 		
 		int i = 0;
-		for(String s : list){
+		for(String string : list){
 			//System.out.println(s);
 			if(i > 1000){
 				return;
 			}
-			generate(scrapRoot + "/" + this.projecName + "/test" + i++ + ".c", s);
+			generate(scrapRoot + "/" + this.projecName + "/test" + i++ + ".java", string);
 		}
 		
 	}
@@ -427,12 +473,14 @@ public class Scraper {
 	}
 
 	public static void main(String[] args){
-		Scraper sc = new Scraper("./block");
+//		Scraper sc = new Scraper("./block");
+		Scraper sc = new Scraper("./repository/myTest");
+
 //		List<String> list = new Scraper("./bughunt/syllables/33").scrape("./bughunt/syllables/33/syllables.c");
 //		for(String s : list){
 //			System.out.println("------------");
 //			System.out.println(s);
 //		}
-		System.out.println(sc.scrape());
+//		System.out.println(sc.scrape());
 	}
 }
