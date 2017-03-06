@@ -88,7 +88,7 @@ public class Scraper {
 		
 	}
 
-	private  void parse(File file, List<String> list) {
+	private void parse(File file, List<String> list) {
 		
 		if(!file.getAbsolutePath().endsWith(".java")) return;
 		String fileString = Utility.getStringFromFile1(file.getAbsolutePath());
@@ -125,6 +125,9 @@ public class Scraper {
 		
 		MyJavaListener listener = Utility.getANTLRListener(file.getAbsolutePath());
 		List<Pair> biggestRanges = listener.getBiggestRanges();
+		if(biggestRanges.size() == 0){
+			return;
+		}
 		Collections.sort(biggestRanges);
 		
 		BufferedReader reader;
@@ -135,7 +138,7 @@ public class Scraper {
 			int lineNumber = 0;
 			int listIndex = 0;
 			String snippetString = "";
-			while(lineNumber <= biggestRanges.get(biggestRanges.size() - 1).getRight()){
+			while(lineNumber < biggestRanges.get(biggestRanges.size() - 1).getRight()){
 				s = reader.readLine();
 				lineNumber++;
 				if(lineNumber >= biggestRanges.get(listIndex).getLeft() && lineNumber <= biggestRanges.get(listIndex).getRight()){
@@ -157,8 +160,8 @@ public class Scraper {
 		}
 		
 		
-		for(String target : array){
-			try{
+//		for(String target : array){
+//			try{
 				//System.out.println(target);
 				//target = Utility.getStringFromFile(this.casePrefix + ".c");
 				
@@ -199,10 +202,10 @@ public class Scraper {
 
 //				}
 //				
-			}catch(Exception e){
-				continue;
-			}
-		}
+//			}catch(Exception e){
+//				continue;
+//			}
+//		}
 		//
 		
 		int i = 0;

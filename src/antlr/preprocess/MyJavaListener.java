@@ -8,14 +8,19 @@ import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import Library.Pair;
+import Library.Variable;
 import antlr.preprocess.JavaParser.*;
 
 public class MyJavaListener extends JavaBaseListener {
 	private Map<Pair, MethodDeclarationContext> methodRanges = new HashMap<Pair, MethodDeclarationContext>(); 
+	private Map<Pair, List<Variable>> variableMap = new HashMap<Pair, List<Variable>>(); 
+	//no VariableDeclarations needed here;
 	private List<Pair> statementRanges = new ArrayList<Pair>(); 
 	private List<Pair> allStatementRanges = new ArrayList<Pair>();
+	private List<Variable> fieldDeclarations = new ArrayList<Variable>();
 	private String packageName = "";
 
 	@Override 
@@ -48,6 +53,141 @@ public class MyJavaListener extends JavaBaseListener {
 	@Override
 	public void enterPackageDeclaration(@NotNull PackageDeclarationContext ctx) { 
 		packageName = ctx.qualifiedName().getText();
+	}
+	
+	@Override
+	public void enterFieldDeclaration(@NotNull FieldDeclarationContext ctx) {
+		String type = "";
+		String id = "";
+		for(ParseTree context: ctx.children){
+			if(context instanceof TypeTypeContext){
+				type =  context.getText();
+			}else if(context instanceof VariableDeclaratorsContext){
+				for(int i = 0; i < context.getChildCount(); i++){
+					if(context.getChild(i) instanceof VariableDeclaratorContext){
+						for(int j = 0; j < context.getChild(i).getChildCount(); j++){
+							if(context.getChild(i).getChild(j) instanceof VariableDeclaratorIdContext){
+								id = context.getChild(i).getChild(j).getText();
+								break;
+							}
+						}
+						break;
+					}
+				}
+				fieldDeclarations.add(new Variable(id, type));
+				type = "";
+				id = "";
+			}
+		}
+		
+		for(Variable tempVar: fieldDeclarations){
+			System.out.println("MapEntry: " + tempVar.getID() + " - " + tempVar.getType());
+		}
+	}
+	
+	@Override 
+	public void enterFormalParameterList(@NotNull FormalParameterListContext ctx) {
+		Pair tempMethodRange = new Pair(0,0);
+		for(Pair range: methodRanges.keySet()){
+			if(ctx.getStart().getLine() >= range.getLeft() && ctx.getStop().getLine() <= range.getRight()){
+				tempMethodRange = range;
+				break;
+			}
+		}
+		
+		List<Variable> tempVariableList = new ArrayList<Variable>();
+		
+		String type = "";
+		String id = "";
+		for(ParseTree context: ctx.children){
+			if(context instanceof FormalParameterContext || context instanceof LastFormalParameterContext){
+				for(int i = 0; i < context.getChildCount(); i++){
+					if(context.getChild(i) instanceof TypeTypeContext){
+						type = context.getChild(i).getText();
+					}else if(context.getChild(i) instanceof VariableDeclaratorIdContext){
+						id = context.getChild(i).getText();
+					}
+				}
+				if(!(type.equals("") || id.equals(""))){
+					tempVariableList.add(new Variable(id, type));
+				}else{
+					System.out.println("Something went wrong! No type or id found - MyJavaListener.enterFormalParameterList");
+				}
+				type = "";
+				id = "";
+			}
+		}
+		
+		if(variableMap.containsKey(tempMethodRange)){
+			tempVariableList.addAll(variableMap.get(tempMethodRange));
+			variableMap.put(tempMethodRange, tempVariableList);
+		}else{
+			variableMap.put(tempMethodRange, tempVariableList);
+		}
+		
+		for(Pair keyRange: variableMap.keySet()){
+			System.out.println("Mehtodrange: " + keyRange.toString());
+			
+			for(Variable var: variableMap.get(keyRange)){
+				System.out.println("Variable: " + var.toString());
+			}
+		}
+		
+	}
+
+	@Override
+	public void enterLocalVariableDeclaration(@NotNull LocalVariableDeclarationContext ctx) {
+		Pair tempMethodRange = new Pair(0,0);
+		for(Pair range: methodRanges.keySet()){
+			if(ctx.getStart().getLine() >= range.getLeft() && ctx.getStop().getLine() <= range.getRight()){
+				tempMethodRange = range;
+				break;
+			}
+		}
+		
+		List<Variable> tempVariableList = new ArrayList<Variable>();
+		
+		String type = "";
+		String id = "";
+		for(ParseTree context: ctx.children){
+			if(context instanceof TypeTypeContext){
+				type =  context.getText();
+			}else if(context instanceof VariableDeclaratorsContext){
+				for(int i = 0; i < context.getChildCount(); i++){
+					if(context.getChild(i) instanceof VariableDeclaratorContext){
+						for(int j = 0; j < context.getChild(i).getChildCount(); j++){
+							if(context.getChild(i).getChild(j) instanceof VariableDeclaratorIdContext){
+								id = context.getChild(i).getChild(j).getText();
+								break;
+							}
+						}
+						break;
+					}
+				}
+				if(!(type.equals("") || id.equals(""))){
+					tempVariableList.add(new Variable(id, type));
+				}else{
+					System.out.println("Something went wrong! No type or id found - MyJavaListener.enterLocalVariableDeclaration");
+				}
+				type = "";
+				id = "";
+			}
+		}
+		
+		if(variableMap.containsKey(tempMethodRange)){
+			tempVariableList.addAll(variableMap.get(tempMethodRange));
+			variableMap.put(tempMethodRange, tempVariableList);
+		}else{
+			variableMap.put(tempMethodRange, tempVariableList);
+		}
+		
+		for(Pair keyRange: variableMap.keySet()){
+			System.out.println("Mehtodrange: " + keyRange.toString());
+			
+			for(Variable var: variableMap.get(keyRange)){
+				System.out.println("Variable: " + var.toString());
+			}
+		}
 	}
 	
 	public String getPackageName(){
@@ -83,6 +223,14 @@ public class MyJavaListener extends JavaBaseListener {
 			}
 		}
 		return biggestRanges;
+	}
+	
+	public List<Variable> getFieldDeclarations(){
+		return fieldDeclarations;
+	}
+	
+	public Map<Pair, List<Variable>> getVariableMap(){
+		return variableMap;
 	}
 	
 	public MethodDeclarationContext getSpecificMethodContext(int lineNumber){
