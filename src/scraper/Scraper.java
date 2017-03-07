@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -33,6 +34,7 @@ import scraper.ScrapeParser.ReturnStatContext;
 import scraper.ScrapeParser.StatContext;
 import Library.Pair;
 import Library.Utility;
+import Library.Variable;
 import antlr.preprocess.MyJavaListener;
 
 
@@ -40,7 +42,7 @@ public class Scraper {
 	private String folder;
 	private String projecName;
 	private static final String scrapRoot = "./repository/scraper";
-	private String returnType;
+//	private String returnType;
 	
 	
 	public Scraper(String folder) {
@@ -48,7 +50,7 @@ public class Scraper {
 		this.folder = folder;
 		int temp = this.folder.substring(0, this.folder.lastIndexOf("/")).lastIndexOf("/");
 		this.projecName = this.folder.substring(temp + 1);
-		this.returnType = "void";
+//		this.returnType = "void";
 		File dir = new File(scrapRoot + "/" + projecName);
 		if(!dir.exists() || !dir.isDirectory()) {
 			dir.mkdir();
@@ -56,39 +58,39 @@ public class Scraper {
 		scrape(new File(folder));
 	}
 	
-	public List<String> scrape(){
-		return scrape(new File(this.folder));
+	public void scrape(){
+		scrape(new File(this.folder));
 	}
 
-	public  List<String> scrape(File dir){
-		List<String> list = new ArrayList<String>();
+	public  void scrape(File dir){
+		HashMap<String, Pair> snippetRangeMap = new HashMap<String, Pair>();
+		HashMap<String, Set<String>> snippetVariablesMap = new HashMap<String, Set<String>>();
 		for(File file : dir.listFiles()){
-			getSupport(file, list);
+			getSupport(file, snippetRangeMap, snippetVariablesMap);
 		}
-		return list;
 	}
 	
-	public  List<String> scrape(String filePath){
-		List<String> list = new ArrayList<String>();
+	public void scrape(String filePath){
+		HashMap<String, Pair> snippetRangeMap = new HashMap<String, Pair>();
+		HashMap<String, Set<String>> snippetVariablesMap = new HashMap<String, Set<String>>();
 //		for(File file : dir.listFiles()){
-			getSupport(new File(filePath), list);
+			getSupport(new File(filePath), snippetRangeMap, snippetVariablesMap);
 //		}
-		return list;
 	}
 	
-	private  void getSupport(File file, List<String> list) {
+	private void getSupport(File file, HashMap<String, Pair> snippetRangeMap, HashMap<String, Set<String>> snippetVariablesMap) {
 		if(file.isDirectory()){
 			for(File g : file.listFiles()){
-				getSupport(g, list);
+				getSupport(g, snippetRangeMap, snippetVariablesMap);
 			}
 		}
 		else{
-			parse(file, list);
+			parse(file, snippetRangeMap, snippetVariablesMap);
 		}
 		
 	}
 
-	private void parse(File file, List<String> list) {
+	private void parse(File file, HashMap<String, Pair> snippetRangeMap, HashMap<String, Set<String>> snippetVariablesMap) {
 		
 		if(!file.getAbsolutePath().endsWith(".java")) return;
 		String fileString = Utility.getStringFromFile1(file.getAbsolutePath());
@@ -144,8 +146,11 @@ public class Scraper {
 				if(lineNumber >= biggestRanges.get(listIndex).getLeft() && lineNumber <= biggestRanges.get(listIndex).getRight()){
 					snippetString += s;
 					if(lineNumber == biggestRanges.get(listIndex).getRight()){
-						list.add(snippetString);
-						System.out.println("SNIPPETSTRING: " + snippetString);
+						Set<String> variableSet = listener.getVariabelsUsedInStatementRange(biggestRanges.get(listIndex));
+						snippetRangeMap.put(snippetString, biggestRanges.get(listIndex));
+						snippetVariablesMap.put(snippetString, variableSet);
+						System.out.println("SNIPPETSTRING: " + snippetString + " Range: " + biggestRanges.get(listIndex));
+						
 						snippetString = "";
 						listIndex++;
 					}else{
@@ -208,13 +213,17 @@ public class Scraper {
 //		}
 		//
 		
+		List<Variable> fieldDeclarations = listener.getFieldDeclarations();
+		
 		int i = 0;
-		for(String string : list){
-			//System.out.println(s);
+		for(String snippet : snippetRangeMap.keySet()){
+			System.out.println("SNIPPET BEFORE GENERATE: " + snippet);
 			if(i > 1000){
 				return;
 			}
-			generate(scrapRoot + "/" + this.projecName + "/test" + i++ + ".java", string);
+			String returnType = listener.getReturnType(snippetRangeMap.get(snippet));
+			List<Variable> variableList = listener.getVariableListfromRange(snippetRangeMap.get(snippet));
+			generate(scrapRoot + "/" + this.projecName + "/test" + i++ + ".java", snippet, variableList, snippetVariablesMap.get(snippet), fieldDeclarations, returnType);
 		}
 		
 	}
@@ -254,15 +263,43 @@ public class Scraper {
 		return sb.toString();
 	}
 
-	public   void generate(String file, String s){
-		Map<String, String> variables = getUndeclaredVariable(s);
+	public void generate(String file, String snippet, List<Variable> declaratedVariables, Set<String> variableIDs, List<Variable> fieldDeclarations, String returnType){
+		System.out.println("In generate");
+		Map<String, String> variables = new HashMap<String, String>();
+		for(String id: variableIDs){
+			boolean found = false;
+			for(Variable declVar: declaratedVariables){
+				if(declVar.getID().equals(id)){
+					variables.put(id, declVar.getType());
+					found = true;
+				}
+			}
+			
+			if(!found){
+				for(Variable fieldVar: fieldDeclarations){
+					if(fieldVar.getID().equals(id)){
+						found = true;
+					}
+				}
+				if(!found){
+					System.out.println("No type found! Default type \"int\" used! - Scraper.generate");
+					variables.put(id,  "int");
+				}
+			}
+		}
+		
+		System.out.println("after variables");
 		//if(!s.trim().startsWith("publish")) return;
-		if(variables.keySet().isEmpty()) return;
+//		if(variables.keySet().isEmpty()) return;
+		
+		//TODO: generate main method to make the snippets executable
+		
 		String param = generateHead(variables);
 		String methodName = "test";
-		String functionType = getFunctionType(s);
-		String function = functionType + " " + methodName + param + "{\n" + s + "}";
+		String functionType = getFunctionType(snippet, returnType);
+		String function = "public " + functionType + " " + methodName + param + "{\n" + snippet + "}";
 		try {
+			System.out.println("Filepath: " + file);
 			File temp = new File(file);
 			if(temp.exists()) temp.delete();
 			temp.createNewFile();
@@ -278,202 +315,206 @@ public class Scraper {
 	}
 	
 	
-	private  String getFunctionType(String s) {
-		return s.contains("return") ? this.returnType : "void";
+	private  String getFunctionType(String s, String returnType) {
+		return s.contains("return") ? returnType : "void";
 	}
 
 	private  String generateHead(Map<String, String> variables) {
 		String s = "(";
-		for(String v : variables.keySet()){
-			s = s  +  variables.get(v) + " "+ v + ", ";
+		if(variables.isEmpty()){
+			s += ")";
+		}else{
+			for(String v : variables.keySet()){
+				s = s  +  variables.get(v) + " "+ v + ", ";
+			}
+			s = s.substring(0, s.length() - 2) + ")";
 		}
-		s = s.substring(0, s.length() - 2) + ")";
 		return s;
 	}
 
-	private  Map<String, String> getUndeclaredVariable(String s) {
-		Map<String, String> list = new HashMap<String, String>();
-		Map<String, String> declared = new HashMap<String, String>();
-		try{
-			InputStream stream = new ByteArrayInputStream(s.getBytes());
-			ANTLRInputStream input = new ANTLRInputStream(stream);
-			ScrapeLexer lexer = new ScrapeLexer(input);
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			ScrapeParser parser = new ScrapeParser(tokens);
-			ProgContext prog = parser.prog();
-			List<StatContext> stats = prog.stat();
-			for(StatContext con : stats){
-				ParseTree child = con.getChild(0);
-				if(child instanceof DeclarationStatContext){
-					DeclarationStatContext decStat = (DeclarationStatContext) child;
-					declared.put(decStat.ID().getText(), decStat.type().getText());
-					//list.add(getTreeString(child) + ";");
-				}
-				else if(child instanceof AssignStatContext){
-					AssignStatContext assign = (AssignStatContext) child;
-					//list.add(getTreeString(child) + ";");
-					if(assign.type() == null){
-						String id = assign.ID().getText();
-						String type = speculateType(assign.assign_expression(), declared);
-						list.put(id, type);
-						update(assign.assign_expression(), list, declared, type);
-					}
-					else{
-						declared.put(assign.ID().getText(), assign.type().getText());
-						update(assign.assign_expression(), list, declared, assign.type().getText());
-					}
-					
-				}
-				else if(child instanceof If_statContext) {
-					
-					If_statContext ifstat = (If_statContext) child;
-					update(ifstat, list, declared, "int");
-					//list.add(getTreeString(child));
-				}
-				else if(child instanceof ReturnStatContext){
-					//update
-					this.returnType = "int";
-					ReturnStatContext returnStat = (ReturnStatContext) child;
-					updateOnReturn(returnStat.arith_expression(), list, declared, "int");
-					//list.add(getTreeString(child) + ";");
-				}
-				else{
-					return list;
-				}
-			}
-			
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			return list;
-		}
-		return list;
-	}
-
-	private String speculateType(
-			Assign_expressionContext assign_expression, Map<String, String> declared) {
-		for(int i = 0; i < assign_expression.getChildCount(); i++){
-			ParseTree tree = assign_expression.getChild(i);
-			if(tree instanceof AtomContext){
-				AtomContext atom = (AtomContext) tree;
-				String id = atom.ID().getText();
-				if(declared.containsKey(id)) return declared.get(id);
-			}
-			else{
-				String temp = speculateType(tree, declared);
-				if(temp != null) return temp;
-			}
-		}
-		return "int";
-	}
-	// no if stat for sure, not statement for sure, as a complement method for speculateType(assign_expression)
-	private  String speculateType(ParseTree tree,
-			Map<String, String> declared) {
-		for(int i = 0; i < tree.getChildCount(); i++){
-			ParseTree child = tree.getChild(i);
-			if(child instanceof AtomContext){
-				AtomContext atom = (AtomContext) child;
-				if(atom.ID() == null) continue;
-				String id = atom.ID().getText();
-				if(declared.containsKey(id)) return declared.get(id);
-			}
-			else{
-				String temp = speculateType(child, declared);
-				if(temp != null) return temp;
-			}
-		}
-		return null;
-	}
-
-	private   void update(If_statContext ifstat, Map<String, String> list, Map<String, String> declared, String backType) {
-		for(int i = 0; i < ifstat.getChildCount(); i++){
-			ParseTree tree = ifstat.getChild(i);
-			if(tree instanceof AtomContext){
-				AtomContext atom = (AtomContext) tree;
-				if(atom.ID() == null) continue;
-				String id = atom.ID().getText();
-				if(!declared.containsKey(id)) list.put(id, backType);
-			}
-			else{
-				update(tree, list, declared, backType);
-			}
-		}
-		
-	}
-
-	private  void updateOnReturn(ParseTree parseTree,
-			Map<String, String> list, Map<String, String> declared, String backType) {
-		for(int i = 0; i < parseTree.getChildCount(); i++){
-			ParseTree tree = parseTree.getChild(i);
-			if(tree instanceof AtomContext){
-				AtomContext atom = (AtomContext) tree;
-				if(atom.ID() == null) continue;
-				String id = atom.ID().getText();
-				if(!declared.containsKey(id)) list.put(id, backType);
-				else this.returnType = declared.get(id);
-			}
-			else{
-				updateOnReturn(tree, list, declared, backType);
-			}
-		}
-		//return "in"
-		
-	}
-
-	//no statement for sure and no if block
-	private   void update(Assign_expressionContext assign_expression,
-			Map<String, String> list, Map<String, String> declared, String typeBack) {
-		for(int i = 0; i < assign_expression.getChildCount(); i++){
-			ParseTree tree = assign_expression.getChild(i);
-			if(tree instanceof AtomContext){
-				AtomContext atom = (AtomContext) tree;
-				if(atom.ID() == null) continue;
-				String id = atom.ID().getText();
-				if(!declared.containsKey(id)) list.put(id, typeBack);
-			}
-			else{
-				update(tree, list, declared, typeBack);
-			}
-		}
-		
-	}
-
-	//no statement and no if in this tree
-	private   void update(ParseTree tree, Map<String, String> list, Map<String, String> declared, String typeBack) {
-		for(int i = 0; i < tree.getChildCount(); i++){
-			ParseTree child = tree.getChild(i);
-			if(child instanceof AtomContext){
-				AtomContext atom = (AtomContext) child;
-				if(atom.ID() == null) continue;
-				String id = atom.ID().getText();
-				if(!declared.containsKey(id)) list.put(id, typeBack);
-			}
-			else if(child instanceof AssignStatContext){
-				AssignStatContext assign = (AssignStatContext) child;
-				//list.add(getTreeString(child) + ";");
-				if(assign.type() == null){
-					String type = speculateType(assign.assign_expression(), declared);
-					if(!declared.containsKey(assign.ID().getText())){
-					
-						list.put(assign.ID().getText(),type);
-					}
-					update(assign.assign_expression(), list, declared, type);
-				}
-				else{
-					declared.put(assign.ID().getText(), assign.type().getText());
-					update(assign.assign_expression(), list, declared, typeBack);
-				}
-			}
-			else if (child instanceof DeclarationStatContext){
-				DeclarationStatContext decl = (DeclarationStatContext) child;
-				declared.put(decl.ID().getText(), decl.type().getText());
-			}
-			else{
-				update(child, list, declared, typeBack);
-			}
-		}
-		
-	}
+//	private  Map<String, String> getUndeclaredVariable(String s) {
+//		Map<String, String> list = new HashMap<String, String>();
+//		Map<String, String> declared = new HashMap<String, String>();
+//		try{
+//			InputStream stream = new ByteArrayInputStream(s.getBytes());
+//			ANTLRInputStream input = new ANTLRInputStream(stream);
+//			ScrapeLexer lexer = new ScrapeLexer(input);
+//			CommonTokenStream tokens = new CommonTokenStream(lexer);
+//			ScrapeParser parser = new ScrapeParser(tokens);
+//			ProgContext prog = parser.prog();
+//			List<StatContext> stats = prog.stat();
+//			for(StatContext con : stats){
+//				ParseTree child = con.getChild(0);
+//				if(child instanceof DeclarationStatContext){
+//					DeclarationStatContext decStat = (DeclarationStatContext) child;
+//					declared.put(decStat.ID().getText(), decStat.type().getText());
+//					//list.add(getTreeString(child) + ";");
+//				}
+//				else if(child instanceof AssignStatContext){
+//					AssignStatContext assign = (AssignStatContext) child;
+//					//list.add(getTreeString(child) + ";");
+//					if(assign.type() == null){
+//						String id = assign.ID().getText();
+//						String type = speculateType(assign.assign_expression(), declared);
+//						list.put(id, type);
+//						update(assign.assign_expression(), list, declared, type);
+//					}
+//					else{
+//						declared.put(assign.ID().getText(), assign.type().getText());
+//						update(assign.assign_expression(), list, declared, assign.type().getText());
+//					}
+//					
+//				}
+//				else if(child instanceof If_statContext) {
+//					
+//					If_statContext ifstat = (If_statContext) child;
+//					update(ifstat, list, declared, "int");
+//					//list.add(getTreeString(child));
+//				}
+//				else if(child instanceof ReturnStatContext){
+//					//update
+////					this.returnType = "int";
+//					ReturnStatContext returnStat = (ReturnStatContext) child;
+//					updateOnReturn(returnStat.arith_expression(), list, declared, "int");
+//					//list.add(getTreeString(child) + ";");
+//				}
+//				else{
+//					return list;
+//				}
+//			}
+//			
+//			
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			return list;
+//		}
+//		return list;
+//	}
+//
+//	private String speculateType(
+//			Assign_expressionContext assign_expression, Map<String, String> declared) {
+//		for(int i = 0; i < assign_expression.getChildCount(); i++){
+//			ParseTree tree = assign_expression.getChild(i);
+//			if(tree instanceof AtomContext){
+//				AtomContext atom = (AtomContext) tree;
+//				String id = atom.ID().getText();
+//				if(declared.containsKey(id)) return declared.get(id);
+//			}
+//			else{
+//				String temp = speculateType(tree, declared);
+//				if(temp != null) return temp;
+//			}
+//		}
+//		return "int";
+//	}
+//	// no if stat for sure, not statement for sure, as a complement method for speculateType(assign_expression)
+//	private  String speculateType(ParseTree tree,
+//			Map<String, String> declared) {
+//		for(int i = 0; i < tree.getChildCount(); i++){
+//			ParseTree child = tree.getChild(i);
+//			if(child instanceof AtomContext){
+//				AtomContext atom = (AtomContext) child;
+//				if(atom.ID() == null) continue;
+//				String id = atom.ID().getText();
+//				if(declared.containsKey(id)) return declared.get(id);
+//			}
+//			else{
+//				String temp = speculateType(child, declared);
+//				if(temp != null) return temp;
+//			}
+//		}
+//		return null;
+//	}
+//
+//	private   void update(If_statContext ifstat, Map<String, String> list, Map<String, String> declared, String backType) {
+//		for(int i = 0; i < ifstat.getChildCount(); i++){
+//			ParseTree tree = ifstat.getChild(i);
+//			if(tree instanceof AtomContext){
+//				AtomContext atom = (AtomContext) tree;
+//				if(atom.ID() == null) continue;
+//				String id = atom.ID().getText();
+//				if(!declared.containsKey(id)) list.put(id, backType);
+//			}
+//			else{
+//				update(tree, list, declared, backType);
+//			}
+//		}
+//		
+//	}
+//
+//	private  void updateOnReturn(ParseTree parseTree,
+//			Map<String, String> list, Map<String, String> declared, String backType) {
+//		for(int i = 0; i < parseTree.getChildCount(); i++){
+//			ParseTree tree = parseTree.getChild(i);
+//			if(tree instanceof AtomContext){
+//				AtomContext atom = (AtomContext) tree;
+//				if(atom.ID() == null) continue;
+//				String id = atom.ID().getText();
+//				if(!declared.containsKey(id)) list.put(id, backType);
+////				else this.returnType = declared.get(id);
+//			}
+//			else{
+//				updateOnReturn(tree, list, declared, backType);
+//			}
+//		}
+//		//return "in"
+//		
+//	}
+//
+//	//no statement for sure and no if block
+//	private   void update(Assign_expressionContext assign_expression,
+//			Map<String, String> list, Map<String, String> declared, String typeBack) {
+//		for(int i = 0; i < assign_expression.getChildCount(); i++){
+//			ParseTree tree = assign_expression.getChild(i);
+//			if(tree instanceof AtomContext){
+//				AtomContext atom = (AtomContext) tree;
+//				if(atom.ID() == null) continue;
+//				String id = atom.ID().getText();
+//				if(!declared.containsKey(id)) list.put(id, typeBack);
+//			}
+//			else{
+//				update(tree, list, declared, typeBack);
+//			}
+//		}
+//		
+//	}
+//
+//	//no statement and no if in this tree
+//	private   void update(ParseTree tree, Map<String, String> list, Map<String, String> declared, String typeBack) {
+//		for(int i = 0; i < tree.getChildCount(); i++){
+//			ParseTree child = tree.getChild(i);
+//			if(child instanceof AtomContext){
+//				AtomContext atom = (AtomContext) child;
+//				if(atom.ID() == null) continue;
+//				String id = atom.ID().getText();
+//				if(!declared.containsKey(id)) list.put(id, typeBack);
+//			}
+//			else if(child instanceof AssignStatContext){
+//				AssignStatContext assign = (AssignStatContext) child;
+//				//list.add(getTreeString(child) + ";");
+//				if(assign.type() == null){
+//					String type = speculateType(assign.assign_expression(), declared);
+//					if(!declared.containsKey(assign.ID().getText())){
+//					
+//						list.put(assign.ID().getText(),type);
+//					}
+//					update(assign.assign_expression(), list, declared, type);
+//				}
+//				else{
+//					declared.put(assign.ID().getText(), assign.type().getText());
+//					update(assign.assign_expression(), list, declared, typeBack);
+//				}
+//			}
+//			else if (child instanceof DeclarationStatContext){
+//				DeclarationStatContext decl = (DeclarationStatContext) child;
+//				declared.put(decl.ID().getText(), decl.type().getText());
+//			}
+//			else{
+//				update(child, list, declared, typeBack);
+//			}
+//		}
+//		
+//	}
 
 	public static void main(String[] args){
 //		Scraper sc = new Scraper("./block");
