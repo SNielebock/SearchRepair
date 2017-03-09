@@ -114,7 +114,7 @@ public class EntryAddition {
 			try {
 				//if(!fileName.equals("./repository/scrape/test41.c")) return methods;
 	//			String com = "./executors/pathgen " + fileName;
-	
+				System.out.println("create class file: " + "javac -g " + fileName);
 				Process javacProcess = Runtime.getRuntime().exec("javac -g " + fileName);
 				try {
 					javacProcess.waitFor();
@@ -425,8 +425,9 @@ public class EntryAddition {
 
 
 	public static void main(String[] args) throws FileNotFoundException{
-		String filePath = "./repository/future";
-		EntryAddition.addOneFolder(filePath, "future");;
+//		String filePath = "./repository/future";
+		String filePath = "./repository/myTest";
+		EntryAddition.addOneFolder(filePath, "mytest");;
 		//EntryAddition.addOneFile(filePath);
 	}
 }

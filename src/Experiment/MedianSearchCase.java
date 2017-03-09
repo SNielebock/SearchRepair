@@ -44,8 +44,8 @@ public class MedianSearchCase extends ESearchCase {
 
 	
 	public static void main(String[] args){
-		MedianSearchCase instan = new MedianSearchCase("./bughunt/median/53", "median.c",  3);
-		instan.transformAndInitRunDir(true, "");
+		MedianSearchCase instan = new MedianSearchCase("./bughunt/median/40", "median_2c155667_000.java",  5);
+		instan.transformAndInitRunDir(false, "");
 		instan.initInputAndOutput();
 		instan.search(false);
 		instan.recordResult(false);

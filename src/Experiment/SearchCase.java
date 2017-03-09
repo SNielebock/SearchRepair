@@ -243,6 +243,7 @@ public class SearchCase {
 	
 
 	private boolean checkPassForOneCase(String s2, String output, String input) {
+		//TODO: really needed?
 		Utility.writeTOFile(this.tempOutput, s2);
 		Utility.writeTOFile(this.outputfile, output);
 		Utility.writeTOFile(this.inputfile, input);
@@ -265,8 +266,8 @@ public class SearchCase {
 			    }
 			    String expectedOutput = sb.toString();
 			    System.out.println("Expected Output: " + expectedOutput);
-			    System.out.println("Actual Output: " + this.tempOutput);
-			    if(expectedOutput.equals(this.tempOutput)){
+			    System.out.println("Actual Output: " + s2);
+			    if(expectedOutput.trim().equals(s2.trim())){
 			    	s = "Test passed.";
 			    }else{
 			    	s = "Test failed.";

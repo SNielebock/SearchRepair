@@ -32,7 +32,7 @@ public class MyJavaListener extends JavaBaseListener {
 	public void enterMethodDeclaration(@NotNull MethodDeclarationContext ctx) {
 		Pair tempRange = new Pair(ctx.start.getLine(), ctx.stop.getLine());
 		methodRanges.put(tempRange,ctx);
-		System.out.println("METHODRETURNTYPE: " + ctx.getChild(0).getText());
+//		System.out.println("METHODRETURNTYPE: " + ctx.getChild(0).getText());
 		returnType.put(tempRange, ctx.getChild(0).getText());
 	}
 	
@@ -63,9 +63,9 @@ public class MyJavaListener extends JavaBaseListener {
 			getVariableList(ctx.getChild(i), variables);
 		}
 		
-		for(String variable: variables){
-			System.out.println("VARIABLE! " + variable);
-		}
+//		for(String variable: variables){
+//			System.out.println("VARIABLE! " + variable);
+//		}
 		
 		return variables;
 	}
@@ -115,9 +115,9 @@ public class MyJavaListener extends JavaBaseListener {
 			}
 		}
 		
-		for(Variable tempVar: fieldDeclarations){
-			System.out.println("MapEntry: " + tempVar.getID() + " - " + tempVar.getType());
-		}
+//		for(Variable tempVar: fieldDeclarations){
+//			System.out.println("MapEntry: " + tempVar.getID() + " - " + tempVar.getType());
+//		}
 	}
 	
 	@Override 
@@ -160,13 +160,13 @@ public class MyJavaListener extends JavaBaseListener {
 			variableMap.put(tempMethodRange, tempVariableList);
 		}
 		
-		for(Pair keyRange: variableMap.keySet()){
-			System.out.println("Mehtodrange: " + keyRange.toString());
-			
-			for(Variable var: variableMap.get(keyRange)){
-				System.out.println("Variable: " + var.toString());
-			}
-		}
+//		for(Pair keyRange: variableMap.keySet()){
+//			System.out.println("Mehtodrange: " + keyRange.toString());
+//			
+//			for(Variable var: variableMap.get(keyRange)){
+//				System.out.println("Variable: " + var.toString());
+//			}
+//		}
 		
 	}
 
@@ -216,13 +216,13 @@ public class MyJavaListener extends JavaBaseListener {
 			variableMap.put(tempMethodRange, tempVariableList);
 		}
 		
-		for(Pair keyRange: variableMap.keySet()){
-			System.out.println("Mehtodrange: " + keyRange.toString());
-			
-			for(Variable var: variableMap.get(keyRange)){
-				System.out.println("Variable: " + var.toString());
-			}
-		}
+//		for(Pair keyRange: variableMap.keySet()){
+//			System.out.println("Mehtodrange: " + keyRange.toString());
+//			
+//			for(Variable var: variableMap.get(keyRange)){
+//				System.out.println("Variable: " + var.toString());
+//			}
+//		}
 	}
 	
 	public String getPackageName(){

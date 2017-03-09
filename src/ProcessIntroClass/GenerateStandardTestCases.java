@@ -121,7 +121,11 @@ public class GenerateStandardTestCases {
 			for(File temp : queue){
 				File caseFolder = new File(outputFolderFile.getAbsolutePath() + "/" + count++);
 				//TODO: only for testing!
-				if(count == 40){
+//				if(count == 40){
+//					init(temp, caseFolder, functionName);
+//				}
+//				System.out.println("OUTPUTFOLDERFILE: " + outputFolderFile.getName());
+				if(outputFolderFile.getName().equals("myTest")){
 					init(temp, caseFolder, functionName);
 				}
 			}

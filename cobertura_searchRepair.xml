@@ -55,7 +55,7 @@
 					don't instrument the test classes.
 				-->
 				<include name="**/*.class" />
-				<exclude name="**/*Test.class" />
+				<!--<exclude name="**/*Test.class" />-->
 			</fileset>
 		</cobertura-instrument>
 	</target>

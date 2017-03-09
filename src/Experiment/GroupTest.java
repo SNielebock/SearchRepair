@@ -87,6 +87,8 @@ public class GroupTest {
 									else actualRepository = 4;
 								}else if(type == 1){
 									actualRepository = 1;
+								}else{
+									actualRepository = type;
 								}
 								System.out.println("Before GeneralSearchCase - Folder: " + folder + " FileName: " + fileName + " ActualRepository: " + actualRepository);
 								GeneralSearchCase searcher = new GeneralSearchCase(folder, fileName, actualRepository);

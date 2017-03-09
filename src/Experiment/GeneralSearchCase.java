@@ -42,7 +42,6 @@ public class GeneralSearchCase extends ESearchCase{
 
 			String prefix = this.getRunDir() + "/" + this.getFileName().substring(0, this.getFileName().lastIndexOf('.'));
 			SearchCase instan = new SearchCase(prefix, this.getRepo());
-			System.out.println(Arrays.toString(range));
 			instan.setBuggy(range);
 			instan.setNegatives(this.getNegatives());
 			instan.setPositives(this.getPositives());
