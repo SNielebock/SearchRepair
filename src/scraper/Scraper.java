@@ -42,6 +42,7 @@ public class Scraper {
 	private String folder;
 	private String projecName;
 	private static final String scrapRoot = "./repository/scraper";
+	private int fileCount = 0;
 //	private String returnType;
 	
 	
@@ -50,6 +51,7 @@ public class Scraper {
 		this.folder = folder;
 		int temp = this.folder.substring(0, this.folder.lastIndexOf("/")).lastIndexOf("/");
 		this.projecName = this.folder.substring(temp + 1);
+		fileCount = 0;
 //		this.returnType = "void";
 		File dir = new File(scrapRoot + "/" + projecName);
 		if(!dir.exists() || !dir.isDirectory()) {
@@ -63,35 +65,33 @@ public class Scraper {
 	}
 
 	public  void scrape(File dir){
-		HashMap<String, Pair> snippetRangeMap = new HashMap<String, Pair>();
-		HashMap<String, Set<String>> snippetVariablesMap = new HashMap<String, Set<String>>();
 		for(File file : dir.listFiles()){
-			getSupport(file, snippetRangeMap, snippetVariablesMap);
+			getSupport(file);
 		}
 	}
 	
 	public void scrape(String filePath){
-		HashMap<String, Pair> snippetRangeMap = new HashMap<String, Pair>();
-		HashMap<String, Set<String>> snippetVariablesMap = new HashMap<String, Set<String>>();
+
 //		for(File file : dir.listFiles()){
-			getSupport(new File(filePath), snippetRangeMap, snippetVariablesMap);
+			getSupport(new File(filePath));
 //		}
 	}
 	
-	private void getSupport(File file, HashMap<String, Pair> snippetRangeMap, HashMap<String, Set<String>> snippetVariablesMap) {
+	private void getSupport(File file) {
 		if(file.isDirectory()){
 			for(File g : file.listFiles()){
-				getSupport(g, snippetRangeMap, snippetVariablesMap);
+				getSupport(g);
 			}
 		}
 		else{
-			parse(file, snippetRangeMap, snippetVariablesMap);
+			parse(file);
 		}
 		
 	}
 
-	private void parse(File file, HashMap<String, Pair> snippetRangeMap, HashMap<String, Set<String>> snippetVariablesMap) {
-		
+	private void parse(File file) {
+		HashMap<String, Pair> snippetRangeMap = new HashMap<String, Pair>();
+		HashMap<String, Set<String>> snippetVariablesMap = new HashMap<String, Set<String>>();
 		if(!file.getAbsolutePath().endsWith(".java")) return;
 		String fileString = Utility.getStringFromFile1(file.getAbsolutePath());
 		List<String> array = new ArrayList<String>();
@@ -215,15 +215,13 @@ public class Scraper {
 		
 		List<Variable> fieldDeclarations = listener.getFieldDeclarations();
 		
-		int i = 0;
 		for(String snippet : snippetRangeMap.keySet()){
-			System.out.println("SNIPPET BEFORE GENERATE: " + snippet);
-			if(i > 1000){
+			if(fileCount > 1000){
 				return;
 			}
 			String returnType = listener.getReturnType(snippetRangeMap.get(snippet));
 			List<Variable> variableList = listener.getVariableListfromRange(snippetRangeMap.get(snippet));
-			generate(scrapRoot + "/" + this.projecName + "/test" + i++ + ".java", snippet, variableList, snippetVariablesMap.get(snippet), fieldDeclarations, returnType);
+			generate(scrapRoot + "/" + this.projecName + "/test" + fileCount++ + ".java", snippet, variableList, snippetVariablesMap.get(snippet), fieldDeclarations, returnType);
 		}
 		
 	}
@@ -264,7 +262,6 @@ public class Scraper {
 	}
 
 	public void generate(String file, String snippet, List<Variable> declaratedVariables, Set<String> variableIDs, List<Variable> fieldDeclarations, String returnType){
-		System.out.println("In generate");
 		Map<String, String> variables = new HashMap<String, String>();
 		for(String id: variableIDs){
 			boolean found = false;
@@ -282,13 +279,12 @@ public class Scraper {
 					}
 				}
 				if(!found){
-					System.out.println("No type found! Default type \"int\" used! - Scraper.generate");
+					System.out.println("No type for " + id + " found! Default type \"int\" used! - Scraper.generate");
 					variables.put(id,  "int");
 				}
 			}
 		}
 		
-		System.out.println("after variables");
 		//if(!s.trim().startsWith("publish")) return;
 //		if(variables.keySet().isEmpty()) return;
 		
@@ -297,7 +293,8 @@ public class Scraper {
 		String param = generateHead(variables);
 		String methodName = "test";
 		String functionType = getFunctionType(snippet, returnType);
-		String function = "public " + functionType + " " + methodName + param + "{\n" + snippet + "}";
+		String mainMethod = generateMain(file, methodName, param);
+		String function = mainMethod + "\tpublic " + functionType + " " + methodName + param + "{\n" + snippet + "\n\t}\n}";
 		try {
 			System.out.println("Filepath: " + file);
 			File temp = new File(file);
@@ -315,6 +312,37 @@ public class Scraper {
 	}
 	
 	
+	private String generateMain(String file, String methodName, String param) {
+		String className = file.substring(file.lastIndexOf("/") + 1, file.lastIndexOf("."));
+		String[] paramArray = param.substring(1, param.length() - 1).split(",");
+		String paramValues = ""; 
+		if(!((paramArray.length == 1 && paramArray[0].equals("")) || paramArray.length == 0)){
+			for(String oneParam: paramArray){
+				String type = oneParam.trim().substring(0, oneParam.trim().indexOf(" "));
+				
+				if(type.equals("byte")) paramValues += "0,";
+				else if(type.equals("short")) paramValues += "0,";
+				else if(type.equals("int")) paramValues += "0,";
+				else if(type.equals("long")) paramValues += "0L,";
+				else if(type.equals("float")) paramValues += "0.0f,";
+				else if(type.equals("double")) paramValues += "0.0d,";
+				else if(type.equals("char")) paramValues += "'\u0000',";
+				else if(type.equals("boolean")) paramValues += "false,";
+				else paramValues += "null,";
+			}
+		}
+		
+		if(!paramValues.equals("")){
+			paramValues = paramValues.substring(0, paramValues.length() - 1);
+		}
+		
+		String mainMethod = "public class " + className + "{\n\tpublic static void main(String[] args){\n\t\t"
+				+ className + " myObject = new " + className + "();\n\t\t\t"
+				+ "myObject." + methodName + "(" + paramValues + ");\n\t"
+				+ "}\n\n";
+		return mainMethod;
+	}
+
 	private  String getFunctionType(String s, String returnType) {
 		return s.contains("return") ? returnType : "void";
 	}
@@ -519,7 +547,6 @@ public class Scraper {
 	public static void main(String[] args){
 //		Scraper sc = new Scraper("./block");
 		Scraper sc = new Scraper("./repository/myTest");
-
 //		List<String> list = new Scraper("./bughunt/syllables/33").scrape("./bughunt/syllables/33/syllables.c");
 //		for(String s : list){
 //			System.out.println("------------");
