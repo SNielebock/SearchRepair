@@ -15,7 +15,6 @@
 (declare-fun int1_out () Int)
 (assert (= int1_out 9))
 (assert (and (= result result_in )(= __test__0 result_out )(= a int1_in )(= a int1_out )(= b int2_in )(= b int2_out )))
-(assert ( <= result 100))
 (assert(= __test__0 (+ b a)))
 
 (check-sat)

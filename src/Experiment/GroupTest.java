@@ -71,7 +71,8 @@ public class GroupTest {
 		int actualRepository = 0;
 		for (File root : file.listFiles()) {
 			System.out.println("THISROOT: " + root.getName());
-			if(root.isDirectory()){
+			//TODO: Delete myTest!
+			if(root.isDirectory() && root.getName().equals("myTest")){
 				for(File subRoot: root.listFiles()){
 					try {
 						String folder = "./bughunt/" + root.getName() + "/" + subRoot.getName();
