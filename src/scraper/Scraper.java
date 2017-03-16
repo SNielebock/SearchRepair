@@ -93,13 +93,13 @@ public class Scraper {
 		HashMap<String, Pair> snippetRangeMap = new HashMap<String, Pair>();
 		HashMap<String, Set<String>> snippetVariablesMap = new HashMap<String, Set<String>>();
 		if(!file.getAbsolutePath().endsWith(".java")) return;
-		String fileString = Utility.getStringFromFile1(file.getAbsolutePath());
-		List<String> array = new ArrayList<String>();
-		
-		int start = -1;
-		int end = -1;
-		Stack<Character> stack = new Stack<Character>();
-		Stack<Integer> index = new Stack<Integer>();
+//		String fileString = Utility.getStringFromFile1(file.getAbsolutePath());
+//		List<String> array = new ArrayList<String>();
+//		
+//		int start = -1;
+//		int end = -1;
+//		Stack<Character> stack = new Stack<Character>();
+//		Stack<Integer> index = new Stack<Integer>();
 		//TODO: probably not needed
 //		for(int i = 0; i < fileString.length(); i++)
 //		{
@@ -146,6 +146,9 @@ public class Scraper {
 				if(lineNumber >= biggestRanges.get(listIndex).getLeft() && lineNumber <= biggestRanges.get(listIndex).getRight()){
 					snippetString += s;
 					if(lineNumber == biggestRanges.get(listIndex).getRight()){
+						if(snippetString.trim().startsWith("return")){
+							continue;
+						}
 						Set<String> variableSet = listener.getVariabelsUsedInStatementRange(biggestRanges.get(listIndex));
 						snippetRangeMap.put(snippetString, biggestRanges.get(listIndex));
 						snippetVariablesMap.put(snippetString, variableSet);
