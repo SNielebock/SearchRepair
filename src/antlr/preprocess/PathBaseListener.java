@@ -1,4 +1,4 @@
-// Generated from Path.g4 by ANTLR 4.4
+// Generated from ./src/antlr/preprocess/Path.g4 by ANTLR 4.4
 package antlr.preprocess;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -17,6 +17,18 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAssiginOperator(@NotNull PathParser.AssiginOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -29,37 +41,13 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturnStat(@NotNull PathParser.ReturnStatContext ctx) { }
+	@Override public void enterCallStat(@NotNull PathParser.CallStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturnStat(@NotNull PathParser.ReturnStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterConvertExpr(@NotNull PathParser.ConvertExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitConvertExpr(@NotNull PathParser.ConvertExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAssignStat(@NotNull PathParser.AssignStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssignStat(@NotNull PathParser.AssignStatContext ctx) { }
+	@Override public void exitCallStat(@NotNull PathParser.CallStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -77,13 +65,13 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCallExpr(@NotNull PathParser.CallExprContext ctx) { }
+	@Override public void enterCondExpr(@NotNull PathParser.CondExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCallExpr(@NotNull PathParser.CallExprContext ctx) { }
+	@Override public void exitCondExpr(@NotNull PathParser.CondExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -96,30 +84,6 @@ public class PathBaseListener implements PathListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAddressExpr(@NotNull PathParser.AddressExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExpr(@NotNull PathParser.ExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExpr(@NotNull PathParser.ExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterComparator(@NotNull PathParser.ComparatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitComparator(@NotNull PathParser.ComparatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -149,66 +113,6 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDefExpr(@NotNull PathParser.DefExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDefExpr(@NotNull PathParser.DefExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCallStat(@NotNull PathParser.CallStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCallStat(@NotNull PathParser.CallStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFormalArgument(@NotNull PathParser.FormalArgumentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFormalArgument(@NotNull PathParser.FormalArgumentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStatement(@NotNull PathParser.StatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStatement(@NotNull PathParser.StatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterProg(@NotNull PathParser.ProgContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -221,13 +125,49 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArguments(@NotNull PathParser.ArgumentsContext ctx) { }
+	@Override public void enterComparator(@NotNull PathParser.ComparatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArguments(@NotNull PathParser.ArgumentsContext ctx) { }
+	@Override public void exitComparator(@NotNull PathParser.ComparatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNotExpr(@NotNull PathParser.NotExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNotExpr(@NotNull PathParser.NotExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConvertExpr(@NotNull PathParser.ConvertExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConvertExpr(@NotNull PathParser.ConvertExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReturnStat(@NotNull PathParser.ReturnStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnStat(@NotNull PathParser.ReturnStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -245,13 +185,49 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCondExpr(@NotNull PathParser.CondExprContext ctx) { }
+	@Override public void enterStatement(@NotNull PathParser.StatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCondExpr(@NotNull PathParser.CondExprContext ctx) { }
+	@Override public void exitStatement(@NotNull PathParser.StatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpr(@NotNull PathParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpr(@NotNull PathParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArguments(@NotNull PathParser.ArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArguments(@NotNull PathParser.ArgumentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFormalArgument(@NotNull PathParser.FormalArgumentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFormalArgument(@NotNull PathParser.FormalArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -269,25 +245,49 @@ public class PathBaseListener implements PathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx) { }
+	@Override public void enterAssignStat(@NotNull PathParser.AssignStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx) { }
+	@Override public void exitAssignStat(@NotNull PathParser.AssignStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNotExpr(@NotNull PathParser.NotExprContext ctx) { }
+	@Override public void enterCallExpr(@NotNull PathParser.CallExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNotExpr(@NotNull PathParser.NotExprContext ctx) { }
+	@Override public void exitCallExpr(@NotNull PathParser.CallExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDefExpr(@NotNull PathParser.DefExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDefExpr(@NotNull PathParser.DefExprContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

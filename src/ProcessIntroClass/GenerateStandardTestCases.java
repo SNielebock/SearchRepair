@@ -125,7 +125,7 @@ public class GenerateStandardTestCases {
 //					init(temp, caseFolder, functionName);
 //				}
 //				System.out.println("OUTPUTFOLDERFILE: " + outputFolderFile.getName());
-				if(outputFolderFile.getName().equals("myTest")){
+				if(outputFolderFile.getName().equals("median")){
 					init(temp, caseFolder, functionName);
 				}
 			}
@@ -346,7 +346,7 @@ public class GenerateStandardTestCases {
 					    String expectedOutput = sb.toString();
 					    System.out.println("Expected Output: " + expectedOutput);
 					    System.out.println("Actual Output: " + runOutput);
-					    if(expectedOutput.equals(runOutput)){
+					    if(expectedOutput.trim().equals(runOutput.trim())){
 					    	s = "Test passed.";
 					    }else{
 					    	s = "Test failed.";
@@ -431,7 +431,7 @@ public class GenerateStandardTestCases {
 					    String expectedOutput = sb.toString();
 					    System.out.println("Expected Output: " + expectedOutput);
 					    System.out.println("Actual Output: " + runOutput);
-					    if(expectedOutput.equals(runOutput)){
+					    if(expectedOutput.trim().equals(runOutput.trim())){
 					    	s = "Test passed.";
 					    }else{
 					    	s = "Test failed.";

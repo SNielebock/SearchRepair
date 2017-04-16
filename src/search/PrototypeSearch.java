@@ -195,6 +195,7 @@ public class PrototypeSearch {
 					String[] variableTracks = pathAndTrack[1].split(DataHandler.VARIABLE_END);
 					String[] mapping = pathAndMap[1].split(DataHandler.VARIABLE_END);
 					String[] formals = pathAndFormal[1].split(DataHandler.VARIABLE_END);
+
 					if(searchWithMapping(constraint, variableTypes, variableTracks, mapping, formals, map, pInputs, pOutputs)){
 						passOnePath = true;
 						break;

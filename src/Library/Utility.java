@@ -243,14 +243,16 @@ public class Utility {
 				if (isAlive(ls_proc)) {
 					ls_proc.destroy();
 				}
-
-				while ((ls_str = ls_in.readLine()) != null) {
-					sb.append(ls_str);
-					sb.append("\n");
+				if(ls_in.ready()){
+					while ((ls_str = ls_in.readLine()) != null) {
+						sb.append(ls_str);
+						sb.append("\n");
+					}
 				}
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				System.out.println("IOException.getMessage: " + e.getMessage());
 				out = "";
 				// System.exit(0);
 			} catch (Exception e) {

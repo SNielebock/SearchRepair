@@ -5,5 +5,27 @@
 	<classpathentry kind="lib" path="lib/antlr-4.4-complete.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/jcov_network_saver.jar"/>
+	<classpathentry kind="lib" path="lib/jcov.jar"/>
+	<classpathentry kind="lib" path="lib/jedis-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.pool_1.6.0.v201204271246.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/asm-5.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/asm-analysis-5.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/asm-commons-5.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/asm-tree-5.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/asm-util-5.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/cobertura-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/jaxen-1.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/jetty-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/jetty-util-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/logback-classic-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/logback-core-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/servlet-api-2.5-6.1.14.jar"/>
+	<classpathentry kind="lib" path="lib/cobertura/slf4j-api-1.7.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

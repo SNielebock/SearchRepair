@@ -259,10 +259,13 @@ public class EntryAddition {
 			int indexLastVisibility = 0;
 			while(tmpFileString.contains(methodVisibility)){
 				String onePartOfFile = tmpFileString.substring(tmpFileString.indexOf(methodVisibility));
+				if(onePartOfFile.startsWith("public class")){
+					onePartOfFile = onePartOfFile.substring(onePartOfFile.indexOf("{"));
+				}
 				onePartOfFile = onePartOfFile.substring(0,onePartOfFile.indexOf("("));
 				indexLastVisibility += tmpFileString.indexOf(onePartOfFile);
 				tmpFileString = tmpFileString.substring(tmpFileString.indexOf(onePartOfFile));
-
+				
 				if(onePartOfFile.contains(methodReturnType) && onePartOfFile.contains(methodName)){
 					
 				     break;	
@@ -328,7 +331,7 @@ public class EntryAddition {
 	private static void createJPFfile(String path, String pureFileName) {
 		String symbolicMethodCall = getSymbolicMethodCall(path, pureFileName);
 		List<String> lines = Arrays.asList( "target=" + pureFileName,
-											"classpath=/home/matthias/git/SearchRepair/repository/myTest",
+											"classpath=" + path,
 											"symbolic.method=" + symbolicMethodCall,
 											"listener = gov.nasa.jpf.symbc.SymbolicListener",
 											"vm.storage.class=nil",
@@ -350,7 +353,7 @@ public class EntryAddition {
 			Class<?> clazz = Utility.getClassFromFile(path, pureFileName);
 			for(java.lang.reflect.Method method : clazz.getMethods()){
 				String returnType = method.getReturnType().toString().substring(((method.getReturnType().toString().lastIndexOf(".")) > 0) ? method.getReturnType().toString().lastIndexOf(".") : 0);
-				if(method.toString().substring(method.toString().indexOf(returnType) + returnType.length(), method.toString().indexOf(method.getName())).contains(pureFileName)){
+				if(!method.toString().substring(method.toString().indexOf(returnType) + returnType.length(), method.toString().indexOf(method.getName())).trim().equals("java.lang.Object.")){
 					if(!((method.toString().contains("public static void"))&&(method.toString().contains("main")))){
 						if(fullMethodName.equals("")){
 							fullMethodName = method.toString().substring(method.toString().indexOf(returnType) + returnType.length() + 1, method.toString().indexOf("("));

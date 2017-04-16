@@ -1,4 +1,4 @@
-// Generated from Path.g4 by ANTLR 4.4
+// Generated from ./src/antlr/preprocess/Path.g4 by ANTLR 4.4
 package antlr.preprocess;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -8,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link PathParser}.
  */
 public interface PathListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by {@link PathParser#selfIncreStat}.
+	 * @param ctx the parse tree
+	 */
+	void enterSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#selfIncreStat}.
+	 * @param ctx the parse tree
+	 */
+	void exitSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PathParser#assiginOperator}.
 	 * @param ctx the parse tree
@@ -19,35 +29,15 @@ public interface PathListener extends ParseTreeListener {
 	 */
 	void exitAssiginOperator(@NotNull PathParser.AssiginOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#returnStat}.
+	 * Enter a parse tree produced by {@link PathParser#callStat}.
 	 * @param ctx the parse tree
 	 */
-	void enterReturnStat(@NotNull PathParser.ReturnStatContext ctx);
+	void enterCallStat(@NotNull PathParser.CallStatContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PathParser#returnStat}.
+	 * Exit a parse tree produced by {@link PathParser#callStat}.
 	 * @param ctx the parse tree
 	 */
-	void exitReturnStat(@NotNull PathParser.ReturnStatContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#convertExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterConvertExpr(@NotNull PathParser.ConvertExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#convertExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitConvertExpr(@NotNull PathParser.ConvertExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#assignStat}.
-	 * @param ctx the parse tree
-	 */
-	void enterAssignStat(@NotNull PathParser.AssignStatContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#assignStat}.
-	 * @param ctx the parse tree
-	 */
-	void exitAssignStat(@NotNull PathParser.AssignStatContext ctx);
+	void exitCallStat(@NotNull PathParser.CallStatContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PathParser#assumeStat}.
 	 * @param ctx the parse tree
@@ -59,15 +49,15 @@ public interface PathListener extends ParseTreeListener {
 	 */
 	void exitAssumeStat(@NotNull PathParser.AssumeStatContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#callExpr}.
+	 * Enter a parse tree produced by {@link PathParser#condExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterCallExpr(@NotNull PathParser.CallExprContext ctx);
+	void enterCondExpr(@NotNull PathParser.CondExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PathParser#callExpr}.
+	 * Exit a parse tree produced by {@link PathParser#condExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitCallExpr(@NotNull PathParser.CallExprContext ctx);
+	void exitCondExpr(@NotNull PathParser.CondExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PathParser#addressExpr}.
 	 * @param ctx the parse tree
@@ -78,26 +68,6 @@ public interface PathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAddressExpr(@NotNull PathParser.AddressExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExpr(@NotNull PathParser.ExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExpr(@NotNull PathParser.ExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#comparator}.
-	 * @param ctx the parse tree
-	 */
-	void enterComparator(@NotNull PathParser.ComparatorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#comparator}.
-	 * @param ctx the parse tree
-	 */
-	void exitComparator(@NotNull PathParser.ComparatorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PathParser#booleanOperator}.
 	 * @param ctx the parse tree
@@ -119,56 +89,6 @@ public interface PathListener extends ParseTreeListener {
 	 */
 	void exitType(@NotNull PathParser.TypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#defExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterDefExpr(@NotNull PathParser.DefExprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#defExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitDefExpr(@NotNull PathParser.DefExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#callStat}.
-	 * @param ctx the parse tree
-	 */
-	void enterCallStat(@NotNull PathParser.CallStatContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#callStat}.
-	 * @param ctx the parse tree
-	 */
-	void exitCallStat(@NotNull PathParser.CallStatContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#formalArgument}.
-	 * @param ctx the parse tree
-	 */
-	void enterFormalArgument(@NotNull PathParser.FormalArgumentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#formalArgument}.
-	 * @param ctx the parse tree
-	 */
-	void exitFormalArgument(@NotNull PathParser.FormalArgumentContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void enterStatement(@NotNull PathParser.StatementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#statement}.
-	 * @param ctx the parse tree
-	 */
-	void exitStatement(@NotNull PathParser.StatementContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link PathParser#declarationStat}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PathParser#declarationStat}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link PathParser#prog}.
 	 * @param ctx the parse tree
 	 */
@@ -179,15 +99,45 @@ public interface PathListener extends ParseTreeListener {
 	 */
 	void exitProg(@NotNull PathParser.ProgContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#arguments}.
+	 * Enter a parse tree produced by {@link PathParser#comparator}.
 	 * @param ctx the parse tree
 	 */
-	void enterArguments(@NotNull PathParser.ArgumentsContext ctx);
+	void enterComparator(@NotNull PathParser.ComparatorContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PathParser#arguments}.
+	 * Exit a parse tree produced by {@link PathParser#comparator}.
 	 * @param ctx the parse tree
 	 */
-	void exitArguments(@NotNull PathParser.ArgumentsContext ctx);
+	void exitComparator(@NotNull PathParser.ComparatorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#notExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotExpr(@NotNull PathParser.NotExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#notExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotExpr(@NotNull PathParser.NotExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#convertExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConvertExpr(@NotNull PathParser.ConvertExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#convertExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConvertExpr(@NotNull PathParser.ConvertExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#returnStat}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnStat(@NotNull PathParser.ReturnStatContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#returnStat}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnStat(@NotNull PathParser.ReturnStatContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PathParser#arithOperator}.
 	 * @param ctx the parse tree
@@ -199,15 +149,45 @@ public interface PathListener extends ParseTreeListener {
 	 */
 	void exitArithOperator(@NotNull PathParser.ArithOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#condExpr}.
+	 * Enter a parse tree produced by {@link PathParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterCondExpr(@NotNull PathParser.CondExprContext ctx);
+	void enterStatement(@NotNull PathParser.StatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PathParser#condExpr}.
+	 * Exit a parse tree produced by {@link PathParser#statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitCondExpr(@NotNull PathParser.CondExprContext ctx);
+	void exitStatement(@NotNull PathParser.StatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr(@NotNull PathParser.ExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr(@NotNull PathParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#arguments}.
+	 * @param ctx the parse tree
+	 */
+	void enterArguments(@NotNull PathParser.ArgumentsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#arguments}.
+	 * @param ctx the parse tree
+	 */
+	void exitArguments(@NotNull PathParser.ArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#formalArgument}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormalArgument(@NotNull PathParser.FormalArgumentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#formalArgument}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormalArgument(@NotNull PathParser.FormalArgumentContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PathParser#selfOperator}.
 	 * @param ctx the parse tree
@@ -219,23 +199,43 @@ public interface PathListener extends ParseTreeListener {
 	 */
 	void exitSelfOperator(@NotNull PathParser.SelfOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#selfIncreStat}.
+	 * Enter a parse tree produced by {@link PathParser#assignStat}.
 	 * @param ctx the parse tree
 	 */
-	void enterSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx);
+	void enterAssignStat(@NotNull PathParser.AssignStatContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PathParser#selfIncreStat}.
+	 * Exit a parse tree produced by {@link PathParser#assignStat}.
 	 * @param ctx the parse tree
 	 */
-	void exitSelfIncreStat(@NotNull PathParser.SelfIncreStatContext ctx);
+	void exitAssignStat(@NotNull PathParser.AssignStatContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PathParser#notExpr}.
+	 * Enter a parse tree produced by {@link PathParser#callExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterNotExpr(@NotNull PathParser.NotExprContext ctx);
+	void enterCallExpr(@NotNull PathParser.CallExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PathParser#notExpr}.
+	 * Exit a parse tree produced by {@link PathParser#callExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitNotExpr(@NotNull PathParser.NotExprContext ctx);
+	void exitCallExpr(@NotNull PathParser.CallExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#declarationStat}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#declarationStat}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclarationStat(@NotNull PathParser.DeclarationStatContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PathParser#defExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefExpr(@NotNull PathParser.DefExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PathParser#defExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefExpr(@NotNull PathParser.DefExprContext ctx);
 }

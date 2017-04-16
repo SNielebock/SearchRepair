@@ -544,8 +544,8 @@ public class GcovTest {
 	}
 
 	public static void main(String[] args){
-		GcovTest test = new GcovTest("./bughunt/myTest/0", "myTest.java", false);
-//		GcovTest test = new GcovTest("./bughunt/median/40", "median_2c155667_000.java", false);
+//		GcovTest test = new GcovTest("./bughunt/myTest/0", "myTest.java", false);
+		GcovTest test = new GcovTest("./bughunt/median/40", "median_2c155667_000.java", false);
 		//test.createPropertiesWithInput("2 3 4");
 		//groupExperiment("./bughunt");
 	}

@@ -1,4 +1,4 @@
-// Generated from Snippet.g4 by ANTLR 4.4
+// Generated from ./src/antlr/preprocess/Snippet.g4 by ANTLR 4.4
 package antlr.preprocess;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -17,37 +17,133 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtom(@NotNull SnippetParser.AtomContext ctx) { }
+	@Override public void enterAdd_expression(@NotNull SnippetParser.Add_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtom(@NotNull SnippetParser.AtomContext ctx) { }
+	@Override public void exitAdd_expression(@NotNull SnippetParser.Add_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssign_expression(@NotNull SnippetParser.Assign_expressionContext ctx) { }
+	@Override public void enterIfblock(@NotNull SnippetParser.IfblockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssign_expression(@NotNull SnippetParser.Assign_expressionContext ctx) { }
+	@Override public void exitIfblock(@NotNull SnippetParser.IfblockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMultiOperator(@NotNull SnippetParser.MultiOperatorContext ctx) { }
+	@Override public void enterCondExpr(@NotNull SnippetParser.CondExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMultiOperator(@NotNull SnippetParser.MultiOperatorContext ctx) { }
+	@Override public void exitCondExpr(@NotNull SnippetParser.CondExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterType(@NotNull SnippetParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitType(@NotNull SnippetParser.TypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOperator(@NotNull SnippetParser.OperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOperator(@NotNull SnippetParser.OperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElsepart(@NotNull SnippetParser.ElsepartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElsepart(@NotNull SnippetParser.ElsepartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAnd_expression(@NotNull SnippetParser.And_expressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAnd_expression(@NotNull SnippetParser.And_expressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConvertExpr(@NotNull SnippetParser.ConvertExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConvertExpr(@NotNull SnippetParser.ConvertExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterReturnStat(@NotNull SnippetParser.ReturnStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnStat(@NotNull SnippetParser.ReturnStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMulti_expression(@NotNull SnippetParser.Multi_expressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMulti_expression(@NotNull SnippetParser.Multi_expressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArithmAssignOperator(@NotNull SnippetParser.ArithmAssignOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArithmAssignOperator(@NotNull SnippetParser.ArithmAssignOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -65,6 +161,30 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterElseifpart(@NotNull SnippetParser.ElseifpartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElseifpart(@NotNull SnippetParser.ElseifpartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTerm(@NotNull SnippetParser.TermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTerm(@NotNull SnippetParser.TermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpr(@NotNull SnippetParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -77,13 +197,61 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(@NotNull SnippetParser.TypeContext ctx) { }
+	@Override public void enterIf_stat(@NotNull SnippetParser.If_statContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(@NotNull SnippetParser.TypeContext ctx) { }
+	@Override public void exitIf_stat(@NotNull SnippetParser.If_statContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCallExpr(@NotNull SnippetParser.CallExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCallExpr(@NotNull SnippetParser.CallExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclarationStat(@NotNull SnippetParser.DeclarationStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclarationStat(@NotNull SnippetParser.DeclarationStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStat(@NotNull SnippetParser.StatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStat(@NotNull SnippetParser.StatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSelfIncreStat(@NotNull SnippetParser.SelfIncreStatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSelfIncreStat(@NotNull SnippetParser.SelfIncreStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -113,73 +281,13 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclarationStat(@NotNull SnippetParser.DeclarationStatContext ctx) { }
+	@Override public void enterElseifblock(@NotNull SnippetParser.ElseifblockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDeclarationStat(@NotNull SnippetParser.DeclarationStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIfblock(@NotNull SnippetParser.IfblockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIfblock(@NotNull SnippetParser.IfblockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterProg(@NotNull SnippetParser.ProgContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProg(@NotNull SnippetParser.ProgContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAdd_expression(@NotNull SnippetParser.Add_expressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAdd_expression(@NotNull SnippetParser.Add_expressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArithmAssignOperator(@NotNull SnippetParser.ArithmAssignOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArithmAssignOperator(@NotNull SnippetParser.ArithmAssignOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSelfIncreStat(@NotNull SnippetParser.SelfIncreStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSelfIncreStat(@NotNull SnippetParser.SelfIncreStatContext ctx) { }
+	@Override public void exitElseifblock(@NotNull SnippetParser.ElseifblockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -197,61 +305,13 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAddOperator(@NotNull SnippetParser.AddOperatorContext ctx) { }
+	@Override public void enterProg(@NotNull SnippetParser.ProgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAddOperator(@NotNull SnippetParser.AddOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterReturnStat(@NotNull SnippetParser.ReturnStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitReturnStat(@NotNull SnippetParser.ReturnStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterConvertExpr(@NotNull SnippetParser.ConvertExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitConvertExpr(@NotNull SnippetParser.ConvertExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAssignStat(@NotNull SnippetParser.AssignStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssignStat(@NotNull SnippetParser.AssignStatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterOr_expression(@NotNull SnippetParser.Or_expressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitOr_expression(@NotNull SnippetParser.Or_expressionContext ctx) { }
+	@Override public void exitProg(@NotNull SnippetParser.ProgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -269,85 +329,37 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterElsepart(@NotNull SnippetParser.ElsepartContext ctx) { }
+	@Override public void enterMultiOperator(@NotNull SnippetParser.MultiOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitElsepart(@NotNull SnippetParser.ElsepartContext ctx) { }
+	@Override public void exitMultiOperator(@NotNull SnippetParser.MultiOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCallExpr(@NotNull SnippetParser.CallExprContext ctx) { }
+	@Override public void enterOr_expression(@NotNull SnippetParser.Or_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCallExpr(@NotNull SnippetParser.CallExprContext ctx) { }
+	@Override public void exitOr_expression(@NotNull SnippetParser.Or_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArith_expression(@NotNull SnippetParser.Arith_expressionContext ctx) { }
+	@Override public void enterAddOperator(@NotNull SnippetParser.AddOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArith_expression(@NotNull SnippetParser.Arith_expressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterElseifblock(@NotNull SnippetParser.ElseifblockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitElseifblock(@NotNull SnippetParser.ElseifblockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterElseifpart(@NotNull SnippetParser.ElseifpartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitElseifpart(@NotNull SnippetParser.ElseifpartContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterOperator(@NotNull SnippetParser.OperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitOperator(@NotNull SnippetParser.OperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStat(@NotNull SnippetParser.StatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStat(@NotNull SnippetParser.StatContext ctx) { }
+	@Override public void exitAddOperator(@NotNull SnippetParser.AddOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -365,61 +377,49 @@ public class SnippetBaseListener implements SnippetListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnd_expression(@NotNull SnippetParser.And_expressionContext ctx) { }
+	@Override public void enterAssign_expression(@NotNull SnippetParser.Assign_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnd_expression(@NotNull SnippetParser.And_expressionContext ctx) { }
+	@Override public void exitAssign_expression(@NotNull SnippetParser.Assign_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTerm(@NotNull SnippetParser.TermContext ctx) { }
+	@Override public void enterAssignStat(@NotNull SnippetParser.AssignStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTerm(@NotNull SnippetParser.TermContext ctx) { }
+	@Override public void exitAssignStat(@NotNull SnippetParser.AssignStatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCondExpr(@NotNull SnippetParser.CondExprContext ctx) { }
+	@Override public void enterAtom(@NotNull SnippetParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCondExpr(@NotNull SnippetParser.CondExprContext ctx) { }
+	@Override public void exitAtom(@NotNull SnippetParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMulti_expression(@NotNull SnippetParser.Multi_expressionContext ctx) { }
+	@Override public void enterArith_expression(@NotNull SnippetParser.Arith_expressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMulti_expression(@NotNull SnippetParser.Multi_expressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIf_stat(@NotNull SnippetParser.If_statContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIf_stat(@NotNull SnippetParser.If_statContext ctx) { }
+	@Override public void exitArith_expression(@NotNull SnippetParser.Arith_expressionContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

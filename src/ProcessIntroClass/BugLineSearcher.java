@@ -354,7 +354,8 @@ public class BugLineSearcher {
 	}
 	
 	public static void main(String[] args){
-		BugLineSearcher bug = new BugLineSearcher("./bughunt/median/40", "median_2c155667_000.java");
+		//BugLineSearcher bug = new BugLineSearcher("./bughunt/median/40", "median_2c155667_000.java");
+		BugLineSearcher bug = new BugLineSearcher("./bughunt/myTest/0", "myTest.java");
 	}
 
 

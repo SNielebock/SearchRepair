@@ -149,15 +149,18 @@ public class SearchCase {
 	}
 
 	private void ruleOutFalsePositive() {
+		boolean trueRepairFound = false;
 		for(String source : info.getResult().getSearchMapping().keySet()){
 			for(Map<String, String> map : info.getResult().getSearchMapping().get(source)){
 				try{
 					String input = Restore.getMappingString(source, map);
+					System.out.println("SOURCE: " + source + " INPUT: " + input);
 					String outputFile = generateOutputFile(input);
 					if(testAllResults(source, outputFile)){
 						info.getResult().getMappingSource().put(source, input);
 						int extraPass = this.passTestSuite(source, outputFile, this.verifications);
 						this.info.getResult().getExtraPass().put(source, extraPass);
+						trueRepairFound = true;
 						break;
 					}
 					else continue;
@@ -166,7 +169,9 @@ public class SearchCase {
 					continue;
 				}
 			}
-			
+			if(trueRepairFound){
+				break;
+			}
 		}
 		
 	}
@@ -311,8 +316,10 @@ public class SearchCase {
 
 //		String command1 = "gcc " + outputFile + " -o " + this.casePrefix;
 		String command1 = "javac -d " + this.folder + "/new/ " + outputFile;
-		Utility.runCProgram(command1);
-		
+		String compileOutput = Utility.runCProgram(command1);
+		if(compileOutput.contains("failed")){
+			return false;
+		}
 		//TODO: Commented out for now
 //		if(!new File(this.casePrefix).exists()){
 //			System.out.println("NO NEW FILE?! -> Returned False in \"SearchCase.passAllPositives\"");

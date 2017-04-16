@@ -170,9 +170,12 @@ public class Analyzer {
 
 	public void fetch(){
 		File rootDir = new File(root);
+		System.out.println("Analyzer root dir: " + rootDir.getAbsolutePath());
 		for(File dir : rootDir.listFiles()){
 			String name = dir.getName();
+			System.out.println("Analyzer Name: " + name);
 			if(name.equals(Analyzer.MEDIAN) || name.equals(Analyzer.SMALLEST) || name.equals(Analyzer.DIGITS) || name.equals(Analyzer.CHECKSUM )|| name.equals(Analyzer.SYLLABLES) || name.equals(Analyzer.GRADE) ){
+				System.out.println("Fetching now!");
 				fetch(dir, name);
 			}			
 		}
@@ -184,11 +187,14 @@ public class Analyzer {
 	private static int  i = 0;
 	private void fetch(File dir, String name) {
 		
+		System.out.println("Before for!");
 		for(File version : dir.listFiles()){
-			if(!checkDefect(version)){
+//			if(!checkDefect(version)){
+//				System.out.println("Check defect false!");
 				initNonDefect(version, name);
-				continue;
-			}
+//				continue;
+//			}
+			
 //			if(checkBroken(version)){
 //				i++;
 //				initBroken(version, name);
@@ -204,8 +210,8 @@ public class Analyzer {
 //				initNopositive(version, name);
 //				continue;
 //			}
-
-
+			 
+			System.out.println("Before init!");
 			initSearchFix(version, name);
 			initAE(version, name);
 			initTSP(version, name);

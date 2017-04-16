@@ -63,7 +63,6 @@ public class GroupTest {
 	 * @param wb 	true = whitebox test; false = blackbox test
 	 * @param type	repository type: 0 linux, 1 introclass, 2 future
 	 */
-	//TODO: finish!
 	public static void allTest(boolean wb, int type) {
 		List<String> list = new ArrayList<String>();
 		File file = new File("./bughunt");
@@ -72,7 +71,8 @@ public class GroupTest {
 		for (File root : file.listFiles()) {
 			System.out.println("THISROOT: " + root.getName());
 			//TODO: Delete myTest!
-			if(root.isDirectory() && root.getName().equals("myTest")){
+			if(root.isDirectory() && root.getName().equals("median")){
+//			if(root.isDirectory()){
 				for(File subRoot: root.listFiles()){
 					try {
 						String folder = "./bughunt/" + root.getName() + "/" + subRoot.getName();
