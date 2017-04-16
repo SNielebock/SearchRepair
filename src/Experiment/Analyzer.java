@@ -189,9 +189,10 @@ public class Analyzer {
 		
 		System.out.println("Before for!");
 		for(File version : dir.listFiles()){
+			//TODO: Not working with introClassJava!
 //			if(!checkDefect(version)){
 //				System.out.println("Check defect false!");
-				initNonDefect(version, name);
+//				initNonDefect(version, name);
 //				continue;
 //			}
 			
