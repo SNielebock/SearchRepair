@@ -66,13 +66,12 @@ public class BugLineSearcher {
 		initContent();
 		
 		if(this.linesContent.size() != this.suspiciousness.keySet().size()){
-			System.out.println("BugLineSearcher init return!");
+//			System.out.println("BugLineSearcher init return!");
 			return;
 		}
 		calculateBuggyANTLR();
 //		calculateBuggy();
-		System.out.println(buggy[0]);
-		System.out.println(buggy[1]);
+		System.out.println("Faulty Statement Range: " + buggy[0] + " - " + buggy[1]);
 	}
 
 	private void calculateBuggyANTLR() {
@@ -107,7 +106,7 @@ public class BugLineSearcher {
 		    
 		    //get Buggy lines
 		    int lineNumber = getBigSupicious();
-		    System.out.println("LineNumber: " + lineNumber);
+		    System.out.println("Most Suspicious LineNumber: " + lineNumber);
 		    Pair temp = listener.getBigSuspiciousRange(lineNumber);
 		    this.buggy[0] = temp.getLeft();
 		    this.buggy[1] = temp.getRight();

@@ -38,7 +38,7 @@ public class EntryTranslator {
 	private void translateWithSSA() {
 		// deal with two situations, one is path with return statement, one is path without return statement
 		for(String path : method.getPath()){
-			System.out.println("PATH: " + path + "\n" + "Method.getPathToInput.get(path): " + method.getPathToInput().get(path));
+//			System.out.println("PATH: " + path + "\n" + "Method.getPathToInput.get(path): " + method.getPathToInput().get(path));
 			PathTranslator pathTranslator = new PathTranslator(path, method.getPathToInput().get(path));
 			List<String> constraints = pathTranslator.getSsa();
 			StringBuilder constraintString = new StringBuilder();
@@ -52,7 +52,7 @@ public class EntryTranslator {
 			}
 			
 			
-			System.out.println("ConstraintString: " + constraintString.toString());
+//			System.out.println("ConstraintString: " + constraintString.toString());
 			this.entryObject.getPathConstraint().put(path, constraintString.toString());
 			
 			Map<String, String> mapping = pathTranslator.getVariableMap();
@@ -79,7 +79,7 @@ public class EntryTranslator {
 			StringBuilder typeString = new StringBuilder();
 			for(String var : types.keySet()){
 				String one = DataHandler.concat(var, types.get(var));
-				System.out.println("TYPES: " + one);
+//				System.out.println("TYPES: " + one);
 				typeString.append(one);
 			}			
 			

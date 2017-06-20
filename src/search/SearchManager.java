@@ -44,7 +44,7 @@ public class SearchManager {
 			List<String> searchOver = loadInputAndOutput(constraint, input1, input, output);
 			loadSearchOver(bw, searchOver);
 			bw.close();
-			System.out.println("Before invoke z3.");
+//			System.out.println("Before invoke z3.");
 			String res = Utility.invokeZ3onFile("ctest/test/temp");
 			if(res.equals("sat")){
 				finding.add(result.getString(3));
@@ -64,7 +64,7 @@ public class SearchManager {
 			loadPrototypeTypes(bw);
 			loadPrototypeString(bw);
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 	}
@@ -154,7 +154,7 @@ public class SearchManager {
 		List<String> result = search(input, 0);
 		
 		for(String s : result){
-			System.out.println(s);
+//			System.out.println(s);
 		}
 	}
 

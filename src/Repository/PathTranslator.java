@@ -89,9 +89,13 @@ public class PathTranslator {
 			ANTLRInputStream input = new ANTLRInputStream(stream);
 			PathLexer lexer = new PathLexer(input);
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
+//			System.out.println("tokens: " + tokens.getText());
 			PathParser parser = new PathParser(tokens);
 			ProgContext prog = parser.prog();
 			List<StatementContext> statements = prog.statement();
+//			for(StatementContext contxt: statements){
+//				System.out.println("StatementContext: " + contxt.getText());
+//			}
 //			HashMap<String, String> tmpMap = new HashMap<String, String>();
 //			for(String key: this.variableMap.keySet()){
 //				if(key.endsWith("SYMINT")){
@@ -120,7 +124,7 @@ public class PathTranslator {
 			convertStatementToConstraints(statements);
 			
 		} catch (IOException e) {
-			System.out.println("Error in applySSA!");
+//			System.out.println("Error in applySSA!");
 			e.printStackTrace();
 		}
 	}
@@ -135,7 +139,7 @@ public class PathTranslator {
 			this.variableMap.put(id, id);
 			this.variableTrack.put(id, id);
 			this.variableType.put(id, type);
-			System.out.println("IN PATHTRANSLATOR.TRACKFORMAL: " + id + " " + type);
+//			System.out.println("IN PATHTRANSLATOR.TRACKFORMAL: " + id + " " + type);
 		}
 		
 	}
@@ -453,16 +457,16 @@ public class PathTranslator {
 
 	private void converNonString(AssignStatContext c) {
 		String expr = getExpr(c.expr());
-		System.out.println("CONVERNONSTRINGEXP: " + expr);
-		System.out.println("CONVERNONSTRINGC: " + c.ID().getText());
-		System.out.println("CONVERNONSTRINGC: " + this.variableTrack.get(c.ID().getText()));
+//		System.out.println("CONVERNONSTRINGEXP: " + expr);
+//		System.out.println("CONVERNONSTRINGC: " + c.ID().getText());
+//		System.out.println("CONVERNONSTRINGC: " + this.variableTrack.get(c.ID().getText()));
 		//TODO: JUST FOR TESTING!
 //		String id = this.variableTrack.get(c.ID().getText());
 		String id = c.ID().getText();
-		for(String key: this.variableTrack.keySet()){
-			System.out.println("VARIABLETRACK: " + key + " " + this.variableTrack.get(key));
-		}
-		System.out.println("COMING FROM converNonString(AssignStatContext c) " + id);
+//		for(String key: this.variableTrack.keySet()){
+//			System.out.println("VARIABLETRACK: " + key + " " + this.variableTrack.get(key));
+//		}
+//		System.out.println("COMING FROM converNonString(AssignStatContext c) " + id);
 		String newId = generateNewName(id);
 		String constraint = "";
 		if(c.assiginOperator().getText() .equals("=") ){
@@ -754,7 +758,7 @@ public class PathTranslator {
 
 
 	private String generateNewName(String dest) {
-		System.out.println("PATHTRANSLATOR.GENERATENEWNAME: " + dest);
+//		System.out.println("PATHTRANSLATOR.GENERATENEWNAME: " + dest);
 		String newName = "_" + this.fileName + "_" + count++;
 //		this.variableTrack.put(dest, newName);
 		this.variableTrack.put(this.variableMap.get(dest), newName);

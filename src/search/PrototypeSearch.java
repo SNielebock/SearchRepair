@@ -109,31 +109,30 @@ public class PrototypeSearch {
 		default: return;
 		}
 		ResultSet result = DataBaseManager.query(database);
-		System.out.println("PrototypeSearch.search:");
 		while(result.next()){
 			String source = result.getString(1).trim();
-			System.out.println("Source: " + source);
+//			System.out.println("Source: " + source);
 			//if(!source.startsWith("if (string[i]") ) continue;
 			String[] pathconstraint = result.getString(2).split(EntryHandler.PATH_SEPERATOR);
-			for(String thisString: pathconstraint){
-				System.out.println("Pathchonstraint: " + thisString);
-			}
+//			for(String thisString: pathconstraint){
+//				System.out.println("Pathchonstraint: " + thisString);
+//			}
 			String[] pathtypes = result.getString(3).split(EntryHandler.PATH_SEPERATOR);
-			for(String thisString: pathtypes){
-				System.out.println("Pathtypes: " + thisString);
-			}
+//			for(String thisString: pathtypes){
+//				System.out.println("Pathtypes: " + thisString);
+//			}
 			String[] pathtracks= result.getString(4).split(EntryHandler.PATH_SEPERATOR);
-			for(String thisString: pathtracks){
-				System.out.println("Pathtracks: " + thisString);
-			}
+//			for(String thisString: pathtracks){
+//				System.out.println("Pathtracks: " + thisString);
+//			}
 			String[] pathmapping = result.getString(5).split(EntryHandler.PATH_SEPERATOR);
-			for(String thisString: pathmapping){
-				System.out.println("Pathmapping: " + thisString);
-			}
+//			for(String thisString: pathmapping){
+//				System.out.println("Pathmapping: " + thisString);
+//			}
 			String[] pathformals = result.getString(6).split(EntryHandler.PATH_SEPERATOR);
-			for(String thisString: pathformals){
-				System.out.println("Pathformals: " + thisString);
-			}
+//			for(String thisString: pathformals){
+//				System.out.println("Pathformals: " + thisString);
+//			}
 			try{
 				searchAllPath(pathconstraint, pathtypes, source, info, pathtracks, pathmapping, pathformals);
 			}catch(Exception e){
@@ -177,7 +176,7 @@ public class PrototypeSearch {
 		for(Map<String, String> map : mapp){
 			String s = map.toString().trim();
 			//TODO: Syso
-			System.out.println("THISMAP: " + s);
+//			System.out.println("THISMAP: " + s);
 			//if(!s.equals("{count=count, string=string, i=i}")) continue;
 			boolean passAllPositive = true;
 			for(List<String> pInputs : info.getPositives().keySet()){
@@ -503,7 +502,7 @@ public class PrototypeSearch {
 			}
 			else return false;
 		}catch(Exception e){
-			System.out.println("EXCEPTION IN VALIDATE!");
+			e.printStackTrace();
 		}
 		return false;
 	}

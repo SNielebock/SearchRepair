@@ -125,7 +125,7 @@ ASSIGN : '=';
 
 
 
-INT : '0'..'9'+;
+INT : ('-')? ('0'..'9')+;
 
 
 FLOAT : ('0'..'9')+ '.' ('0'..'9')*;
@@ -136,8 +136,8 @@ OR : '||';
 AND: '&&';
 LPAREN : '(';
 RPAREN : ')';
-ADDCTIVE : '+';
 DEDUCTIVE : '-';
+ADDCTIVE : '+';
 MULTIPLY : '*';
 DIVIDE : '/';
 MOD : '%';

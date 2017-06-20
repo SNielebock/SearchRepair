@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="Autobugfix">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../eclipse/java-neon/eclipse/"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="../../.p2/pool/plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
+        <pathelement location="../../.p2/pool/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+    <path id="Autobugfix.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/antlr-4.4-complete.jar"/>
+        <pathelement location="lib/mysql-connector-java-5.1.7-bin.jar"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="lib/jcov_network_saver.jar"/>
+        <pathelement location="lib/jcov.jar"/>
+        <pathelement location="lib/jedis-2.1.0.jar"/>
+        <pathelement location="lib/org.apache.commons.pool_1.6.0.v201204271246.jar"/>
+        <pathelement location="lib/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
+        <pathelement location="lib/cobertura/asm-5.0.1.jar"/>
+        <pathelement location="lib/cobertura/asm-analysis-5.0.1.jar"/>
+        <pathelement location="lib/cobertura/asm-commons-5.0.1.jar"/>
+        <pathelement location="lib/cobertura/asm-tree-5.0.1.jar"/>
+        <pathelement location="lib/cobertura/asm-util-5.0.1.jar"/>
+        <pathelement location="lib/cobertura/cobertura-2.1.1.jar"/>
+        <pathelement location="lib/cobertura/commons-lang3-3.3.2.jar"/>
+        <pathelement location="lib/cobertura/hamcrest-core-1.3.jar"/>
+        <pathelement location="lib/cobertura/jaxen-1.1.4.jar"/>
+        <pathelement location="lib/cobertura/jetty-6.1.14.jar"/>
+        <pathelement location="lib/cobertura/jetty-util-6.1.14.jar"/>
+        <pathelement location="lib/cobertura/junit-4.11.jar"/>
+        <pathelement location="lib/cobertura/logback-classic-1.0.13.jar"/>
+        <pathelement location="lib/cobertura/logback-core-1.0.13.jar"/>
+        <pathelement location="lib/cobertura/oro-2.0.8.jar"/>
+        <pathelement location="lib/cobertura/servlet-api-2.5-6.1.14.jar"/>
+        <pathelement location="lib/cobertura/slf4j-api-1.7.5.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.ucls"/>
+                <exclude name="**/*.useq"/>
+                <exclude name="**/*.java"/>
+            	<exclude name="**/*.jpf"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Autobugfix.classpath"/>
+        </javac>
+    </target>
+    <target depends="init" name="build-repository">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="repository" includeantruntime="true" source="${source}" target="${target}">
+            <src path="repository"/>
+            <classpath refid="Autobugfix.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build-repository"/>
+    </target>
+    <target name="DataBaseManager">
+        <java classname="Database.DataBaseManager" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="GcovTest">
+        <java classname="ProcessIntroClass.GcovTest" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="GenerateStandardTestCases">
+        <java classname="ProcessIntroClass.GenerateStandardTestCases" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="Main">
+        <java classname="test.Main" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="BugLineSearcher">
+        <java classname="ProcessIntroClass.BugLineSearcher" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="GeneralSearchCase">
+        <java classname="Experiment.GeneralSearchCase" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="PrototypeSearch">
+        <java classname="search.PrototypeSearch" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="EntryAddition">
+        <java classname="Repository.EntryAddition" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="Main (1)">
+        <java classname="main.Main" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="Scraper">
+        <java classname="scraper.Scraper" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="SearchCase">
+        <java classname="Experiment.SearchCase" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="EntryHandler">
+        <java classname="Database.EntryHandler" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="MedianSearchCase">
+        <java classname="Experiment.MedianSearchCase" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="MedianInstance">
+        <java classname="Experiment.MedianInstance" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+    <target name="GenerateANTLR">
+        <java classname="test.GenerateANTLR" failonerror="true" fork="yes">
+            <classpath refid="Autobugfix.classpath"/>
+        </java>
+    </target>
+</project>

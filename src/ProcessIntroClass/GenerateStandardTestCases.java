@@ -43,11 +43,9 @@ public class GenerateStandardTestCases {
 	public void generate(){
 		try{
 			File dir = new File(introPath);
-			System.out.println(dir.getAbsolutePath());
-			System.out.println("test");
+//			System.out.println(dir.getAbsolutePath());
 			for(String typeName : dir.list()){
 				File file = new File(dir.getAbsolutePath() + "/" + typeName);
-				System.out.println("GenerateStandardTestCases.generate - typeName: " + typeName);
 				if(file.isDirectory()){
 					generate(introPath + "/" + typeName, outputFolderPath + "/" + typeName);
 				}
@@ -89,7 +87,6 @@ public class GenerateStandardTestCases {
 		String functionName = inputFolder.substring(inputFolder.lastIndexOf("/") + 1);
 		File outputFolderFile = new File(outputFolder);
 		outputFolderFile.mkdir();
-		System.out.println("GeneralStandardTestCases.generate");
 		try{
 			int depth = 0;
 			File file = new File(inputFolder);
@@ -112,7 +109,6 @@ public class GenerateStandardTestCases {
 				depth++;
 			}
 			if(depth != 2){
-				System.out.println("GeneralStandardTestCases.generate - Return because: \"depth != 2\"");
 				return;
 			}
 			
@@ -125,7 +121,7 @@ public class GenerateStandardTestCases {
 //					init(temp, caseFolder, functionName);
 //				}
 //				System.out.println("OUTPUTFOLDERFILE: " + outputFolderFile.getName());
-				if(outputFolderFile.getName().equals("median")){
+				if((outputFolderFile.getName().equals("oneOf"))){
 					init(temp, caseFolder, functionName);
 				}
 			}
@@ -154,19 +150,16 @@ public class GenerateStandardTestCases {
 //		inputFolder = "/home/matthias/git/SearchRepair/TestCases/MedianJavaTest";
 		new File(outputFolder).mkdir();
 		new File(outputFolder + "/src").mkdir();
-		System.out.println(inputFolder + "\n" + outputFolder);
+//		System.out.println(inputFolder + "\n" + outputFolder);
 	
 		File inputDirectory = new File(inputFolder);
-		System.out.println("GenerateStandardTestCases.init - InputFolder: " + inputDirectory.getName());
 		for(File tmpFile: inputDirectory.listFiles()){
 			if(tmpFile.getName().endsWith(".java")){
-				System.out.println("TEMPFILE GET NAME: " + tmpFile.getName());
 				
 				Utility.copy(inputFolder + "/" + tmpFile.getName(), outputFolder + "/" + tmpFile.getName());
 				
 				String packages = Utility.getANTLRListener(inputFolder + "/" + tmpFile.getName()).getPackageName();
 				String packagesPath = packages.replaceAll("\\.", "/");
-				System.out.println("PACKAGESPATH: " + packagesPath);
 				
 				new File(outputFolder + "/src/" + packagesPath).mkdir();
 				
@@ -273,17 +266,15 @@ public class GenerateStandardTestCases {
 			if(!packages.isEmpty()){
 				packages += ".";
 			}
-			String testingExe =  packages + fileName.substring(0, fileName.lastIndexOf("."));
-			System.out.println("TestingExeString: " + testingExe);
-			
+			String testingExe =  packages + fileName.substring(0, fileName.lastIndexOf("."));			
 			
 			//TODO: doesn't work with current testingExe String
 			if(new File(testingExe).exists()) new File(testingExe).delete();
 			
 //			String s = Utility.runCProgram("gcc -o " + testingExe + " " + inputFolder + '/'+fileName);
-			System.out.println("FILENAME: " + inputFolder + '/' + fileName);
+//			System.out.println("FILENAME: " + inputFolder + '/' + fileName);
 			String s = Utility.runCProgram("javac -d . " + inputFolder + '/' + fileName);
-			System.out.println("Output Javac Compile Process: " + s);
+//			System.out.println("Output Javac Compile Process: " + s);
 
 			if(s.equals("failed")) {
 				list.add(s);
@@ -318,7 +309,7 @@ public class GenerateStandardTestCases {
 			String path = file.getAbsolutePath();
 			if(path.endsWith(".in")){
 				String input = Utility.getStringFromFile1(path);
-				System.out.println("Utility.initBlackBox Input: " + input);
+//				System.out.println("Utility.initBlackBox Input: " + input);
 				String outPath = path.substring(0, path.length() - 3) + ".out";
 				String runOutput = Utility.runCProgramWithInput("java " + testingExe, input);
 //				String tempOuputFile = "./tempFolder/test.out";
@@ -344,8 +335,8 @@ public class GenerateStandardTestCases {
 							line = br.readLine();
 					    }
 					    String expectedOutput = sb.toString();
-					    System.out.println("Expected Output: " + expectedOutput);
-					    System.out.println("Actual Output: " + runOutput);
+//					    System.out.println("Expected Output: " + expectedOutput);
+//					    System.out.println("Actual Output: " + runOutput);
 					    if(expectedOutput.trim().equals(runOutput.trim())){
 					    	s = "Test passed.";
 					    }else{
@@ -373,7 +364,7 @@ public class GenerateStandardTestCases {
 //				}else if(className.startsWith("syllables")){
 //					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
 //				}
-				System.out.println("Utility.initBlackBox Python output: " + s);
+//				System.out.println("Utility.initBlackBox Python output: " + s);
 				if(s.equals("Test passed.")){
 					String index = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
 					Utility.copy(path, outputFolder + "/blackbox/positive/" + index + ".in");
@@ -429,8 +420,8 @@ public class GenerateStandardTestCases {
 							line = br.readLine();
 					    }
 					    String expectedOutput = sb.toString();
-					    System.out.println("Expected Output: " + expectedOutput);
-					    System.out.println("Actual Output: " + runOutput);
+//					    System.out.println("Expected Output: " + expectedOutput);
+//					    System.out.println("Actual Output: " + runOutput);
 					    if(expectedOutput.trim().equals(runOutput.trim())){
 					    	s = "Test passed.";
 					    }else{
@@ -459,7 +450,7 @@ public class GenerateStandardTestCases {
 //					s = Utility.runCProgramWithPythonCommand("syllables", tempOuputFile, path, outPath).trim();
 //				}
 				
-				System.out.println("Utility.initWhiteBox Python output: " + s);
+//				System.out.println("Utility.initWhiteBox Python output: " + s);
 				if(s.equals("Test passed.")){
 					String index = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
 					Utility.copy(path, outputFolder + "/whitebox/positive/" + index + ".in");

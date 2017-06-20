@@ -187,7 +187,7 @@ public class Analyzer {
 	private static int  i = 0;
 	private void fetch(File dir, String name) {
 		
-		System.out.println("Before for!");
+//		System.out.println("Before for!");
 		for(File version : dir.listFiles()){
 			//TODO: Not working with introClassJava!
 //			if(!checkDefect(version)){
@@ -212,7 +212,7 @@ public class Analyzer {
 //				continue;
 //			}
 			 
-			System.out.println("Before init!");
+//			System.out.println("Before init!");
 			initSearchFix(version, name);
 			initAE(version, name);
 			initTSP(version, name);

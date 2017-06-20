@@ -38,8 +38,14 @@ public class GeneralSearchCase extends ESearchCase{
 		
 		for(int[] range : buggys){
 			String s = Arrays.toString(range);
-			System.out.println("THISRANGE: " + s);
-
+//			System.out.println("THISRANGE: " + s);
+			
+//			if(s.contains("[33, 33]")){
+//				System.out.println("it does!");
+//			}else{
+//				continue;
+//			}
+			
 			String prefix = this.getRunDir() + "/" + this.getFileName().substring(0, this.getFileName().lastIndexOf('.'));
 			SearchCase instan = new SearchCase(prefix, this.getRepo());
 			instan.setBuggy(range);
@@ -79,9 +85,11 @@ public class GeneralSearchCase extends ESearchCase{
 		initSuspicious();
 		this.initContent();
 		double average = getAverage();
+//		System.out.println("Average is: " + average);
 		int index = 12;
 		while(index < this.getSuspiciousness().keySet().size()){
 			if(this.getSuspiciousness().get(index) >= average){
+				list.add(new int[]{index,index});
 				int right = index + 1;
 				while(right <= this.getSuspiciousness().keySet().size() && right - index < 6) {
 					if(this.getSuspiciousness().get(right) >= average) {
@@ -92,18 +100,20 @@ public class GeneralSearchCase extends ESearchCase{
 			}
 			index++;
 		}
-				
+//		for(int[] myRange: list){
+//			System.out.println("Range: " + myRange[0] + " " + myRange[1]);
+//		}		
 		return list;
 	}
 	
 	
 	public static void main(String[] args){
-		GeneralSearchCase instan = new GeneralSearchCase("./bughunt/syllables/109", "syllables.c", 3);
+		GeneralSearchCase instan = new GeneralSearchCase("./bughunt/syllables/4", "syllables_fcf701e8_002.java", 3);
 		instan.transformAndInitRunDir(false, "");
 		instan.initInputAndOutput();
-//		instan.search(true);
+		instan.search(true);
 //		instan.recordResult(true);
-		instan.search(false);
+//		instan.search(false);
 		instan.recordResult(false);
 	}
 }

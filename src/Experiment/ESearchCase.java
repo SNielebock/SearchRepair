@@ -161,8 +161,7 @@ public  class ESearchCase {
 		}
 		Transform trans = new Transform(this.getFolder(), this.getFileName(), typeParameter);
 		String pass = trans.tranform();
-		//TODO: Syso
-		System.out.println("PASS: " + pass);
+//		System.out.println("PASS: " + pass);
 		//transform here, if there is a true transform, no need to copy
 		if(pass != null) {
 			Utility.copy(pass, runDir + "/" + this.getFileName());

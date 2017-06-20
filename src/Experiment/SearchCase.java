@@ -154,18 +154,21 @@ public class SearchCase {
 			for(Map<String, String> map : info.getResult().getSearchMapping().get(source)){
 				try{
 					String input = Restore.getMappingString(source, map);
-					System.out.println("SOURCE: " + source + " INPUT: " + input);
+//					System.out.println("SOURCE: " + source + " INPUT: " + input);
 					String outputFile = generateOutputFile(input);
-					if(testAllResults(source, outputFile)){
+					String result = testAllResults(source, outputFile);
+					if(!result.equals("not pass")){
 						info.getResult().getMappingSource().put(source, input);
 						int extraPass = this.passTestSuite(source, outputFile, this.verifications);
 						this.info.getResult().getExtraPass().put(source, extraPass);
-						trueRepairFound = true;
+						if(result.equals("true fix")){
+							trueRepairFound = true;
+						}
 						break;
 					}
 					else continue;
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 					continue;
 				}
 			}
@@ -180,27 +183,27 @@ public class SearchCase {
 		
 
 
-	private boolean testAllResults(String source, String outputFile) {
+	private String testAllResults(String source, String outputFile) {
 		boolean pass = passAllPositive(source, outputFile);
 		if(!pass){
-			System.out.println("NOT PASS -> RETURNED FALSE");
-			return false;
+//			System.out.println("NOT PASS -> RETURNED FALSE");
+			return "not pass";
 		}
 		int count = passNegatives(source, outputFile);
 		if(count == this.getNegatives().size()) {
 			info.getResult().getPositive().add(source);
-			System.out.println("COUNT = PASSNEGATIVES -> RETURNED TRUE");
-			return true;
+//			System.out.println("COUNT = PASSNEGATIVES -> RETURNED TRUE");
+			return "true fix";
 		}
 		else if(count == 0){
 			info.getResult().getFalsePositve().add(source);
-			System.out.println("COUNT = 0 -> RETURNED FALSE");
-			return false;
+//			System.out.println("COUNT = 0 -> RETURNED FALSE");
+			return "not pass";
 		}
 		else {
 			info.getResult().getPartial().put(source, count * 1.0 / this.getNegatives().size());
-			System.out.println("ELSE -> RETURNED TRUE");
-			return true;
+//			System.out.println("ELSE -> RETURNED TRUE");
+			return "partial fix";
 		}
 	}
 
@@ -235,7 +238,7 @@ public class SearchCase {
 			
 			String s2 = Utility.runCProgramWithInput(command2, input);
 			
-			System.out.println("SearchCase.passTestSuite S2: " + s2);
+//			System.out.println("SearchCase.passTestSuite S2: " + s2);
 			
 			if(s2.isEmpty() ){
 				continue;
@@ -270,8 +273,8 @@ public class SearchCase {
 					line = br.readLine();
 			    }
 			    String expectedOutput = sb.toString();
-			    System.out.println("Expected Output: " + expectedOutput);
-			    System.out.println("Actual Output: " + s2);
+//			    System.out.println("Expected Output: " + expectedOutput);
+//			    System.out.println("Actual Output: " + s2);
 			    if(expectedOutput.trim().equals(s2.trim())){
 			    	s = "Test passed.";
 			    }else{
@@ -299,9 +302,9 @@ public class SearchCase {
 //		}else if(this.functionName.startsWith("syllables")){
 //			s = Utility.runCProgramWithPythonCommand("syllables", this.tempOutput, this.inputfile, this.outputfile);
 //		}
-		System.out.println("THIS FUNTIONNAME CHECKPASSFORONECASE: " + this.functionName);
+//		System.out.println("THIS FUNTIONNAME CHECKPASSFORONECASE: " + this.functionName);
 
-		System.out.println("SearchCase.checkPassForOneCase output: " + s);	
+//		System.out.println("SearchCase.checkPassForOneCase output: " + s);	
 		
 		if(s.trim().endsWith("Test passed.")) return true;
 		else return false;
@@ -312,7 +315,7 @@ public class SearchCase {
 		//TODO: Commented out for now
 //		File file = new File( this.casePrefix);
 //		if(file.exists()) file.delete();
-		System.out.println("PASSALLPOSITIVES OUTPUTFILE: " + outputFile);
+//		System.out.println("PASSALLPOSITIVES OUTPUTFILE: " + outputFile);
 
 //		String command1 = "gcc " + outputFile + " -o " + this.casePrefix;
 		String command1 = "javac -d " + this.folder + "/new/ " + outputFile;
@@ -338,13 +341,13 @@ public class SearchCase {
 			
 			String s2 = Utility.runCProgramWithInput(command2, input);
 			//TODO: Syso
-			System.out.println("S2 OUTPUT: " + s2);
+//			System.out.println("S2 OUTPUT: " + s2);
 			
 			if(s2.isEmpty() ){
 				return false;
 			}
 			if(!checkPassForOneCase(s2, output, input)){
-				System.out.println("SearchCase.passAllPositives checkPassForOneCase returned false");
+//				System.out.println("SearchCase.passAllPositives checkPassForOneCase returned false");
 				return false;
 			}
 	
@@ -424,14 +427,14 @@ public class SearchCase {
 	private boolean fillSearchCase() {
 		System.out.println("---"+Arrays.toString(this.buggy));
 		try{
-			System.out.println("THISCASEPREFIX: " + this.casePrefix + ".java");
+//			System.out.println("THISCASEPREFIX: " + this.casePrefix + ".java");
 			if(insertStateStatements(this.casePrefix + ".java")){
-				System.out.println("SearchCase.fillSearchCase insertStateStatements true");
+//				System.out.println("SearchCase.fillSearchCase insertStateStatements true");
 				obtainPositiveStates();
 				return true;
 			}
 			else{
-				System.out.println("SearchCase.fillSearchCase insertStateStatements false");
+//				System.out.println("SearchCase.fillSearchCase insertStateStatements false");
 				return false;
 			}
 		}catch(Exception e){
@@ -445,7 +448,7 @@ public class SearchCase {
 //		String sourceFile = this.casePrefix + "state.java";
 		String sourceFile = this.folder + "/state/" + this.functionName + ".java";
 
-		System.out.println("ObtainPositiveStates sourceFile: " + sourceFile);
+//		System.out.println("ObtainPositiveStates sourceFile: " + sourceFile);
 		
 		for(String input : this.positives.keySet()){
 			File file = new File( this.casePrefix);
@@ -500,16 +503,16 @@ public class SearchCase {
 	 * @return
 	 */
 	private boolean insertStateStatements(String original) {
-		System.out.println("Original: " + original);
+//		System.out.println("Original: " + original);
 		String markFile = insertMark(original);
 		
-		System.out.println("MARKFILE: " + markFile);
+//		System.out.println("MARKFILE: " + markFile);
 //		String target = getFunction(markFile);
 //old:	String[] states = getStatesStatement(target);
 		String[] states = getStatesStatement(original);
 		if(states == null) return false;
 		writeStatesStatement(states);
-		System.out.println("returned true(SearchCase.insertStateStatements)");
+//		System.out.println("returned true(SearchCase.insertStateStatements)");
 		return true;
 
 		
@@ -521,7 +524,7 @@ public class SearchCase {
 		dir.mkdir();
 		String fileName = this.folder + "/state/" + this.functionName + ".java";
 
-		System.out.println("FILENAME writeStatesStatement: " + fileName);
+//		System.out.println("FILENAME writeStatesStatement: " + fileName);
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(this.casePrefix + ".java")));
@@ -571,7 +574,7 @@ public class SearchCase {
 		    MethodDeclarationContext method = Utility.getANTLRListener(target).getSpecificMethodContext(this.buggy[0]);
 			
 			if(method == null){
-				System.out.println("SearchCase.getStatesStatement return, because of method == null");
+//				System.out.println("SearchCase.getStatesStatement return, because of method == null");
 				return states;
 			}
 
@@ -583,7 +586,7 @@ public class SearchCase {
 			return null;
 		}
 		if(variables.isEmpty()){
-			System.out.println("SearchCase.getStatesStatement return, because of variables.isEmpty()");
+//			System.out.println("SearchCase.getStatesStatement return, because of variables.isEmpty()");
 			return null;
 		}
 		states = configureStatStatment(variables);
@@ -611,7 +614,7 @@ public class SearchCase {
 				outputend += end;
 			}
 			else if(type.equals("char")){
-				String begin = id + ":%d:char_VBC_";
+				String begin = id + ":%s:char_VBC_";
 				String end = id + ", ";
 				inputbegin += begin;
 				inputend += end;
@@ -647,10 +650,10 @@ public class SearchCase {
 				//Objects
 			}
 		}
-		System.out.println("InputBegin: " + inputbegin);
-		System.out.println("InputEnd: " + inputend);
-		System.out.println("OutputBegin: " + outputbegin);
-		System.out.println("OutputEnd: " + outputend);
+//		System.out.println("InputBegin: " + inputbegin);
+//		System.out.println("InputEnd: " + inputend);
+//		System.out.println("OutputBegin: " + outputbegin);
+//		System.out.println("OutputEnd: " + outputend);
 
 		states[0] = inputbegin.subSequence(0, inputbegin.length()) + "inputEnd\", " + inputend.substring(0, inputend.length() - 2) + ");";
 		states[1] = outputbegin.subSequence(0, outputbegin.length()) + "_nextloop_\", " + outputend.substring(0, outputend.length() - 2) + ");";
@@ -803,7 +806,7 @@ public class SearchCase {
 			
 			start = fileString.substring(0, start - 1).lastIndexOf('}');
 			output = fileString.substring(start + 1, end + 1);
-			System.out.println("SearchCase.getFunction: " + output);
+//			System.out.println("SearchCase.getFunction: " + output);
 			
 		}catch(Exception e){
 			System.out.println(e);

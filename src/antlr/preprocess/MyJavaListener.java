@@ -232,13 +232,14 @@ public class MyJavaListener extends JavaBaseListener {
 	public Pair getBigSuspiciousRange(int bigSuspicious){
 		Pair bigSuspiciousRange = new Pair(0,0);
 		for(Pair range: statementRanges){
+//			System.out.println("statementranges: " + range.getLeft() + " " + range.getRight());
 			if((range.getLeft() <= bigSuspicious) && (range.getRight() >= bigSuspicious)){
 				if((range.getRight() - range.getLeft()) > (bigSuspiciousRange.getRight() - bigSuspiciousRange.getLeft())){
 					bigSuspiciousRange = range;
 				}
 			}
 		}
-		System.out.println("BigSuspiciousRange: " + bigSuspiciousRange.toString());
+//		System.out.println("BigSuspiciousRange: " + bigSuspiciousRange.toString());
 		return bigSuspiciousRange;
 	}
 	

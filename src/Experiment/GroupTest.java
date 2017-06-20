@@ -69,16 +69,15 @@ public class GroupTest {
 		int size = file.listFiles().length;
 		int actualRepository = 0;
 		for (File root : file.listFiles()) {
-			System.out.println("THISROOT: " + root.getName());
 			//TODO: Delete myTest!
-			if(root.isDirectory() && root.getName().equals("median")){
+			if(root.isDirectory() && (root.getName().equals("oneOf"))){
 //			if(root.isDirectory()){
 				for(File subRoot: root.listFiles()){
 					try {
 						String folder = "./bughunt/" + root.getName() + "/" + subRoot.getName();
-						System.out.println("FolderName: " + folder);
+//						System.out.println("FolderName: " + folder);
 						for(File javaFile: subRoot.listFiles()){
-							System.out.println("JavaFile: " + javaFile.getName());
+//							System.out.println("JavaFile: " + javaFile.getName());
 							if(!javaFile.isDirectory() && javaFile.getName().endsWith(".java")){
 								String fileName = javaFile.getName();
 								if (type == 2) {
@@ -86,12 +85,10 @@ public class GroupTest {
 									int value = Integer.parseInt(subRoot.getName());
 									if(value < size / 2) actualRepository = 3;
 									else actualRepository = 4;
-								}else if(type == 1){
-									actualRepository = 1;
 								}else{
 									actualRepository = type;
 								}
-								System.out.println("Before GeneralSearchCase - Folder: " + folder + " FileName: " + fileName + " ActualRepository: " + actualRepository);
+//								System.out.println("Before GeneralSearchCase - Folder: " + folder + " FileName: " + fileName + " ActualRepository: " + actualRepository);
 								GeneralSearchCase searcher = new GeneralSearchCase(folder, fileName, actualRepository);
 								searcher.transformAndInitRunDir(false, "");
 								searcher.initInputAndOutput();
@@ -110,6 +107,7 @@ public class GroupTest {
 			}
 
 		}
+		System.out.println("Successful repairs:");
 		for (String s : list) {
 			System.out.println(s);
 		}

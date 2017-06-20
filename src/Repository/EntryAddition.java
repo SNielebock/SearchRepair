@@ -39,7 +39,7 @@ public class EntryAddition {
 		
 		File file = new File(filePath);
 		if(!file.exists()){
-			System.out.println("Return in EntryAddition.addOneFile");
+//			System.out.println("Return in EntryAddition.addOneFile");
 			return;
 		}
 		List<Method> methods = parse(filePath);
@@ -50,7 +50,7 @@ public class EntryAddition {
 			try{
 				object = covertMethodToEntry(method);
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 				continue;
 			}
 			EntryHandler.save(object, table);
@@ -59,9 +59,9 @@ public class EntryAddition {
 //			} catch (FileNotFoundException e) {
 //				e.printStackTrace();
 //			}
-			System.out.println(method.getName());
+//			System.out.println(method.getName());
 //			save++;
-			System.out.println(method.getSource());
+//			System.out.println(method.getSource());
 
 			for(String path : object.getPathConstraint().keySet())
 			{
@@ -78,7 +78,7 @@ public class EntryAddition {
 
 	
 	private static EntryObject covertMethodToEntry(Method method) {
-		System.out.println("METHOD: " + method.getName() + " RETURNTYPE: " + method.getReturnType() + " SOURCE: " + method.getSource() + " TOSTRING: " + method.toString());
+//		System.out.println("METHOD: " + method.getName() + " RETURNTYPE: " + method.getReturnType() + " SOURCE: " + method.getSource() + " TOSTRING: " + method.toString());
 		EntryTranslator translator = new EntryTranslator(method);
 		return translator.getEntryObject();
 		
@@ -114,17 +114,20 @@ public class EntryAddition {
 			try {
 				//if(!fileName.equals("./repository/scrape/test41.c")) return methods;
 	//			String com = "./executors/pathgen " + fileName;
-				System.out.println("create class file: " + "javac -g " + fileName);
-				Process javacProcess = Runtime.getRuntime().exec("javac -g " + fileName);
-				try {
-					javacProcess.waitFor();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+//				System.out.println("create class file: " + "javac -g " + fileName);
+				File classFile = new File(fileNameWOExt + ".class");
+				if(!classFile.exists()){
+					Process javacProcess = Runtime.getRuntime().exec("javac -g " + fileName);
+					try {
+						javacProcess.waitFor();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 				createJPFfile(testFilePath, pureFileName);
 				File f = new File(fileNameWOExt + ".jpf");
 				if(!f.exists()) { 
-					System.out.println("JPF was not created!(check EntryAddition.createJPFfile for details)");
+//					System.out.println("JPF was not created!(check EntryAddition.createJPFfile for details)");
 				    return methods;
 				}
 				//TODO: not relative
@@ -136,13 +139,14 @@ public class EntryAddition {
 	//			BufferedReader ls_error = new BufferedReader(new InputStreamReader(
 	//					p.getErrorStream()));
 	//			System.out.println(ls_error.readLine());
+				
 				String s = null;
 				StringBuilder path = new StringBuilder();
 				StringBuilder input = new StringBuilder();
 				Method method = new Method();
 				boolean startParsing = false;
 				boolean correct = true;
-				System.out.println("FILE: " + fileName);
+//				System.out.println("FILE: " + fileName);
 				while((s = ls_in.readLine()) != null)
 				{
 					System.out.println("S:" + s);
@@ -176,10 +180,12 @@ public class EntryAddition {
 						path.append("\n");
 						
 						//TODO: CHECK IF THIS IS CORRECT!
-						System.out.println("PATH REPLACEMENT: " + path.toString().replaceAll("_\\d+_SYM[A-Z]+", ""));
+//						System.out.println("PATH REPLACEMENT: " + path.toString().replaceAll("_\\d+_SYM[A-Z]+", ""));
 						String pathString = path.toString().replaceAll("_\\d+_SYM[A-Z]+", "");
-						System.out.println("INPUT REPLACEMENT COMPARE: " + input.toString() + " "+ input.toString().replaceAll("_\\d+_SYM[A-Z]+", ""));
+						pathString = pathString.replaceAll("CONST_", "");
+//						System.out.println("INPUT REPLACEMENT COMPARE: " + input.toString() + " "+ input.toString().replaceAll("_\\d+_SYM[A-Z]+", ""));
 						String inputString = input.toString().replaceAll("_\\d+_SYM[A-Z]+", "");
+						inputString = inputString.replaceAll("CONST_", "");
 						method.getPath().add(pathString);
 						method.getPathToInput().put(pathString, inputString);	
 	//					System.out.println("PATHGENPATH: " + method.getPathToInput());
@@ -254,7 +260,7 @@ public class EntryAddition {
 			}
 			//Get  whole file text
 			String fileString = Utility.getStringFromFile(fileName);
-			System.out.println("METHODINFOS: " + methodVisibility + " " + methodReturnType + " " + methodName);
+//			System.out.println("METHODINFOS: " + methodVisibility + " " + methodReturnType + " " + methodName);
 			String tmpFileString = fileString;
 			int indexLastVisibility = 0;
 			while(tmpFileString.contains(methodVisibility)){
@@ -291,7 +297,7 @@ public class EntryAddition {
 					if(stack.isEmpty()){
 						int g = typeStack.isEmpty() ? 0 : typeStack.pop() + 1;
 						String declare = fileString.substring(g, i);
-						System.out.println("DECLARE: " + declare);
+//						System.out.println("DECLARE: " + declare);
 //						types.add(getType(declare));
 						types.add(getType(methodReturnType));
 					}
@@ -335,7 +341,8 @@ public class EntryAddition {
 											"symbolic.method=" + symbolicMethodCall,
 											"listener = gov.nasa.jpf.symbc.SymbolicListener",
 											"vm.storage.class=nil",
-											"search.multiple_errors=true");
+											"search.multiple_errors=true",
+											"search.depth_limit = 10");
 		Path file = Paths.get(path + pureFileName + ".jpf");
 		try {
 			Files.write(file, lines, Charset.forName("UTF-8"));
@@ -395,19 +402,19 @@ public class EntryAddition {
 					if(fileAbsolutePath.endsWith(".jpf")){
 						Path JPFpath = Paths.get(fileAbsolutePath);
 						Boolean jpfTest = Files.deleteIfExists(JPFpath);
-						System.out.println("Deleted JPF:" + jpfTest);
-					}else if(fileAbsolutePath.endsWith(".class")){
-						Path CLASSpath = Paths.get(fileAbsolutePath);
-						Boolean classTest = Files.deleteIfExists(CLASSpath);
-						System.out.println("Deleted Class: " + classTest);
+//						System.out.println("Deleted JPF:" + jpfTest);
+//					}else if(fileAbsolutePath.endsWith(".class")){
+//						Path CLASSpath = Paths.get(fileAbsolutePath);
+//						Boolean classTest = Files.deleteIfExists(CLASSpath);
+//						System.out.println("Deleted Class: " + classTest);
 					}else if(!fileAbsolutePath.endsWith(".java")){
-						System.out.println("This File will be ignored: " + fileAbsolutePath);
+//						System.out.println("This File will be ignored: " + fileAbsolutePath);
 					}
 				}	
 			}
 		} catch (IOException x) {
 		    // File permission problems are caught here.
-		    System.err.println(x);
+		    x.printStackTrace();
 		}
 		
 	}

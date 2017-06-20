@@ -52,7 +52,7 @@ public class Utility {
 	public static String runCProgramWithPythonCommand(String testingExe,
 			String tempOuputFile, String inputFile, String outputFile) {
 		String programName = testingExe.substring(testingExe.indexOf("/") + 1);
-		System.out.println("GENPROG ARGUMENTS: programName: " + programName + "\n tempOuputFile: " + tempOuputFile + "\n outputFile: " + outputFile + "\n inputFile: " + inputFile);
+//		System.out.println("GENPROG ARGUMENTS: programName: " + programName + "\n tempOuputFile: " + tempOuputFile + "\n outputFile: " + outputFile + "\n inputFile: " + inputFile);
 		String command = "./executors/genprog_tests.py --program "
 				+ programName
 				+ " "
@@ -109,7 +109,7 @@ public class Utility {
 			e.printStackTrace();
 		}
 		out = sb.toString();
-		System.out.println("LS_STR: " + out);
+//		System.out.println("LS_STR: " + out);
 		return out;
 	}
 
@@ -209,7 +209,7 @@ public class Utility {
 	    URLClassLoader loader = new URLClassLoader(new URL[] {
 	            new URL("file:" + path)
 	    });
-	    System.out.println("PATH: " + path);
+//	    System.out.prinstln("PATH: " + path);
 	    return loader.loadClass(fullClassName);
 	}
 
@@ -231,7 +231,7 @@ public class Utility {
 					ls_proc.getInputStream()));
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 100L * 10; // timeout in seconds
+			long timeoutInMillis = 1000L * 10; // timeout in seconds
 			long finish = now + timeoutInMillis;
 
 			try {
@@ -252,7 +252,6 @@ public class Utility {
 
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("IOException.getMessage: " + e.getMessage());
 				out = "";
 				// System.exit(0);
 			} catch (Exception e) {
@@ -282,7 +281,7 @@ public class Utility {
 					ls_proc.getErrorStream()));
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 1000L * 10; // timeout in seconds
+			long timeoutInMillis = 5000L * 10; // timeout in seconds
 			long finish = now + timeoutInMillis;
 
 			try {

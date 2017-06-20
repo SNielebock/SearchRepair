@@ -29,7 +29,7 @@ public class Main {
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 		//repository type: 0 linux, 1 introclass, 2 future, 5 myTest
-		int repositoryType = 2;
+		int repositoryType = 5;
 		
 		//introclass path
 //		String introclassPath = "/home/matthias/git/IntroClass-master";
@@ -47,19 +47,19 @@ public class Main {
 		}
 		else{
 			//rerun
-//			deleteFolders();
-//			GenerateStandardTestCases test = new GenerateStandardTestCases(introclassPath, "./bughunt");
-//			test.generate();
-//			rerun(wb, repositoryType);
+			deleteFolders();
+			GenerateStandardTestCases test = new GenerateStandardTestCases(introclassPath, "./bughunt");
+			test.generate();
+			rerun(wb, repositoryType);
 			Analyzer.getCSVData();
 		}
 		long endTime = System.currentTimeMillis();
 		long millis = endTime - startTime;
-//		System.out.println(String.format("%d min, %d sec", 
-//			    TimeUnit.MILLISECONDS.toMinutes(millis),
-//			    TimeUnit.MILLISECONDS.toSeconds(millis) - 
-//			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-//			));
+		System.out.println(String.format("%d min, %d sec", 
+			    TimeUnit.MILLISECONDS.toMinutes(millis),
+			    TimeUnit.MILLISECONDS.toSeconds(millis) - 
+			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+			));
 		
 	}
 
@@ -106,11 +106,11 @@ public class Main {
 	}
 
 	private static void initRepository() {
-		EntryAddition.addOneFolder("./repository/future", DataBaseManager.TABLEFUTURE1);
-		EntryAddition.addOneFolder("./repository/future2", DataBaseManager.TABLEFUTURE2);
+//		EntryAddition.addOneFolder("./repository/future", DataBaseManager.TABLEFUTURE1);
+//		EntryAddition.addOneFolder("./repository/future2", DataBaseManager.TABLEFUTURE2);
 //		EntryAddition.addOneFolder("./repository/introclass", DataBaseManager.TABLEALL);
 //		EntryAddition.addOneFolder("./repository/linux", DataBaseManager.TABLELINUX);
-//		EntryAddition.addOneFolder("./repository/myTest", DataBaseManager.TABLEMYTEST);
+		EntryAddition.addOneFolder("./repository/myTest", DataBaseManager.TABLEMYTEST);
 	}
 
 }

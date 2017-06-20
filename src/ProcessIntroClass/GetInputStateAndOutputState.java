@@ -63,7 +63,7 @@ public class GetInputStateAndOutputState {
 				List<String> types = getTypes();
 			mergeToStates(inputStates, outputStates, types);
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 				continue;
 			}
 		}		
@@ -110,7 +110,7 @@ public class GetInputStateAndOutputState {
 			}
 			br.close();
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return list;
@@ -144,8 +144,6 @@ public class GetInputStateAndOutputState {
 		
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println(e);
-			
 		}
 		
 	}
@@ -183,7 +181,7 @@ public class GetInputStateAndOutputState {
 			}
 			br.close();
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return list;
 	}
@@ -216,8 +214,6 @@ public class GetInputStateAndOutputState {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println(e);
-			
 		}
 	}
 	

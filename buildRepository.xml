@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="compile" default="main" basedir=".">
+
+ <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+ <property name="root" value="${basedir}/repository"/>
+
+ <property name="destdir" value="${basedir}/repository" />
+
+ <target name="main">
+  <javac srcdir="${root}" destdir="${destdir}" debug="on" nowarn="on" source="1.8" compiler="${build.compiler}">
+      <classpath>
+        <pathelement location="/home/matthias/git/SearchRepair/lib/*"/>
+
+      </classpath>
+  </javac>
+ </target>
+</project>

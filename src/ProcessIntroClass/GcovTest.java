@@ -45,9 +45,9 @@ public class GcovTest {
 	public GcovTest(String folder, String fileName, boolean wb) {
 		super();
 		this.folder = folder;
-		System.out.println("GCov Test Folder: " + folder);
+//		System.out.println("GCov Test Folder: " + folder);
 		this.fileName = fileName;
-		System.out.println("GCov Test FileName: " + fileName);
+//		System.out.println("GCov Test FileName: " + fileName);
 		this.wb = wb;
 		this.positiveExecutions = new HashMap<Integer, Integer>();
 		this.negativeExecutions = new HashMap<Integer, Integer>();
