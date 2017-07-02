@@ -70,7 +70,7 @@ public class GroupTest {
 		int actualRepository = 0;
 		for (File root : file.listFiles()) {
 			//TODO: Delete myTest!
-			if(root.isDirectory() && (root.getName().equals("oneOf"))){
+			if(root.isDirectory() && (root.getName().equals("myTest"))){
 //			if(root.isDirectory()){
 				for(File subRoot: root.listFiles()){
 					try {

@@ -40,7 +40,7 @@ public class Main {
 		int operation = 1;
 		
 		//run wb test or run bb test, wb : wb = true, bb: wb = false; 
-		boolean wb = false;
+		boolean wb = true;
 
 		if(operation == 0){
 			Analyzer.getExistingData();

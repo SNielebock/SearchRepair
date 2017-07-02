@@ -121,7 +121,7 @@ public class GenerateStandardTestCases {
 //					init(temp, caseFolder, functionName);
 //				}
 //				System.out.println("OUTPUTFOLDERFILE: " + outputFolderFile.getName());
-				if((outputFolderFile.getName().equals("oneOf"))){
+				if((outputFolderFile.getName().equals("myTest"))){
 					init(temp, caseFolder, functionName);
 				}
 			}
